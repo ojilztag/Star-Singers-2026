@@ -76,6 +76,20 @@ img,video,iframe{max-width:100%}
   .top nav a{padding:9px 8px;font-size:12px}
   .menu{display:block}
 }
+
+/* Keep the complete header permanently visible while the page scrolls */
+body{padding-top:0}
+header.top{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100vw!important;z-index:5000!important}
+body{padding-top:80px}
+.top nav{position:absolute!important;top:calc(100% + 1px)!important;z-index:5001!important;pointer-events:auto}
+.top nav.open{display:grid!important}
+.menu{position:relative;z-index:5002;cursor:pointer;touch-action:manipulation}
+@media(max-width:760px){
+  body{padding-top:68px}
+  header.top{position:fixed!important}
+  .top nav{position:absolute!important;top:calc(100% + 1px)!important;max-height:calc(100dvh - 90px)!important;overflow-y:auto!important;overscroll-behavior:contain}
+  .top nav.open{display:grid!important}
+}
 </style></head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 <header class="top"><div class="head">
