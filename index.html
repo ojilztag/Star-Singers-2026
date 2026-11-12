@@ -90,6 +90,29 @@ body{padding-top:80px}
   .top nav{position:absolute!important;top:calc(100% + 1px)!important;max-height:calc(100dvh - 90px)!important;overflow-y:auto!important;overscroll-behavior:contain}
   .top nav.open{display:grid!important}
 }
+
+/* Dedicated responsive card for the 10 audience-engagement encouragement prizes */
+.encouragement-card{max-width:900px;margin:26px auto 0;padding:clamp(18px,3vw,30px);border:1px solid var(--gold);border-radius:18px;background:radial-gradient(ellipse at 8% 0%,#d9bd781c,transparent 42%),linear-gradient(145deg,#102f40,#0b282d 58%,#271729);box-shadow:0 14px 34px #0004;color:#fff}
+.encouragement-card-head{display:flex;align-items:center;gap:16px;padding-bottom:18px;border-bottom:1px solid #d9bd7866}
+.encouragement-gift{flex:0 0 58px;width:58px;height:58px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(145deg,#f5d98d,#a77a32);font-size:30px;box-shadow:0 5px 16px #0004}
+.encouragement-heading{min-width:0;flex:1}.encouragement-eyebrow{margin:0 0 3px;color:var(--gold);font-size:10px;font-weight:800;letter-spacing:2.5px}
+.encouragement-heading h3{margin:0;color:#fff2d0;font:700 clamp(22px,3.4vw,31px)/1.2 var(--serif)}
+.encouragement-malayalam-title{margin:5px 0 0;color:#f1d58f;font-size:clamp(14px,2vw,18px);font-weight:700}
+.encouragement-count{flex:0 0 66px;width:66px;height:66px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--gold);border-radius:50%;color:#ffe2a0;font:700 25px/1 var(--serif)}
+.encouragement-count small{margin-top:5px;font:800 8px/1 var(--sans);letter-spacing:1.3px}
+.encouragement-intro{margin:18px 0 13px;color:#e5ece8;font-size:14px;text-align:center}
+.engagement-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.engagement-metrics span{display:flex;align-items:center;justify-content:center;gap:7px;min-height:43px;padding:9px 7px;border:1px solid #d9bd7866;border-radius:10px;background:#ffffff0a;color:#ffe6b1;font-size:12px;font-weight:700;text-align:center}
+.engagement-metrics b{color:var(--gold);font-size:16px}
+.encouragement-malayalam{margin:18px 0 0;color:#f2e4c6;font-size:14px;line-height:1.85;text-align:center}
+.encouragement-approval{display:flex;align-items:flex-start;gap:12px;margin-top:18px;padding:15px;border:1px solid #d9bd78a6;border-radius:12px;background:linear-gradient(100deg,#d9bd7818,#ffffff08)}
+.approval-icon{flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:#d9bd78;color:#102a2d;font-size:18px;font-weight:900}
+.encouragement-approval b{display:block;margin-bottom:4px;color:#ffe2a0;font-size:13px}
+.encouragement-approval p{margin:3px 0 0;color:#e4eae6;font-size:12px;line-height:1.65}
+.encouragement-separation{margin:16px 0 0;color:#dce7e2;font-size:12px;line-height:1.7;text-align:center}
+.encouragement-separation-ml{margin:5px 0 0;color:#f0dcae;font-size:12px;line-height:1.8;text-align:center}
+@media(max-width:600px){.encouragement-card{margin-top:20px;padding:17px 14px;border-radius:14px}.encouragement-card-head{gap:11px}.encouragement-gift{flex-basis:46px;width:46px;height:46px;border-radius:12px;font-size:24px}.encouragement-count{flex-basis:52px;width:52px;height:52px;font-size:21px}.encouragement-count small{font-size:7px}.engagement-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.engagement-metrics span{font-size:11px}.encouragement-intro,.encouragement-malayalam{font-size:13px}.encouragement-approval{padding:12px}}
+
 </style></head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 <header class="top"><div class="head">
@@ -150,7 +173,31 @@ body{padding-top:80px}
 <section class="section" id="judging"><div class="title"><p class="eyebrow">THE ART OF PERFORMANCE</p><h2>Jury <span>Evaluation</span></h2><p>വിലയിരുത്തൽ വിശദാംശങ്ങളും ഓരോ മാനദണ്ഡത്തിന്റെയും Marks/Weightage-ഉം ഔദ്യോഗികമായി അറിയിക്കും.</p></div>
 <div class="card-grid"><article class="info-card"><div class="icon">♫</div><h3>Vocal Performance</h3><p>ശബ്ദത്തിന്റെ ഗുണനിലവാരം, Pitch, Rhythm, സംഗീതാവതരണം എന്നിവ വിലയിരുത്തലിൽ ഉൾപ്പെടാം.</p></article><article class="info-card"><div class="icon">✧</div><h3>Presentation</h3><p>Stage Presence, ഭാവപ്രകടനം, മൊത്തത്തിലുള്ള അവതരണശൈലി എന്നിവ പരിഗണിക്കപ്പെടാം.</p></article><article class="info-card"><div class="icon">♥</div><h3>Theme & Expression</h3><p>Christmas Theme-നോടുള്ള ബന്ധവും ഗാനത്തിന്റെ വികാരാവിഷ്കാരവും പരിഗണിക്കപ്പെടാം.</p></article></div><div class="notice">ഇവ പരിഗണിക്കാവുന്ന പൊതുമേഖലകൾ മാത്രമാണ്. ഔദ്യോഗിക Scoring Criteria അല്ലെങ്കിൽ Weightage ആയി സ്ഥിരീകരിച്ചിട്ടില്ല. Jury-യുടെ ഔദ്യോഗിക മാനദണ്ഡങ്ങൾക്കായിരിക്കും മുൻഗണന.</div></section>
 <section class="section prizes" id="prizes"><div class="prize-inner"><div class="title"><p class="eyebrow">RECOGNISING EXCELLENCE</p><h2>Prizes & Awards</h2><p>സമ്മാനത്തുകയും പുരസ്കാരങ്ങളുടെ വിശദാംശങ്ങളും സംഘാടകർ ഔദ്യോഗികമായി അറിയിക്കും.</p></div>
-<div class="prize-grid"><article class="prize"><div class="medal">1</div><h3>First Prize</h3><b>To Be Announced</b><small>Winner · Star Singers 2026</small></article><article class="prize"><div class="medal">2</div><h3>Second Prize</h3><b>To Be Announced</b><small>Runner-up</small></article><article class="prize"><div class="medal">3</div><h3>Third Prize</h3><b>To Be Announced</b><small>Third Place</small></article></div><p class="special">✧ Special Awards <small>Additional awards, if any, will be announced officially. · അധിക പുരസ്കാരങ്ങൾ ഉണ്ടെങ്കിൽ ഔദ്യോഗികമായി അറിയിക്കും.</small></p><div class="encouragement-panel" style="margin-top:22px"><div class="encouragement-head"><span class="gift-icon">🎁</span><div><h3>10 Encouragement Prizes</h3><p>10 പ്രോത്സാഹന സമ്മാനങ്ങൾ</p></div><span class="sponsor-pill">OJILZTAG.COM</span></div><p>Ten encouragement prizes are included to recognise audience engagement and encourage participation. Any engagement-based selection must be verified and approved by the organisers.</p><p class="ml">പ്രേക്ഷക പങ്കാളിത്തം അംഗീകരിക്കാനും കൂടുതൽ പേരെ പ്രോത്സാഹിപ്പിക്കാനുമായി 10 Encouragement Prizes ഉൾപ്പെടുത്തിയിരിക്കുന്നു. Audience Engagement അടിസ്ഥാനമാക്കിയുള്ള തിരഞ്ഞെടുപ്പ് സംഘാടകർ പരിശോധിച്ച് അംഗീകരിക്കണം.</p><div class="notice" style="margin-top:14px"><b>Selection & Sponsor Confirmation:</b> Final criteria, prize details and sponsor confirmation must be approved by JKJ CREATIONS before publication. · തിരഞ്ഞെടുപ്പ് മാനദണ്ഡങ്ങൾ, സമ്മാനവിവരങ്ങൾ, Sponsor Confirmation എന്നിവ JKJ CREATIONS അംഗീകരിക്കണം.</div></div></div></section>
+<div class="prize-grid"><article class="prize"><div class="medal">1</div><h3>First Prize</h3><b>To Be Announced</b><small>Winner · Star Singers 2026</small></article><article class="prize"><div class="medal">2</div><h3>Second Prize</h3><b>To Be Announced</b><small>Runner-up</small></article><article class="prize"><div class="medal">3</div><h3>Third Prize</h3><b>To Be Announced</b><small>Third Place</small></article></div><p class="special">✧ Special Awards <small>Additional awards, if any, will be announced officially. · അധിക പുരസ്കാരങ്ങൾ ഉണ്ടെങ്കിൽ ഔദ്യോഗികമായി അറിയിക്കും.</small></p><div class="encouragement-card" aria-labelledby="encouragement-title">
+<div class="encouragement-card-head">
+  <span class="encouragement-gift" aria-hidden="true">🎁</span>
+  <div class="encouragement-heading">
+    <p class="encouragement-eyebrow">SPECIAL RECOGNITION</p>
+    <h3 id="encouragement-title">10 Encouragement Prizes</h3>
+    <p class="encouragement-malayalam-title">10 പ്രോത്സാഹന സമ്മാനങ്ങൾ</p>
+  </div>
+  <span class="encouragement-count">10 <small>PRIZES</small></span>
+</div>
+<p class="encouragement-intro">These 10 prizes are awarded separately to recognise videos that achieve strong audience engagement through:</p>
+<div class="engagement-metrics" aria-label="Audience engagement factors">
+  <span><b aria-hidden="true">♥</b> Likes</span>
+  <span><b aria-hidden="true">▶</b> Views</span>
+  <span><b aria-hidden="true">★</b> Followers</span>
+  <span><b aria-hidden="true">↗</b> Overall Engagement</span>
+</div>
+<p class="encouragement-malayalam">കൂടുതൽ Likes, Views, Followers എന്നിവയും മികച്ച Audience Engagement-ഉം നേടുന്ന വീഡിയോകളിൽ നിന്ന് 10 പേരെ പ്രോത്സാഹന സമ്മാനങ്ങൾക്കായി തിരഞ്ഞെടുക്കുന്നതാണ്.</p>
+<div class="encouragement-approval">
+  <span class="approval-icon" aria-hidden="true">✓</span>
+  <div><b>Verification & Approval</b><p>All engagement-based selections will be reviewed, verified and approved by the organisers.</p><p>പങ്കാളിത്തത്തെ അടിസ്ഥാനമാക്കിയുള്ള തിരഞ്ഞെടുപ്പുകൾ സംഘാടകർ പരിശോധിച്ച് ഉറപ്പുവരുത്തി അംഗീകരിക്കുന്നതാണ്.</p></div>
+</div>
+<p class="encouragement-separation">These are separate encouragement awards and do not replace or affect the First, Second or Third Prizes, which are awarded according to the competition's song and performance evaluation.</p>
+<p class="encouragement-separation-ml">ഈ പ്രോത്സാഹന സമ്മാനങ്ങൾ ഒന്നാം, രണ്ടാം, മൂന്നാം സമ്മാനങ്ങളിൽ നിന്ന് വ്യത്യസ്തമാണ്. ആ സമ്മാനങ്ങൾ പാട്ടിന്റെയും അവതരണത്തിന്റെയും മികവ് വിലയിരുത്തിയാണ് നൽകുന്നത്.</p>
+</div></div></section>
 <section class="section" id="schedule"><div class="title"><p class="eyebrow">IMPORTANT DATES</p><h2>Event <span>Schedule</span></h2><p>തീയതികൾ സ്ഥിരീകരിക്കുന്നതനുസരിച്ച് ഇവിടെ Update ചെയ്യുന്നതാണ്.</p></div><div class="timeline"><article><b>Registration Opens</b><span>To be announced</span></article><article><b>Registration Closes</b><span>To be announced</span></article><article><b>Video Submission</b><span>To be announced</span></article><article><b>Results Announcement</b><span>To be announced</span></article></div></section>
 <section class="section alt" id="registration"><div class="title"><p class="eyebrow">YOUR VOICE BELONGS HERE</p><h2>Ready to <span>shine?</span></h2><p>Entries ഔദ്യോഗികമായി ആരംഭിക്കുമ്പോൾ Registration-ഉം Participant Portal Access-ഉം സജീവമാക്കും.</p></div><div class="contact-panel"><h3>Participant Registration</h3><p class="lead">ഔദ്യോഗിക Registration Link ഇതുവരെ ലഭ്യമായിട്ടില്ല. രജിസ്ട്രേഷൻ അറിയിപ്പിനും സ്ഥിരീകരിച്ച Entry Instructions-നും ഈ പേജ് പരിശോധിക്കുക.</p><p><span class="btn red" aria-disabled="true">Registration Opening Soon · ഉടൻ ആരംഭിക്കും</span></p><small style="color:var(--muted)">No participant data is being collected on this page at present.</small></div></section>
 <section class="section" id="updates"><div class="title"><p class="eyebrow">OFFICIAL INFORMATION</p><h2>Updates & <span>Announcements</span></h2><p>പ്രധാന Event വിവരങ്ങളും അറിയിപ്പുകളും ഈ ഭാഗത്ത് പ്രസിദ്ധീകരിക്കും.</p></div><div class="updates"><p><b>●</b> Registration opening date — To be announced · രജിസ്ട്രേഷൻ തീയതി പിന്നീട് അറിയിക്കും</p><p><b>●</b> Official competition rules — Subject to confirmation · ഔദ്യോഗിക നിയമങ്ങൾ സ്ഥിരീകരിക്കും</p><p><b>●</b> Participation — Individual / Single Category · വ്യക്തിഗത വിഭാഗം</p><p><b>●</b> Prize details and 10 Encouragement Prizes — To be announced · സമ്മാനവിവരങ്ങൾ പിന്നീട് അറിയിക്കും</p><p><b>●</b> Video submission instructions — Shared with registered participants · രജിസ്റ്റർ ചെയ്തവർക്ക് നിർദേശങ്ങൾ നൽകും</p><p><b>●</b> Results announcement — To be announced · ഫലം പിന്നീട് അറിയിക്കും</p><p><a href="notices.html" style="color:#f4d98e;font-weight:700">Open Official Notices →</a></p></div></section>
