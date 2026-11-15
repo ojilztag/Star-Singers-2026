@@ -27,7 +27,7 @@ const REG_HEADERS = [
 const NOTICE_HEADERS = ['Notice ID','Created At','Updated At','Title','Body','Publish Date','Status','Updated By'];
 const AUDIT_HEADERS = ['Timestamp','Admin','Action','Record ID','Details'];
 const SETTINGS_HEADERS = ['Setting','Value','Description'];
-const FINANCE_HEADERS = ['Date','Tracking Ref','Participant Name','UTR / Transaction ID','Expected Fee','Payment Status','Verified Amount','Verified By','Verification Date','Notes'];
+const FINANCE_HEADERS = ['Submitted At','Tracking Ref','Participant Name','UTR / Transaction ID','Expected Fee','Payment Status'];
 
 function setupStarSingersBackend() {
   const props = PropertiesService.getScriptProperties();
