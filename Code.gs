@@ -234,7 +234,7 @@ function register_(p) {
     const row=sh.getLastRow();sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');
     audit_('PUBLIC','REGISTRATION_SUBMITTED',ref,'Photo and payment proof stored in private Drive folders.');
     // Email is sent only after a new registration has been committed successfully.
-    sendRegistrationNotification_(ref, {name:name, parish:parish, diocese:diocese, country:country, state:state, district:district, phone:phone, fee:500});
+    sendRegistrationNotification_(ref, {participantId:'Not yet issued — generated after payment verification and approval', name:name, parish:parish, diocese:diocese, country:country, state:state, district:district, phone:phone, fee:500});
     const result={success:true,trackingRef:ref,message:'Registration request received. Payment and documents are pending organiser verification.'};
     if(clientToken)CacheService.getScriptCache().put('SS26_SUBMIT_'+clientToken,JSON.stringify(result),21600);
     return result;
@@ -245,7 +245,7 @@ function register_(p) {
     throw err;
   } finally {lock.releaseLock();}
 }
-function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\\s+/g,' ').trim();}
+function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();}
 function duplicatePhoneKey_(v){return String(v||'').replace(/\\D/g,'');}
 function initAdmin_(){const p=PropertiesService.getScriptProperties();if(!p.getProperty('ADMIN_HASH'))throw new Error('Admin not initialized.');}
 function login_(p) {
@@ -344,7 +344,7 @@ function sendRegistrationNotification_(ref, info) {
     const body=[
       'A new participant registration was successfully submitted.',
       '',
-      'Tracking Reference: '+ref,
+      'Tracking Reference: '+ref,\n      'Participant ID: '+(info.participantId||'Not yet issued'),
       'Participant Name: '+info.name,
       'Parish: '+info.parish,
       'Diocese: '+info.diocese,
