@@ -308,8 +308,8 @@ function renderNoticeTicker(){
  if(!ticker)return;
  const notices=(window.STAR_SINGERS_NOTICES||[]).slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
  if(!notices.length){ticker.innerHTML='<span>Official notices and announcements will appear here.</span>';return;}
- const links=notices.map((n,i)=>'<a href="notices.html#notice-'+i+'">'+String(n.title||"Official Notice")+' · '+String(n.summary||"")+'</a>').join("");
- ticker.innerHTML=links+links;
+ const makeLinks=()=>{const fragment=document.createDocumentFragment();notices.forEach((n,i)=>{const link=document.createElement('a');link.href='notices.html#notice-'+i;link.textContent=String(n.title||'Official Notice')+' · '+String(n.summary||'');fragment.appendChild(link);});return fragment;};
+ ticker.replaceChildren(makeLinks(),makeLinks());
 }
 renderNoticeTicker();
 window.addEventListener('ss26:notices-loaded',renderNoticeTicker);

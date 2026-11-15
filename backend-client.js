@@ -27,7 +27,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   const cleanup=()=>{if(finished)return;finished=true;clearTimeout(timer);window.removeEventListener('message',onMessage);f.remove();frame.remove();};
   const timer=setTimeout(()=>{cleanup();done({success:false,error:'No reply was received from the Apps Script Web App after 90 seconds. Check the Admin Panel before retrying to avoid duplicate registrations.'});},90000);
   function onMessage(event){
-   const d=event.data;if(!d||d.type!=='SS26_REGISTRATION_RESULT'||d.token!==payload.clientToken)return;
+   const d=event.data;if(event.source!==frame.contentWindow||!['https://script.google.com','https://script.googleusercontent.com'].includes(event.origin)||!d||d.type!=='SS26_REGISTRATION_RESULT'||d.token!==payload.clientToken)return;
    cleanup();done(d);
   }
   window.addEventListener('message',onMessage);f.submit();
@@ -42,6 +42,10 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   const photo=form.querySelector('[name="participantPhoto"]').files[0];
   const originalPhoto=form.querySelector('#participantPhotoOriginal')?.files[0]||photo;
   const proof=form.querySelector('[name="paymentProof"]').files[0];
+   const acceptedImageTypes=['image/jpeg','image/png','image/webp','image/heic'];
+   if(!acceptedImageTypes.includes(photo.type)){status('Participant photo must be JPG, PNG, WebP or HEIC.',true);return;}
+   if(!acceptedImageTypes.includes(originalPhoto.type)){status('Original participant photo must be JPG, PNG, WebP or HEIC.',true);return;}
+   if(!(acceptedImageTypes.includes(proof.type)||proof.type==='application/pdf')){status('Payment proof must be JPG, PNG, WebP, HEIC or PDF.',true);return;}
   const utr=form.querySelector('[name="utr"]').value.trim();
   busy=true;const submit=form.querySelector('[type="submit"]');if(submit){submit.disabled=true;submit.textContent='Submitting securely…';}
   status('Uploading participant photo and payment receipt to private Google Drive folders…',false);
