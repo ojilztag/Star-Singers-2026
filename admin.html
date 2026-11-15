@@ -104,43 +104,41 @@ function fitText(ctx,text,maxWidth){
 function drawEntryCard(r,photo,logo){
  const c=$('entryCanvas'),ctx=c.getContext('2d'),W=c.width,H=c.height;
  ctx.clearRect(0,0,W,H);
- const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#710d18');bg.addColorStop(.48,'#a81720');bg.addColorStop(1,'#071f19');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
- // Warm festive light and subtle snow.
- for(let i=0;i<55;i++){const x=(i*173)%W,y=(i*251)%H;ctx.beginPath();ctx.arc(x,y,2+(i%4),0,Math.PI*2);ctx.fillStyle='rgba(255,220,140,'+(.08+(i%4)*.025)+')';ctx.fill();}
+ // Premium, balanced portrait layout: compact event header, prominent photo, clean identity block.
+ const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#720d19');bg.addColorStop(.52,'#a91a25');bg.addColorStop(1,'#102b24');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+ for(let i=0;i<48;i++){const x=(i*173)%W,y=(i*251)%H;ctx.beginPath();ctx.arc(x,y,1.5+(i%3),0,Math.PI*2);ctx.fillStyle='rgba(255,220,140,'+(.07+(i%3)*.025)+')';ctx.fill();}
  ctx.strokeStyle='#e7bd61';ctx.lineWidth=18;rr(ctx,18,18,W-36,H-36,46);ctx.stroke();
- ctx.strokeStyle='rgba(255,236,176,.75)';ctx.lineWidth=3;rr(ctx,39,39,W-78,H-78,34);ctx.stroke();
- // Gold festive top ornament.
- ctx.fillStyle='#d9bd78';ctx.font='bold 27px Arial';ctx.textAlign='center';ctx.fillText('✦  ✧  ✦',W/2,91);
- if(logo){
-  const maxW=260,maxH=115,scale=Math.min(maxW/logo.width,maxH/logo.height);
-  ctx.drawImage(logo,(W-logo.width*scale)/2,108,logo.width*scale,logo.height*scale);
- }else{
-  ctx.fillStyle='#fff4d4';ctx.font='bold 56px Georgia';ctx.fillText('JKJ',W/2,177);
-  ctx.font='bold 27px Arial';ctx.fillText('CREATIONS',W/2,212);
- }
- ctx.fillStyle='#f5d98d';ctx.font='bold 24px Arial';ctx.fillText('FAITH  •  CREATIVITY  •  SERVICE',W/2,250);
- ctx.fillStyle='#fff4dc';ctx.font='bold 52px Georgia';ctx.fillText('NAKSHATHRA GAYAKAR',W/2,326);
- ctx.fillStyle='#f7d27d';ctx.font='bold 39px Arial';ctx.fillText('STAR SINGERS 2026',W/2,379);
- ctx.fillStyle='#fff';ctx.font='25px Arial';ctx.fillText('AN ONLINE CHRISTMAS CAROL SINGING COMPETITION',W/2,424);
- // Header ribbon.
- const ribbon=ctx.createLinearGradient(120,0,W-120,0);ribbon.addColorStop(0,'#8b641f');ribbon.addColorStop(.5,'#fff0b8');ribbon.addColorStop(1,'#8b641f');
- ctx.fillStyle=ribbon;rr(ctx,105,470,W-210,82,18);ctx.fill();
- ctx.fillStyle='#68121a';ctx.font='bold 38px Georgia';ctx.fillText('OFFICIAL ENTRY CARD',W/2,524);
- // Participant portrait.
- const px=300,py=590,pw=400,ph=440;
- ctx.save();rr(ctx,px-12,py-12,pw+24,ph+24,32);ctx.fillStyle='#f3d17b';ctx.fill();ctx.clip();
- ctx.beginPath();rr(ctx,px,py,pw,ph,24);ctx.clip();
+ ctx.strokeStyle='rgba(255,236,176,.78)';ctx.lineWidth=3;rr(ctx,40,40,W-80,H-80,34);ctx.stroke();
+ ctx.textAlign='center';ctx.textBaseline='alphabetic';
+ ctx.fillStyle='#e9c875';ctx.font='bold 25px Georgia';ctx.fillText('✦  ✧  ✦',W/2,91);
+ if(logo){const maxW=210,maxH=92,scale=Math.min(maxW/logo.width,maxH/logo.height);ctx.drawImage(logo,(W-logo.width*scale)/2,103,logo.width*scale,logo.height*scale);}else{ctx.fillStyle='#fff4d4';ctx.font='bold 48px Georgia';ctx.fillText('JKJ',W/2,160);ctx.font='bold 23px Arial';ctx.fillText('CREATIONS',W/2,190);}
+ ctx.fillStyle='#f5d98d';ctx.font='bold 21px Arial';ctx.fillText('FAITH  •  CREATIVITY  •  SERVICE',W/2,218);
+ ctx.fillStyle='#fff4dc';ctx.font='bold 43px Georgia';ctx.fillText('NAKSHATHRA GAYAKAR',W/2,285);
+ ctx.fillStyle='#f7d27d';ctx.font='bold 35px Arial';ctx.fillText('STAR SINGERS 2026',W/2,333);
+ ctx.fillStyle='#fff';ctx.font='21px Arial';ctx.fillText('AN ONLINE CHRISTMAS CAROL SINGING COMPETITION',W/2,371);
+ const ribbon=ctx.createLinearGradient(135,0,W-135,0);ribbon.addColorStop(0,'#8b641f');ribbon.addColorStop(.5,'#fff0b8');ribbon.addColorStop(1,'#8b641f');
+ ctx.fillStyle=ribbon;rr(ctx,115,397,W-230,68,18);ctx.fill();
+ ctx.fillStyle='#68121a';ctx.font='bold 33px Georgia';ctx.fillText('OFFICIAL ENTRY CARD',W/2,442);
+ // Photo is framed consistently and centred, with breathing room above and below.
+ const pw=390,ph=420,px=(W-pw)/2,py=500;
+ ctx.save();rr(ctx,px-11,py-11,pw+22,ph+22,30);ctx.fillStyle='#f3d17b';ctx.fill();
+ ctx.beginPath();rr(ctx,px,py,pw,ph,21);ctx.clip();
  const scale=Math.max(pw/photo.width,ph/photo.height),sw=pw/scale,sh=ph/scale,sx=(photo.width-sw)/2,sy=(photo.height-sh)/2;
  ctx.drawImage(photo,sx,sy,sw,sh,px,py,pw,ph);ctx.restore();
- // Name plate.
- ctx.fillStyle='#fff0c5';rr(ctx,95,1070,W-190,100,24);ctx.fill();
- ctx.strokeStyle='#d5a844';ctx.lineWidth=5;rr(ctx,95,1070,W-190,100,24);ctx.stroke();
- ctx.fillStyle='#6f151c';ctx.font='bold 48px Arial';ctx.fillText(fitText(ctx,r.participantName||'PARTICIPANT',W-250),W/2,1134);
- ctx.fillStyle='#f7d78d';ctx.font='bold 27px Arial';ctx.fillText('PARTICIPANT ID',W/2,1208);
- ctx.fillStyle='#0b382b';rr(ctx,120,1230,W-240,88,18);ctx.fill();
- ctx.strokeStyle='#d7b45c';ctx.lineWidth=4;rr(ctx,120,1244,W-240,76,18);ctx.stroke();
- ctx.fillStyle='#fff6d8';ctx.font='bold 36px Arial';ctx.fillText(fitText(ctx,r.registrationId||'',W-290),W/2,1287);
- // Participant ID is the only identifier shown on this official entry card.
+ // Name: one clean, centred plate. Font scales down for long names instead of clipping.
+ ctx.fillStyle='#fff0c5';rr(ctx,105,966,W-210,100,22);ctx.fill();
+ ctx.strokeStyle='#d5a844';ctx.lineWidth=5;rr(ctx,105,966,W-210,100,22);ctx.stroke();
+ let nameFont=48;ctx.font='bold '+nameFont+'px Arial';while(nameFont>30&&ctx.measureText(String(r.participantName||'PARTICIPANT')).width>W-270){nameFont-=2;ctx.font='bold '+nameFont+'px Arial';}
+ ctx.fillStyle='#6f151c';ctx.fillText(String(r.participantName||'PARTICIPANT'),W/2,1030);
+ // Participant ID is visually subordinate to the name, but remains easy to read.
+ ctx.fillStyle='#f7d78d';ctx.font='bold 25px Arial';ctx.fillText('PARTICIPANT ID',W/2,1114);
+ ctx.fillStyle='#0b382b';rr(ctx,155,1135,W-310,82,18);ctx.fill();
+ ctx.strokeStyle='#d7b45c';ctx.lineWidth=4;rr(ctx,155,1135,W-310,82,18);ctx.stroke();
+ let idFont=37;ctx.font='bold '+idFont+'px Arial';while(idFont>25&&ctx.measureText(String(r.registrationId||'')).width>W-370){idFont-=2;ctx.font='bold '+idFont+'px Arial';}
+ ctx.fillStyle='#fff6d8';ctx.fillText(String(r.registrationId||''),W/2,1188);
+ // Restrained footer anchors the composition and balances the lower margin.
+ ctx.fillStyle='rgba(255,239,196,.9)';ctx.font='bold 19px Arial';ctx.fillText('JKJ CREATIONS  •  OFFICIAL PARTICIPANT',W/2,1282);
+ ctx.fillStyle='rgba(255,239,196,.75)';ctx.font='17px Arial';ctx.fillText('Keep this Entry Card safe',W/2,1312);
 }
 function entryMessage(r){
  return '🎄 NAKSHATHRA GAYAKAR – STAR SINGERS 2026\nOFFICIAL ENTRY CARD\n\nParticipant: '+(r.participantName||'')+'\nParticipant ID: '+(r.registrationId||'')+'\n\nYour participation is officially approved. Please keep this Entry Card safe.\n\nJKJ CREATIONS';
