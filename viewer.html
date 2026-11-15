@@ -12,7 +12,7 @@
 <div id="proofModal" class="modal"><div class="modalbox"><div class="row"><b>Payment Proof · Secure Viewer</b><button id="closeProof" class="right">Close</button></div><div id="proofStatus" class="muted">Loading…</div><img id="proofImage" class="preview hidden" alt="Payment proof"><iframe id="proofPdf" class="preview hidden" style="width:100%;height:70vh;border:0"></iframe></div></div>
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbxPwRrD35fv7UWOJO6EN6eqIxT5czuaIBjbU8qR9xfdFYuod6bB-RrNj6r0hDuma6Qk6Q/exec';
-const GOOGLE_CLIENT_ID='YOUR_GOOGLE_OAUTH_CLIENT_ID.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID='96691726006-qso86p9s5pq6mjrfiionmene5qhovp5f.apps.googleusercontent.com';
 let sessionToken=sessionStorage.getItem('ss26ViewerSession')||'',rows=[],seq=0,busy=false;
 const $=id=>document.getElementById(id);
 function status(id,text,error){$(id).textContent=text;$(id).classList.remove('hidden');$(id).classList.toggle('error',!!error);}
