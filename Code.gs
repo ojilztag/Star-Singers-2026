@@ -163,7 +163,7 @@ function register_(p) {
   const name=clean_(p.participantName,120),parish=clean_(p.parishName,160),diocese=clean_(p.diocese,160);
   const country=clean_(p.country,100),state=clean_(p.state,100),district=clean_(p.district,100);
   const phone=String(p.phone||'').trim(),utr=clean_(p.utr,100);
-  if(!name||!parish||!diocese||!country||!state||!district||!phone||!utr)throw new Error('Complete all required fields.');
+  if(!name||!parish||!diocese||!country||!state||!district||!phone)throw new Error('Complete all required fields.');
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
   if(String(p.feeConsent)!=='true')throw new Error('Registration fee consent is required.');
   if(Number(p.fee)!==500)throw new Error('Registration fee must be ₹500.');
