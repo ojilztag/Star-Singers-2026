@@ -426,15 +426,22 @@ function viewerDashboard_(p) {
 }
 function viewerProof_(p) {
   requireViewer_(p.sessionToken);
-  const ref=clean_(p.trackingRef,40),sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  const ref=clean_(p.trackingRef,40);
+  if(!ref)throw new Error('Tracking Reference is required.');
+  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
   if(last<2)throw new Error('No registration found.');
   const cell=sh.getRange(2,1,last-1,1).createTextFinder(ref).matchEntireCell(true).findNext();
   if(!cell)throw new Error('Registration not found.');
   const row=sh.getRange(cell.getRow(),1,1,REG_HEADERS.length).getValues()[0],fileId=String(row[17]||'');
   if(!fileId)throw new Error('Payment proof is not available.');
-  const file=DriveApp.getFileById(fileId),blob=file.getBlob(),bytes=blob.getBytes();
-  if(bytes.length>CFG.MAX_FILE_BYTES)throw new Error('Payment proof exceeds the secure preview limit.');
-  return {success:true,mimeType:blob.getContentType()||'application/octet-stream',fileName:file.getName(),base64:Utilities.base64Encode(bytes)};
+  const file=DriveApp.getFileById(fileId);
+  const maxPreviewBytes=1024*1024,size=file.getSize();
+  if(size>maxPreviewBytes)throw new Error('This payment proof is larger than 1 MB. Please contact the event Admin to verify it.');
+  const blob=file.getBlob(),mime=String(blob.getContentType()||'').toLowerCase();
+  if(['application/pdf','image/jpeg','image/png','image/webp'].indexOf(mime)===-1)throw new Error('Only PDF, JPG, PNG and WEBP payment proofs can be previewed.');
+  const bytes=blob.getBytes();
+  if(bytes.length>maxPreviewBytes)throw new Error('Payment proof exceeds the secure preview limit.');
+  return {success:true,mimeType:mime,fileName:file.getName(),base64:Utilities.base64Encode(bytes)};
 }
 function viewerLogout_(p) {
   const token=String(p.sessionToken||'');if(token)CacheService.getScriptCache().remove('SS26_VIEWER_'+token);
