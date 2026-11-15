@@ -158,6 +158,12 @@ function doPost(e) {
       case 'adminlogout': out=logout_(p); break;
       case 'getnotificationsettings': out=getNotificationSettings_(p); break;
       case 'savenotificationsettings': out=saveNotificationSettings_(p); break;
+      case 'getviewersettings': out=getViewerSettings_(p); break;
+      case 'saveviewersettings': out=saveViewerSettings_(p); break;
+      case 'viewerlogin': out=viewerLogin_(p); break;
+      case 'viewerdashboard': out=viewerDashboard_(p); break;
+      case 'viewerproof': out=viewerProof_(p); break;
+      case 'viewerlogout': out=viewerLogout_(p); break;
       default: throw new Error('Unsupported action.');
     }
     return reply_('SS26_ADMIN_RESULT',out,p.clientToken);
@@ -356,6 +362,73 @@ function sendRegistrationNotification_(ref, info) {
     // Do not roll back a valid registration because the email service failed.
     audit_('SYSTEM','REGISTRATION_EMAIL_FAILED',ref,String(err&&err.message||err).slice(0,250));
   }
+}
+
+
+function getViewerSettings_(p) {
+  requireAdmin_(p.sessionToken);
+  const raw=PropertiesService.getScriptProperties().getProperty('SS26_VIEWER_ALLOWED_EMAILS')||'';
+  return {success:true,emails:raw.split(/[;,\\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)};
+}
+function saveViewerSettings_(p) {
+  const admin=requireAdmin_(p.sessionToken);
+  const emails=[...new Set(String(p.emails||'').split(/[;,\\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean))];
+  if(emails.length>100)throw new Error('A maximum of 100 viewer email addresses is allowed.');
+  const invalid=emails.filter(x=>!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(x));
+  if(invalid.length)throw new Error('Invalid email address: '+invalid[0]);
+  PropertiesService.getScriptProperties().setProperty('SS26_VIEWER_ALLOWED_EMAILS',emails.join(','));
+  audit_(admin.user,'VIEWER_ACCESS_LIST_UPDATED','VIEWER',emails.length+' allowed email(s).');
+  return {success:true,emails:emails};
+}
+function viewerLogin_(p) {
+  const idToken=String(p.idToken||'');
+  if(!idToken||idToken.length>10000)throw new Error('Google sign-in token is missing or invalid.');
+  const clientId=PropertiesService.getScriptProperties().getProperty('GOOGLE_OAUTH_CLIENT_ID');
+  if(!clientId)throw new Error('Google OAuth Client ID is not configured by the system administrator.');
+  const response=UrlFetchApp.fetch('https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(idToken),{muteHttpExceptions:true});
+  if(response.getResponseCode()!==200)throw new Error('Google sign-in could not be verified. Please sign in again.');
+  const claims=JSON.parse(response.getContentText());
+  if(claims.aud!==clientId||String(claims.email_verified)!=='true')throw new Error('Google account verification failed.');
+  const email=String(claims.email||'').trim().toLowerCase();
+  const allowed=(PropertiesService.getScriptProperties().getProperty('SS26_VIEWER_ALLOWED_EMAILS')||'').split(',').map(x=>x.trim().toLowerCase());
+  if(!email||!allowed.includes(email))throw new Error('This Google account has not been authorised by the Admin.');
+  const token=Utilities.getUuid().replace(/-/g,'')+Utilities.getUuid().replace(/-/g,'');
+  CacheService.getScriptCache().put('SS26_VIEWER_'+token,JSON.stringify({email:email}),CFG.SESSION_TTL);
+  audit_(email,'VIEWER_LOGIN','VIEWER','Authorised viewer signed in.');
+  return {success:true,sessionToken:token,email:email};
+}
+function requireViewer_(token) {
+  if(!/^[a-f0-9]{64}$/i.test(String(token||'')))throw new Error('Viewer session invalid. Sign in again.');
+  const cache=CacheService.getScriptCache(),key='SS26_VIEWER_'+token,raw=cache.get(key);
+  if(!raw)throw new Error('Viewer session expired. Sign in again.');
+  const s=JSON.parse(raw),allowed=(PropertiesService.getScriptProperties().getProperty('SS26_VIEWER_ALLOWED_EMAILS')||'').split(',').map(x=>x.trim().toLowerCase());
+  if(!allowed.includes(String(s.email||'').toLowerCase())){cache.remove(key);throw new Error('Viewer access has been revoked.');}
+  cache.put(key,raw,CFG.SESSION_TTL);return s;
+}
+function viewerDashboard_(p) {
+  const viewer=requireViewer_(p.sessionToken),sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
+  const records=rows.map(r=>{
+    const d=r[2] instanceof Date?r[2]:new Date(r[2]);
+    return {participantId:String(r[1]||''),participantName:String(r[3]||''),parish:String(r[4]||''),diocese:String(r[5]||''),country:String(r[6]||''),state:String(r[7]||''),district:String(r[8]||''),whatsapp:String(r[9]||''),entryType:String(r[10]||''),registrationStatus:String(r[20]||''),paymentProofAvailable:!!r[17],trackingRef:String(r[0]||''),submittedAt:isNaN(d.getTime())?'':Utilities.formatDate(d,Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a')};
+  }).reverse();
+  return {success:true,email:viewer.email,records:records};
+}
+function viewerProof_(p) {
+  requireViewer_(p.sessionToken);
+  const ref=clean_(p.trackingRef,40),sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  if(last<2)throw new Error('No registration found.');
+  const cell=sh.getRange(2,1,last-1,1).createTextFinder(ref).matchEntireCell(true).findNext();
+  if(!cell)throw new Error('Registration not found.');
+  const row=sh.getRange(cell.getRow(),1,1,REG_HEADERS.length).getValues()[0],fileId=String(row[17]||'');
+  if(!fileId)throw new Error('Payment proof is not available.');
+  const file=DriveApp.getFileById(fileId),blob=file.getBlob(),bytes=blob.getBytes();
+  if(bytes.length>CFG.MAX_FILE_BYTES)throw new Error('Payment proof exceeds the secure preview limit.');
+  return {success:true,mimeType:blob.getContentType()||'application/octet-stream',fileName:file.getName(),base64:Utilities.base64Encode(bytes)};
+}
+function viewerLogout_(p) {
+  const token=String(p.sessionToken||'');if(token)CacheService.getScriptCache().remove('SS26_VIEWER_'+token);
+  return {success:true};
 }
 
 function verifyPayment_(p) {
