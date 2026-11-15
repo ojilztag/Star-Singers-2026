@@ -237,8 +237,8 @@ function register_(p) {
     throw err;
   } finally {lock.releaseLock();}
 }
-function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\\s+/g,' ').trim();}
-function duplicatePhoneKey_(v){return String(v||'').replace(/\\D/g,'');}
+function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();}
+function duplicatePhoneKey_(v){return String(v||'').replace(/\D/g,'');}
 function initAdmin_(){const p=PropertiesService.getScriptProperties();if(!p.getProperty('ADMIN_HASH'))throw new Error('Admin not initialized.');}
 function login_(p) {
   initAdmin_();const props=PropertiesService.getScriptProperties();
