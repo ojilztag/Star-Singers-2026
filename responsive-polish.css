@@ -1,0 +1,59 @@
+/* STAR SINGERS 2026 — cross-device responsive polish
+   Shared by the public website, admin dashboard and notices page. */
+:root{color-scheme:light}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-width:320px;max-width:100%;overflow-x:hidden}
+img,video,canvas,svg{max-width:100%;height:auto}
+button,input,select,textarea{font:inherit;max-width:100%}
+button,a,input,select,textarea{touch-action:manipulation}
+button,[role=button],a.btn{min-height:44px}
+a{overflow-wrap:anywhere}
+:focus-visible{outline:3px solid #d9bd78;outline-offset:3px}
+.wrap,main,.container{width:min(100% - 32px,1240px);margin-inline:auto}
+header img,nav img{max-width:100%;object-fit:contain}
+input,select,textarea{min-width:0}
+table{display:block;max-width:100%;overflow-x:auto}
+.notice,.card,.feature,.info-card,.rule,.timeline article{min-width:0;overflow-wrap:anywhere}
+@media(min-width:1440px){
+ body{font-size:16px}
+ .wrap,main,.container{width:min(100% - 64px,1320px)}
+}
+@media(max-width:900px){
+ .features{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .about{grid-template-columns:minmax(0,1fr);gap:24px}
+ .about .poster{width:min(100%,420px);margin-inline:auto}
+ .section{margin-inline:12px}
+}
+@media(max-width:650px){
+ .wrap,main,.container{width:calc(100% - 24px)}
+ .section{width:calc(100% - 20px);margin:14px auto;padding:30px 14px;border-radius:15px}
+ .features,.timeline,.card-grid,.rule-list,.two{grid-template-columns:minmax(0,1fr)}
+ .form-grid{grid-template-columns:minmax(0,1fr)!important}
+ .form-grid>*,.form-grid label,.form-grid .full{min-width:0;width:100%}
+ .form-grid input,.form-grid select,.form-grid textarea{width:100%;min-width:0}
+ .head{gap:12px}
+ nav{max-width:100%}
+ .notice-highlight{margin-inline:10px;max-width:calc(100% - 20px)}
+ .notice-highlight-label{padding-inline:9px;font-size:10px}
+ .notice-highlight-window{padding-inline:9px}
+ .notice-highlight-link{padding-inline:9px}
+ .entry-modal,.photo-modal{padding:8px}
+ .entry-modal-box,.photo-modal-box{width:100%;padding:10px}
+ .entry-modal-actions button,.actions button{flex:1 1 100%;width:100%}
+ .details{grid-template-columns:minmax(0,1fr)!important}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .notice{grid-template-columns:minmax(0,1fr)!important;gap:8px}
+ .notice .date{display:flex;gap:8px;align-items:center}
+}
+@media(max-width:380px){
+ .wrap,main,.container{width:calc(100% - 18px)}
+ .section{padding:24px 11px}
+ .grid{grid-template-columns:minmax(0,1fr)}
+ .notice-highlight-label{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
