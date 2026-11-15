@@ -198,7 +198,7 @@ function decodeFile_(obj,label) {
   if(!bytes.length||bytes.length>CFG.MAX_FILE_BYTES)throw new Error(label+' must be smaller than 3 MB.');
   const mime=String(obj.mimeType);
   if(label==='Participant Photo'&&!/^image\/(jpeg|png|webp|heic)$/.test(mime))throw new Error('Participant photo must be JPG, PNG, WebP or HEIC.');
-  if(label==='Payment Proof'&&!(/^image\/(jpeg|png|webp|heic)$/.test(mime)||mime==='application/pdf'))throw new Error('Payment proof must be an image or PDF.');
+  if(label==='Payment Proof'&&!(/^image\/(jpeg|png|webp)$/.test(mime)||mime==='application/pdf'))throw new Error('Payment proof must be JPG, PNG, WebP or PDF.');
   const safeName=String(obj.name).replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,90);
   return Utilities.newBlob(bytes,mime,safeName);
 }
@@ -220,7 +220,7 @@ function register_(p) {
   const originalPhoto=decodeFile_(p.originalPhoto||p.photo,'Original Participant Photo');
   const proof=decodeFile_(p.paymentProof,'Payment Proof');
   const lock=LockService.getScriptLock();lock.waitLock(20000);
-  let photoSaved=null,originalSaved=null,proofSaved=null;
+  let photoSaved=null,originalSaved=null,proofSaved=null,rowCommitted=false;
   try {
     const sh=sheet_(CFG.REG_SHEET,REG_HEADERS);
     // Block only an exact participant-name + WhatsApp-number duplicate.
@@ -239,7 +239,7 @@ function register_(p) {
     const now=new Date();
     sh.appendRow([ref,'',now,name,parish,diocese,country,state,district,phone,'Individual / Single Entry',500,utr,
       photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
-    const row=sh.getLastRow();sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');
+    const row=sh.getLastRow();rowCommitted=true;try{sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');}catch(formatError){audit_('SYSTEM','REGISTRATION_DATE_FORMAT_WARNING',ref,String(formatError&&formatError.message||formatError).slice(0,200));}
     audit_('PUBLIC','REGISTRATION_SUBMITTED',ref,'Photo and payment proof stored in private Drive folders.');
     // Email is sent only after a new registration has been committed successfully.
     sendRegistrationNotification_(ref, {participantId:'Not yet issued — generated after payment verification and approval', name:name, parish:parish, diocese:diocese, country:country, state:state, district:district, phone:phone, fee:500});
@@ -247,9 +247,11 @@ function register_(p) {
     if(clientToken)CacheService.getScriptCache().put('SS26_SUBMIT_'+clientToken,JSON.stringify(result),21600);
     return result;
   } catch(err) {
-    if(photoSaved)try{DriveApp.getFileById(photoSaved.id).setTrashed(true);}catch(ignore){}
-    if(originalSaved)try{DriveApp.getFileById(originalSaved.id).setTrashed(true);}catch(ignore){}
-    if(proofSaved)try{DriveApp.getFileById(proofSaved.id).setTrashed(true);}catch(ignore){}
+    if(!rowCommitted){
+      if(photoSaved)try{DriveApp.getFileById(photoSaved.id).setTrashed(true);}catch(ignore){}
+      if(originalSaved)try{DriveApp.getFileById(originalSaved.id).setTrashed(true);}catch(ignore){}
+      if(proofSaved)try{DriveApp.getFileById(proofSaved.id).setTrashed(true);}catch(ignore){}
+    }
     throw err;
   } finally {lock.releaseLock();}
 }
