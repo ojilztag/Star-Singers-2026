@@ -22,8 +22,8 @@ function request(payload,callback){
  const form=document.createElement('form');form.method='POST';form.action=API_URL;form.target=name;form.hidden=true;
  const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(requestPayload);form.appendChild(input);document.body.appendChild(form);
  let done=false;const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;};
- const timer=setTimeout(()=>{cleanup();callback({success:false,error:'Apps Script did not return a response. The request connection has been corrected; check the deployed Web App version if this continues.'});},45000);
- function onMessage(e){if(!e.origin.endsWith('.googleusercontent.com')&&e.origin!=='https://script.google.com')return;const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT'||d.token!==requestToken)return;cleanup();callback(d);}
+ const timer=setTimeout(()=>{cleanup();callback({success:false,error:'No reply was received from the Apps Script Web App after 90 seconds. Confirm that the latest Code.gs version is deployed as a Web App and that access is set to Anyone.'});},90000);
+ function onMessage(e){if(e.source!==frame.contentWindow)return;const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT'||d.token!==requestToken)return;cleanup();callback(d);}
  window.addEventListener('message',onMessage);form.submit();
 }
 function loginView(){token='';sessionStorage.removeItem('ss26AdminSession');$('login').classList.remove('hidden');$('app').classList.add('hidden');}
