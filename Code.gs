@@ -206,6 +206,15 @@ function register_(p) {
   let photoSaved=null,originalSaved=null,proofSaved=null;
   try {
     const sh=sheet_(CFG.REG_SHEET,REG_HEADERS);
+    // Block only an exact participant-name + WhatsApp-number duplicate.
+    // A shared WhatsApp number with a different participant name is allowed.
+    const nameKey=duplicateNameKey_(name),phoneKey=duplicatePhoneKey_(phone);
+    const last=sh.getLastRow();
+    if(last>1) {
+      const existing=sh.getRange(2,1,last-1,REG_HEADERS.length).getValues();
+      const duplicate=existing.some(r=>duplicateNameKey_(r[3])===nameKey && duplicatePhoneKey_(r[9])===phoneKey);
+      if(duplicate) throw new Error('A registration with the same participant name and WhatsApp number has already been submitted. Please wait for organiser verification; do not submit again.');
+    }
     const ref='SS26-P'+Utilities.getUuid().replace(/-/g,'').slice(0,8).toUpperCase();
     photoSaved=savePrivate_(folder_('SS26_PHOTOS_FOLDER_ID'),photo,ref,'CROPPED');
     originalSaved=savePrivate_(folder_('SS26_ORIGINALS_FOLDER_ID'),originalPhoto,ref,'ORIGINAL');
@@ -225,6 +234,8 @@ function register_(p) {
     throw err;
   } finally {lock.releaseLock();}
 }
+function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\\s+/g,' ').trim();}
+function duplicatePhoneKey_(v){return String(v||'').replace(/\\D/g,'');}
 function initAdmin_(){const p=PropertiesService.getScriptProperties();if(!p.getProperty('ADMIN_HASH'))throw new Error('Admin not initialized.');}
 function login_(p) {
   initAdmin_();const props=PropertiesService.getScriptProperties();
