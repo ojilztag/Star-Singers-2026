@@ -1,6 +1,6 @@
 /* Star Singers 2026 public registration bridge.
    Set API_URL to the deployed Apps Script Web App URL ending in /exec. */
-const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxGurOD8VovynfDyXizd2Thq8M-_tt5HRNqDCEzgo3elKDvHZ6oT4jMNiXehSfwKf7b/exec';
+const STAR_SINGERS_API_URL = 'PASTE_NEW_STAR_SINGERS_WEB_APP_URL_HERE';
 (function(){
  const form=document.getElementById('participantRegistration');
  if(!form)return;
