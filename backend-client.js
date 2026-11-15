@@ -27,9 +27,8 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxGurOD8Vo
   const cleanup=()=>{if(finished)return;finished=true;clearTimeout(timer);window.removeEventListener('message',onMessage);f.remove();frame.remove();};
   const timer=setTimeout(()=>{cleanup();done({success:false,error:'Server response timed out. Check the Admin Panel before submitting again to avoid duplicates.'});},60000);
   function onMessage(event){
-   if(event.source!==frame.contentWindow)return;
-   if(!['https://script.google.com','https://script.googleusercontent.com'].includes(event.origin))return;
-   const d=event.data;if(!d||d.type!=='SS26_REGISTRATION_RESULT')return;
+   if(!event.origin.endsWith('.googleusercontent.com')&&event.origin!=='https://script.google.com')return;
+   const d=event.data;if(!d||d.type!=='SS26_REGISTRATION_RESULT'||d.token!==payload.clientToken)return;
    cleanup();done(d);
   }
   window.addEventListener('message',onMessage);f.submit();
