@@ -131,12 +131,19 @@ function initializeStarSingersAdmin() {
 }
 
 function doGet(e) {
-  const action=String(e&&e.parameter&&e.parameter.action||'health');
+  const params=(e&&e.parameter)||{};
+  const page=String(params.page||'').toLowerCase();
+  if(page==='admin'||page==='viewer') {
+    return HtmlService.createHtmlOutputFromFile(page)
+      .setTitle(page==='admin'?'STAR SINGERS 2026 · Admin':'STAR SINGERS 2026 · Participant Viewer')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
+  const action=String(params.action||'health');
   if(action==='notices') {
     const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\u003c');
     return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.top.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
-  return ContentService.createTextOutput('STAR SINGERS 2026 API is active.').setMimeType(ContentService.MimeType.TEXT);
+  return ContentService.createTextOutput('STAR SINGERS 2026 API is active. Use ?page=admin or ?page=viewer.').setMimeType(ContentService.MimeType.TEXT);
 }
 function doPost(e) {
   let p={};
@@ -390,7 +397,8 @@ function viewerLogin_(p) {
   const response=UrlFetchApp.fetch('https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(idToken),{muteHttpExceptions:true});
   if(response.getResponseCode()!==200)throw new Error('Google sign-in could not be verified. Please sign in again.');
   const claims=JSON.parse(response.getContentText());
-  if(claims.aud!==clientId||String(claims.email_verified)!=='true')throw new Error('Google account verification failed.');
+  const now=Math.floor(Date.now()/1000);
+  if(claims.aud!==clientId||String(claims.email_verified)!=='true'||!['accounts.google.com','https://accounts.google.com'].includes(String(claims.iss||''))||!claims.sub||!/^\\d+$/.test(String(claims.exp||''))||Number(claims.exp)<=now)throw new Error('Google account verification failed or the sign-in token has expired.');
   const email=String(claims.email||'').trim().toLowerCase();
   const allowed=(PropertiesService.getScriptProperties().getProperty('SS26_VIEWER_ALLOWED_EMAILS')||'').split(',').map(x=>x.trim().toLowerCase());
   if(!email||!allowed.includes(email))throw new Error('This Google account has not been authorised by the Admin.');
