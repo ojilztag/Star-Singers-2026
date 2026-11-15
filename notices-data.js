@@ -1,7 +1,7 @@
 /* Public notices are loaded from the Star Singers Apps Script deployment. */
 window.STAR_SINGERS_NOTICES = [];
 (function(){
- const API='PASTE_STAR_SINGERS_APPS_SCRIPT_EXEC_URL_HERE';
+ const API='https://script.google.com/macros/s/AKfycbxPwRrD35fv7UWOJO6EN6eqIxT5czuaIBjbU8qR9xfdFYuod6bB-RrNj6r0hDuma6Qk6Q/exec';
  if(API.includes('PASTE_'))return;
  const frame=document.createElement('iframe');frame.hidden=true;frame.src=API+'?action=notices&v='+Date.now();document.body.appendChild(frame);
  const timer=setTimeout(()=>frame.remove(),15000);
