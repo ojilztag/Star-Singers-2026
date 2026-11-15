@@ -179,8 +179,22 @@ function requireAdmin_(token) {
 function dashboard_(p) {
   const admin=requireAdmin_(p.sessionToken),sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
   const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
-  rows.reverse();
-  return {success:true,total:rows.length,pending:rows.filter(r=>r[18]==='Pending Review').length,approved:rows.filter(r=>r[18]==='Approved').length,registrations:rows.slice(0,100).map(rowObject_),notices:adminNotices_()};
+  const newest=rows.slice().reverse();
+  const pendingPayment=rows.filter(r=>r[17]==='Pending Verification');
+  const pendingReview=rows.filter(r=>r[18]==='Pending Review');
+  const approved=rows.filter(r=>r[18]==='Approved');
+  const rejected=rows.filter(r=>r[18]==='Rejected');
+  const collected=approved.filter(r=>r[17]==='Verified').reduce((sum,r)=>sum+(Number(r[11])||0),0);
+  const pendingAmount=pendingPayment.reduce((sum,r)=>sum+(Number(r[11])||0),0);
+  const cutoff=Date.now()-7*24*60*60*1000;
+  const last7=rows.filter(r=>{const d=r[2] instanceof Date?r[2]:new Date(r[2]);return !isNaN(d.getTime())&&d.getTime()>=cutoff;});
+  const auditSh=sheet_(CFG.AUDIT_SHEET,['Timestamp','Admin','Action','Record ID','Details']);
+  const auditLast=auditSh.getLastRow();
+  const auditRows=auditLast>1?auditSh.getRange(Math.max(2,auditLast-49),1,Math.min(50,auditLast-1),5).getValues().reverse():[];
+  const auditLogs=auditRows.map(r=>({timestamp:r[0] instanceof Date?Utilities.formatDate(r[0],Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'):String(r[0]||''),admin:String(r[1]||''),action:String(r[2]||''),recordId:String(r[3]||''),details:String(r[4]||'')}));
+  return {success:true,total:rows.length,pending:pendingReview.length,pendingPayment:pendingPayment.length,approved:approved.length,rejected:rejected.length,
+    collectedAmount:collected,pendingAmount:pendingAmount,last7DaysCount:last7.length,last7Days:last7.slice().reverse().map(rowObject_),
+    registrations:newest.slice(0,100).map(rowObject_),auditLogs:auditLogs,notices:adminNotices_()};
 }
 function search_(p) {
   requireAdmin_(p.sessionToken);const q=String(p.query||'').trim().toLowerCase();if(!q)throw new Error('Enter Registration ID, tracking reference, name or WhatsApp number.');
