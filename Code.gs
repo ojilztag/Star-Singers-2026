@@ -247,7 +247,7 @@ function register_(p) {
   } finally {lock.releaseLock();}
 }
 function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();}
-function duplicatePhoneKey_(v){return String(v||'').replace(/\\D/g,'');}
+function duplicatePhoneKey_(v){return String(v||'').replace(/\D/g,'');}
 function initAdmin_(){const p=PropertiesService.getScriptProperties();if(!p.getProperty('ADMIN_HASH'))throw new Error('Admin not initialized.');}
 function login_(p) {
   initAdmin_();const props=PropertiesService.getScriptProperties();
@@ -319,14 +319,14 @@ function exportRegistrations_(p) {
 function getNotificationSettings_(p) {
   requireAdmin_(p.sessionToken);
   const raw=PropertiesService.getScriptProperties().getProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS')||'';
-  return {success:true,emails:raw.split(/[;,\\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)};
+  return {success:true,emails:raw.split(/[;,\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)};
 }
 function saveNotificationSettings_(p) {
   const admin=requireAdmin_(p.sessionToken);
   const raw=String(p.emails||'');
-  const emails=[...new Set(raw.split(/[;,\\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean))];
+  const emails=[...new Set(raw.split(/[;,\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean))];
   if(emails.length>30)throw new Error('A maximum of 30 notification email addresses is allowed.');
-  const invalid=emails.filter(x=>!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(x));
+  const invalid=emails.filter(x=>!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x));
   if(invalid.length)throw new Error('Invalid email address: '+invalid[0]);
   if(!emails.length)throw new Error('Add at least the Main Admin email address.');
   PropertiesService.getScriptProperties().setProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS',emails.join(','));
@@ -336,7 +336,7 @@ function saveNotificationSettings_(p) {
 function sendRegistrationNotification_(ref, info) {
   try {
     const props=PropertiesService.getScriptProperties();
-    const recipients=(props.getProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS')||'').split(',').map(x=>x.trim()).filter(x=>/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(x));
+    const recipients=(props.getProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS')||'').split(',').map(x=>x.trim()).filter(x=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x));
     if(!recipients.length) {
       audit_('SYSTEM','REGISTRATION_EMAIL_NOT_SENT',ref,'No notification recipients configured.');
       return;
@@ -345,7 +345,8 @@ function sendRegistrationNotification_(ref, info) {
     const body=[
       'A new participant registration was successfully submitted.',
       '',
-      'Tracking Reference: '+ref,\n      'Participant ID: '+(info.participantId||'Not yet issued'),
+      'Tracking Reference: '+ref,
+      'Participant ID: '+(info.participantId||'Not yet issued'),
       'Participant Name: '+info.name,
       'Parish: '+info.parish,
       'Diocese: '+info.diocese,
@@ -356,7 +357,7 @@ function sendRegistrationNotification_(ref, info) {
       'Registration Fee: INR '+info.fee,
       '',
       'This is the only automatic email notification configured for this workflow. Payment review, approval, rejection and other admin actions do not send email.'
-    ].join('\\n');
+    ].join('\n');
     MailApp.sendEmail({to:recipients.join(','),subject:subject,body:body,name:'STAR SINGERS 2026'});
     audit_('SYSTEM','REGISTRATION_EMAIL_SENT',ref,'Notification sent to '+recipients.length+' configured recipient(s).');
   } catch(err) {
@@ -369,13 +370,13 @@ function sendRegistrationNotification_(ref, info) {
 function getViewerSettings_(p) {
   requireAdmin_(p.sessionToken);
   const raw=PropertiesService.getScriptProperties().getProperty('SS26_VIEWER_ALLOWED_EMAILS')||'';
-  return {success:true,emails:raw.split(/[;,\\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)};
+  return {success:true,emails:raw.split(/[;,\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)};
 }
 function saveViewerSettings_(p) {
   const admin=requireAdmin_(p.sessionToken);
-  const emails=[...new Set(String(p.emails||'').split(/[;,\\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean))];
+  const emails=[...new Set(String(p.emails||'').split(/[;,\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean))];
   if(emails.length>100)throw new Error('A maximum of 100 viewer email addresses is allowed.');
-  const invalid=emails.filter(x=>!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(x));
+  const invalid=emails.filter(x=>!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x));
   if(invalid.length)throw new Error('Invalid email address: '+invalid[0]);
   PropertiesService.getScriptProperties().setProperty('SS26_VIEWER_ALLOWED_EMAILS',emails.join(','));
   audit_(admin.user,'VIEWER_ACCESS_LIST_UPDATED','VIEWER',emails.length+' allowed email(s).');
@@ -448,7 +449,7 @@ function getEntryPhoto_(p) {
   const blob=DriveApp.getFileById(fileId).getBlob(),bytes=blob.getBytes();
   if(bytes.length>CFG.MAX_FILE_BYTES)throw new Error('Participant photo exceeds the secure preview limit.');
   const mime=blob.getContentType()||'application/octet-stream';
-  if(!/^image\\/(jpeg|png|webp|heic)$/.test(mime))throw new Error('Unsupported participant photo type.');
+  if(!/^image\/(jpeg|png|webp|heic)$/.test(mime))throw new Error('Unsupported participant photo type.');
   return {success:true,mimeType:mime,photoBase64:Utilities.base64Encode(bytes)};
 }
 
