@@ -7,7 +7,7 @@
  * initializeStarSingersAdmin() once.
  */
 const CFG = {
-  PREFIX: 'SS26-',
+  PREFIX: 'JKJ-CC26-M-',
   SESSION_TTL: 21600,
   HASH_ROUNDS: 3000,
   MIN_PASSWORD: 12,
@@ -17,7 +17,7 @@ const CFG = {
   AUDIT_SHEET: 'AuditLog'
 };
 const REG_HEADERS = [
-  'Tracking Ref','Registration ID','Submitted At','Participant Name','Own Parish',
+  'Tracking Ref','Participant ID','Submitted At','Participant Name','Own Parish',
   'Own Diocese','Residence Country','State / Province','District / Region',
   'WhatsApp Number','Entry Type','Registration Fee','UTR / Transaction ID',
   'Participant Photo Drive ID','Participant Photo Drive URL',
@@ -210,9 +210,20 @@ function review_(p) {
   } finally {lock.releaseLock();}
 }
 function uniqueId_(sh) {
-  const last=sh.getLastRow(),ids=last>1?sh.getRange(2,2,last-1,1).getDisplayValues().flat():[];
-  for(let i=0;i<100;i++){const id=CFG.PREFIX+String(Math.floor(100000+Math.random()*900000));if(!ids.includes(id))return id;}
-  throw new Error('Could not generate unique Registration ID.');
+  // Sequential Participant IDs: JKJ-CC26-M-001, 002, 003...
+  // The Script Property preserves the high-water mark even if an old row is removed.
+  const props=PropertiesService.getScriptProperties();
+  const last=sh.getLastRow();
+  const ids=last>1?sh.getRange(2,2,last-1,1).getDisplayValues().flat():[];
+  let highest=Number(props.getProperty('SS26_LAST_PARTICIPANT_SEQUENCE')||0);
+  ids.forEach(value=>{
+    const match=String(value||'').match(/^JKJ-CC26-M-(\\d+)$/);
+    if(match)highest=Math.max(highest,Number(match[1]));
+  });
+  const next=highest+1;
+  if(!Number.isSafeInteger(next)||next<1)throw new Error('Participant ID sequence is invalid.');
+  props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE',String(next));
+  return CFG.PREFIX+String(next).padStart(3,'0');
 }
 function rowObject_(r) {
   const d=r[2] instanceof Date?r[2]:new Date(r[2]);
