@@ -4,6 +4,7 @@
 <section id="login" class="panel"><h2>Admin Login</h2><p class="muted">Authorised organiser access only.</p><form id="loginForm"><div class="two"><div><label>Username</label><input id="username" autocomplete="username" required></div><div><label>Password</label><input id="password" type="password" autocomplete="current-password" required></div></div><p><button id="loginBtn">Login</button></p></form><div id="loginStatus" class="status hidden"></div></section>
 <div id="app" class="hidden">
 <section class="panel"><div class="row" style="justify-content:space-between"><h2>Dashboard</h2><div class="row"><button id="refresh" class="gold">Refresh</button><button id="logout" class="red">Logout</button></div></div><div class="grid"><div class="stat"><span>Total Registrations</span><b id="total">0</b></div><div class="stat"><span>Payment Verification Pending</span><b id="pendingPayment">0</b></div><div class="stat"><span>Registration Review Pending</span><b id="pending">0</b></div><div class="stat"><span>Approved</span><b id="approved">0</b></div><div class="stat"><span>Rejected</span><b id="rejected">0</b></div><div class="stat"><span>Collected Amount</span><b id="collected">₹0</b></div><div class="stat"><span>Pending Amount</span><b id="pendingAmount">₹0</b></div><div class="stat"><span>Last 7 Days</span><b id="last7Count">0</b></div></div><p class="muted">Collected Amount includes only payments manually verified and approved by an organiser. Pending Amount is the value awaiting payment verification.</p><div id="dashStatus" class="status hidden"></div></section>
+<section class="panel"><h2>New Registration Email Alerts</h2><p class="muted">Main Admin and every assigned Admin / Staff email entered here receive an email only when a new participant form is successfully submitted. Other actions do not send email.</p><label for="notificationEmails">Notification recipient email addresses (comma-separated)</label><textarea id="notificationEmails" rows="3" placeholder="mainadmin@example.com, staff1@example.com"></textarea><div class="actions"><button type="button" id="saveNotificationEmails" class="gold">Save Email Recipients</button><button type="button" id="reloadNotificationEmails">Reload</button></div><div id="notificationStatus" class="status hidden" aria-live="polite"></div></section>
 <section class="panel"><h2>Participant Records Export</h2><p class="muted">Export participant details and payment status only. No participant photos or payment receipt files are included.</p><div class="row" style="gap:10px;flex-wrap:wrap;align-items:end"><div class="field"><label for="exportFilter">Records to export</label><select id="exportFilter"><option value="all">All registrations</option><option value="approved">Approved participants</option><option value="pending-payment">Payment verification pending</option><option value="pending-review">Payment verified · Approval pending</option><option value="rejected">Rejected registrations</option></select></div><button type="button" id="exportExcel" class="gold">Download Excel (CSV)</button><button type="button" id="exportPdf">Print / Save PDF</button></div><div id="exportStatus" class="status hidden" aria-live="polite"></div></section>
 <section class="panel"><h2>Registration Review</h2><form id="searchForm" class="row"><div class="field"><input id="query" placeholder="Search Participant ID, tracking reference, name, WhatsApp, UTR / Transaction ID"></div><button>Search</button><button type="button" id="clearSearch" class="gold">Show Latest</button></form><div id="records" class="cards" style="margin-top:14px"></div></section>
 <section class="panel"><details class="section-toggle"><summary>Last 7 Days · Recent Submissions</summary><p class="muted">Participant photos and payment receipts are stored in private Google Drive folders. Open them using the links below.</p><div id="recentRecords" class="cards"></div></details></section><section class="panel"><details class="section-toggle"><summary>Admin Activity Log</summary><p class="muted">Recent admin actions, approvals, rejections, notice changes and password updates.</p><div id="auditLogs"></div></details></section><section class="panel"><details class="section-toggle"><summary>Official Notices · Manage</summary><form id="noticeForm"><input id="noticeId" type="hidden"><label>Notice Title</label><input id="noticeTitle" maxlength="180" required><label>Notice Content</label><textarea id="noticeBody" rows="4" maxlength="5000" required></textarea><div class="two"><div><label>Publish Date</label><input id="noticeDate" placeholder="e.g. 15 November 2026"></div><div><label>Status</label><select id="noticeStatus"><option>Draft</option><option>Published</option><option>Archived</option></select></div></div><div class="actions"><button>Save Notice</button><button type="button" id="newNotice" class="gold">New / Clear</button></div></form><div id="noticeStatusMsg" class="status hidden"></div><div id="notices"></div></section>
@@ -42,12 +43,28 @@ function request(payload,callback){
  try{form.submit();}catch(err){cleanup();callback({success:false,error:'Could not send request: '+String(err.message||err)});}
 }
 
+function loadNotificationSettings(){
+ request({action:'getnotificationsettings',sessionToken:token},d=>{
+  if(!d.success){msg('notificationStatus',d.error||'Could not load notification recipients.',true);return;}
+  $('notificationEmails').value=(d.emails||[]).join(', ');
+  msg('notificationStatus',(d.emails||[]).length+' email recipient(s) configured.',false);
+ });
+}
+$('saveNotificationEmails').addEventListener('click',()=>{
+ const emails=$('notificationEmails').value;
+ request({action:'savenotificationsettings',sessionToken:token,emails:emails},d=>{
+  if(!d.success){msg('notificationStatus',d.error||'Could not save email recipients.',true);return;}
+  $('notificationEmails').value=(d.emails||[]).join(', ');
+  msg('notificationStatus','Saved. '+d.emails.length+' recipient(s) will receive every new registration notification.',false);
+ });
+});
+$('reloadNotificationEmails').addEventListener('click',loadNotificationSettings);
 function loginView(){token='';sessionStorage.removeItem('ss26AdminSession');$('login').classList.remove('hidden');$('app').classList.add('hidden');}
 function loadDashboard(){
  request({action:'admindashboard',sessionToken:token},d=>{
   if(!d.success){msg('dashStatus',d.error||'Dashboard failed.',true);if((d.error||'').toLowerCase().includes('session'))loginView();return;}
   $('total').textContent=d.total;$('pending').textContent=d.pending;$('pendingPayment').textContent=d.pendingPayment;$('approved').textContent=d.approved;$('rejected').textContent=d.rejected;$('collected').textContent='₹'+Number(d.collectedAmount||0).toLocaleString('en-IN');$('pendingAmount').textContent='₹'+Number(d.pendingAmount||0).toLocaleString('en-IN');$('last7Count').textContent=d.last7DaysCount||0;
-  renderRecords(d.registrations||[]);renderRecent(d.last7Days||[]);renderAudit(d.auditLogs||[]);renderNotices(d.notices||[]);
+  renderRecords(d.registrations||[]);renderRecent(d.last7Days||[]);renderAudit(d.auditLogs||[]);renderNotices(d.notices||[]);loadNotificationSettings();
  });
 }
 
