@@ -150,6 +150,7 @@ function doPost(e) {
       case 'adminlogin': out=login_(p); break;
       case 'admindashboard': out=dashboard_(p); break;
       case 'adminsearch': out=search_(p); break;
+      case 'exportregistrations': out=exportRegistrations_(p); break;
       case 'verifypayment': out=verifyPayment_(p); break;
       case 'reviewregistration': out=review_(p); break;
       case 'adminnotices': out=manageNotices_(p); break;
@@ -278,6 +279,29 @@ function search_(p) {
   const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow(),rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
   const found=rows.filter(r=>r.join(' ').toLowerCase().includes(q)).reverse().slice(0,100);
   return {success:true,count:found.length,registrations:found.map(rowObject_)};
+}
+
+
+function exportRegistrations_(p) {
+  const admin=requireAdmin_(p.sessionToken);
+  const filter=String(p.filter||'all').toLowerCase();
+  if(!['all','approved','pending-payment','pending-review','rejected'].includes(filter))throw new Error('Invalid export filter.');
+  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
+  const data=rows.map(rowObject_).filter(r=>{
+    if(filter==='approved')return r.status==='Approved';
+    if(filter==='pending-payment')return r.paymentStatus==='Pending Verification';
+    if(filter==='pending-review')return r.status==='Pending Review'&&r.paymentStatus==='Verified';
+    if(filter==='rejected')return r.status==='Rejected'||r.paymentStatus==='Rejected';
+    return true;
+  }).map(r=>({
+    submittedAt:r.submittedAt,participantId:r.registrationId,participantName:r.participantName,
+    parish:r.parishName,diocese:r.diocese,country:r.country,state:r.state,district:r.district,
+    whatsapp:r.phone,entryType:r.entryType,registrationFee:r.fee,utr:r.utr,
+    paymentStatus:r.paymentStatus,registrationStatus:r.status,adminNote:r.adminNote
+  }));
+  audit_(admin.user,'REGISTRATION_EXPORT',filter,'Exported '+data.length+' participant records; photo and payment-proof files excluded.');
+  return {success:true,count:data.length,filter:filter,records:data};
 }
 
 function verifyPayment_(p) {
