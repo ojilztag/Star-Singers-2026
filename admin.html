@@ -15,17 +15,22 @@ const $=id=>document.getElementById(id);
 function msg(id,text,error){const el=$(id);el.textContent=text;el.classList.remove('hidden');el.classList.toggle('error',!!error);}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function request(payload,callback){
- if(busy){callback({success:false,error:'Please wait for the current request.'});return;}busy=true;
+ if(busy){callback({success:false,error:'Please wait for the current request.'});return;}
+ busy=true;
  const requestToken='ADM-'+Date.now()+'-'+Math.random().toString(16).slice(2);
  const requestPayload=Object.assign({},payload,{clientToken:requestToken});
- const name='ss26-admin-'+(++requestNo),frame=document.createElement('iframe');frame.name=name;frame.hidden=true;document.body.appendChild(frame);
- const form=document.createElement('form');form.method='POST';form.action=API_URL;form.target=name;form.hidden=true;
+ const name='ss26-admin-'+(++requestNo),frame=document.createElement('iframe');
+ frame.name=name;frame.title='Secure admin response';frame.style.cssText='position:absolute;width:1px;height:1px;left:-10px;bottom:0;border:0;opacity:0';document.body.appendChild(frame);
+ const form=document.createElement('form');form.method='POST';form.action=API_URL;form.target=name;form.style.display='none';
  const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(requestPayload);form.appendChild(input);document.body.appendChild(form);
- let done=false;const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;};
- const timer=setTimeout(()=>{cleanup();callback({success:false,error:'No reply was received from the Apps Script Web App after 90 seconds. Confirm that the latest Code.gs version is deployed as a Web App and that access is set to Anyone.'});},90000);
+ let done=false;
+ const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;};
+ const timer=setTimeout(()=>{cleanup();callback({success:false,error:'The Apps Script Web App did not respond. The latest Code.gs must be deployed as a new Web App version with access set to Anyone.'});},45000);
  function onMessage(e){const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT'||d.token!==requestToken)return;cleanup();callback(d);}
- window.addEventListener('message',onMessage);form.submit();
+ window.addEventListener('message',onMessage);
+ try{form.submit();}catch(err){cleanup();callback({success:false,error:'Could not send request: '+String(err.message||err)});}
 }
+
 function loginView(){token='';sessionStorage.removeItem('ss26AdminSession');$('login').classList.remove('hidden');$('app').classList.add('hidden');}
 function loadDashboard(){
  request({action:'admindashboard',sessionToken:token},d=>{
@@ -49,7 +54,7 @@ $('records').addEventListener('click',e=>{
  const note=$('note-'+b.dataset.index).value;
  b.disabled=true;request({action:'reviewregistration',sessionToken:token,trackingRef:r.trackingRef,decision:action,adminNote:note},d=>{if(!d.success){msg('dashStatus',d.error||'Review failed.',true);return;}msg('dashStatus',action==='approve'?'Approved. Participant ID: '+d.registration.registrationId:'Registration rejected.',false);loadDashboard();});
 });
-$('loginForm').addEventListener('submit',e=>{e.preventDefault();if(API_URL.includes('PASTE_')){msg('loginStatus','Apps Script URL has not been configured.',true);return;}$('loginBtn').disabled=true;request({action:'adminlogin',username:$('username').value.trim(),password:$('password').value},d=>{$('loginBtn').disabled=false;if(!d.success){msg('loginStatus',d.error||'Login failed.',true);return;}token=d.sessionToken;sessionStorage.setItem('ss26AdminSession',token);$('password').value='';$('login').classList.add('hidden');$('app').classList.remove('hidden');loadDashboard();});});
+$('loginForm').addEventListener('submit',e=>{e.preventDefault();if(API_URL.includes('PASTE_')){msg('loginStatus','Apps Script URL has not been configured.',true);return;}msg('loginStatus','Connecting securely to the Admin server…',false);$('loginBtn').disabled=true;request({action:'adminlogin',username:$('username').value.trim(),password:$('password').value},d=>{$('loginBtn').disabled=false;if(!d.success){msg('loginStatus',d.error||'Login failed.',true);return;}token=d.sessionToken;sessionStorage.setItem('ss26AdminSession',token);$('password').value='';$('login').classList.add('hidden');$('app').classList.remove('hidden');loadDashboard();});});
 $('refresh').onclick=loadDashboard;$('logout').onclick=()=>request({action:'adminlogout',sessionToken:token},loginView);
 $('searchForm').addEventListener('submit',e=>{e.preventDefault();const q=$('query').value.trim();if(!q){loadDashboard();return;}request({action:'adminsearch',sessionToken:token,query:q},d=>{if(!d.success){msg('dashStatus',d.error,true);return;}renderRecords(d.registrations||[]);});});
 $('clearSearch').onclick=()=>{$('query').value='';loadDashboard();};
