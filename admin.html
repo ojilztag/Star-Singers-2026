@@ -59,11 +59,12 @@ $('saveViewerEmails').addEventListener('click',()=>{
  });
 });
 $('reloadViewerEmails').addEventListener('click',loadViewerSettings);
-function loadNotificationSettings(){
+function loadNotificationSettings(afterLoad){
  request({action:'getnotificationsettings',sessionToken:token},d=>{
   if(!d.success){msg('notificationStatus',d.error||'Could not load notification recipients.',true);return;}
   $('notificationEmails').value=(d.emails||[]).join(', ');
   msg('notificationStatus',(d.emails||[]).length+' email recipient(s) configured.',false);
+  if(typeof afterLoad==='function')afterLoad();
  });
 }
 $('saveNotificationEmails').addEventListener('click',()=>{
@@ -80,7 +81,7 @@ function loadDashboard(){
  request({action:'admindashboard',sessionToken:token},d=>{
   if(!d.success){msg('dashStatus',d.error||'Dashboard failed.',true);if((d.error||'').toLowerCase().includes('session'))loginView();return;}
   $('total').textContent=d.total;$('pending').textContent=d.pending;$('pendingPayment').textContent=d.pendingPayment;$('approved').textContent=d.approved;$('rejected').textContent=d.rejected;$('collected').textContent='₹'+Number(d.collectedAmount||0).toLocaleString('en-IN');$('pendingAmount').textContent='₹'+Number(d.pendingAmount||0).toLocaleString('en-IN');$('last7Count').textContent=d.last7DaysCount||0;
-  renderRecords(d.registrations||[]);renderRecent(d.last7Days||[]);renderAudit(d.auditLogs||[]);renderNotices(d.notices||[]);loadNotificationSettings();loadViewerSettings();
+  renderRecords(d.registrations||[]);renderRecent(d.last7Days||[]);renderAudit(d.auditLogs||[]);renderNotices(d.notices||[]);loadNotificationSettings(loadViewerSettings);
  });
 }
 
