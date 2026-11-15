@@ -269,7 +269,7 @@ body{padding-top:80px}
 <label>Current Country of Residence *<input name="country" id="residenceCountry" type="text" required maxlength="100" autocomplete="country-name" placeholder="Type your country name"></label>
 <label>Current State / Province *<input name="state" type="text" required maxlength="100" placeholder="State / Province"></label>
 <label>Current District / Region *<input name="district" type="text" required maxlength="100" placeholder="District / Region"></label>
-<label class="full">Contact Mobile Number (with WhatsApp) *<input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="30" placeholder="Include country code, e.g. +91XXXXXXXXXX"><small>Use the international dialing code so organisers can contact you. · സംഘാടകർക്ക് ബന്ധപ്പെടാൻ country code ഉൾപ്പെടുത്തി നമ്പർ നൽകുക.</small></label>
+<label class="full">Contact Mobile Number (with WhatsApp) *<input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="30" placeholder="Required: +91XXXXXXXXXX" aria-describedby="phoneHelp"><small id="phoneHelp">Enter the full WhatsApp number with + and country code, e.g. +91XXXXXXXXXX. Country code is required.</small></label>
 <input type="file" id="participantPhotoOriginal" accept="image/*" hidden><label id="photoUploadLabel">Participant Photo *<input name="participantPhoto" id="participantPhoto" type="file" accept="image/jpeg,image/png,image/webp,image/*" required><small>Your photo will be used to generate your Entry Card / Photo ID. Choose a clear, front-facing photo with your face fully visible.</small><span id="photoCropStatus" class="crop-status" aria-live="polite">No photo selected yet.</span></label>
 <div class="photo-tools full" id="photoTools" hidden>
  <div class="photo-selected" id="photoSelected" hidden><img id="photoThumbnail" alt="Selected cropped participant photo"><span>✓ Photo ready</span><button type="button" id="changeParticipantPhoto" class="crop-control">Change Photo</button></div>
@@ -312,7 +312,16 @@ const registrationForm=document.getElementById('participantRegistration');
 if(registrationForm){
  const phoneInput=document.getElementById('phone');
  const paymentModal=document.getElementById('paymentModal'),openPayment=document.getElementById('openPayment');
+ const validateInternationalPhone=()=>{
+  const normalized=phoneInput.value.trim().replace(/[\s()-]/g,'');
+  const valid=/^\+[1-9]\d{6,14}$/.test(normalized);
+  phoneInput.setCustomValidity(valid?'':'Enter your WhatsApp number with + and country code, e.g. +91XXXXXXXXXX.');
+  return valid;
+ };
+ phoneInput.addEventListener('input',validateInternationalPhone);
+ phoneInput.addEventListener('blur',validateInternationalPhone);
  openPayment.addEventListener('click',()=>{
+  if(!validateInternationalPhone()){phoneInput.reportValidity();phoneInput.focus();return;}
   const requiredBeforePayment=[...registrationForm.querySelectorAll('[required]')].filter(el=>!['paymentProof','utr'].includes(el.name));
   for(const field of requiredBeforePayment){if(!field.checkValidity()){field.reportValidity();field.focus();return;}}
     paymentModal.hidden=false;document.body.style.overflow='hidden';
