@@ -42,18 +42,19 @@ const STAR_SINGERS_API_URL = 'PASTE_STAR_SINGERS_APPS_SCRIPT_EXEC_URL_HERE';
   const phone=form.querySelector('[name="phone"]').value.trim();
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,''))){status('Enter mobile number with country code, e.g. +91XXXXXXXXXX.',true);return;}
   const photo=form.querySelector('[name="participantPhoto"]').files[0];
+  const originalPhoto=form.querySelector('#participantPhotoOriginal')?.files[0]||photo;
   const proof=form.querySelector('[name="paymentProof"]').files[0];
   const utr=form.querySelector('[name="utr"]').value.trim();
   busy=true;const submit=form.querySelector('[type="submit"]');if(submit){submit.disabled=true;submit.textContent='Submitting securely…';}
   status('Uploading participant photo and payment receipt to private Google Drive folders…',false);
   try{
-   const [photoData,proofData]=await Promise.all([fileData(photo,3*1024*1024,'Participant photo'),fileData(proof,3*1024*1024,'Payment proof')]);
+   const [photoData,originalPhotoData,proofData]=await Promise.all([fileData(photo,3*1024*1024,'Cropped participant photo'),fileData(originalPhoto,3*1024*1024,'Original participant photo'),fileData(proof,3*1024*1024,'Payment proof')]);
    const payload={
     action:'register',clientToken:'SS26-'+Date.now()+'-'+Math.random().toString(16).slice(2),
     participantName:form.elements.participantName.value,parishName:form.elements.parishName.value,
     diocese:form.elements.diocese.value,country:form.elements.country.value,state:form.elements.state.value,
     district:form.elements.district.value,phone:phone,utr:utr,fee:500,feeConsent:String(form.elements.feeConsent.checked),
-    photo:photoData,paymentProof:proofData
+    photo:photoData,originalPhoto:originalPhotoData,paymentProof:proofData
    };
    post(payload,result=>{
     busy=false;if(submit){submit.disabled=false;submit.textContent='Submit Registration & Payment Proof';}
