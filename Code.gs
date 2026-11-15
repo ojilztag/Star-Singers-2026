@@ -20,11 +20,14 @@ const REG_HEADERS = [
   'Tracking Ref','Participant ID','Submitted At','Participant Name','Own Parish',
   'Own Diocese','Residence Country','State / Province','District / Region',
   'WhatsApp Number','Entry Type','Registration Fee','UTR / Transaction ID',
-  'Participant Photo Drive ID','Participant Photo Drive URL',
+  'Participant Photo Drive ID','Participant Photo Drive URL','Original Photo Drive ID','Original Photo Drive URL',
   'Payment Proof Drive ID','Payment Proof Drive URL','Payment Status',
   'Registration Status','Admin Note','Reviewed At','Reviewed By'
 ];
 const NOTICE_HEADERS = ['Notice ID','Created At','Updated At','Title','Body','Publish Date','Status','Updated By'];
+const AUDIT_HEADERS = ['Timestamp','Admin','Action','Record ID','Details'];
+const SETTINGS_HEADERS = ['Setting','Value','Description'];
+const FINANCE_HEADERS = ['Date','Tracking Ref','Participant Name','UTR / Transaction ID','Expected Fee','Payment Status','Verified Amount','Verified By','Verification Date','Notes'];
 
 function setupStarSingersBackend() {
   const props = PropertiesService.getScriptProperties();
@@ -40,15 +43,31 @@ function setupStarSingersBackend() {
   notices.getRange(1,1,1,NOTICE_HEADERS.length).setValues([NOTICE_HEADERS]).setFontWeight('bold');
   notices.setFrozenRows(1);
   const audit = ss.insertSheet(CFG.AUDIT_SHEET);
-  audit.getRange(1,1,1,5).setValues([['Timestamp','Admin','Action','Record ID','Details']]).setFontWeight('bold');
+  audit.getRange(1,1,1,AUDIT_HEADERS.length).setValues([AUDIT_HEADERS]).setFontWeight('bold');
   audit.setFrozenRows(1);
+  const settings=ss.insertSheet('Settings');
+  settings.getRange(1,1,1,SETTINGS_HEADERS.length).setValues([SETTINGS_HEADERS]).setFontWeight('bold');
+  settings.getRange(2,1,6,3).setValues([
+    ['Event Name','NAKSHATHRA GAYAKAR – STAR SINGERS 2026','Official competition title'],
+    ['Registration Fee',500,'INR per individual entry'],
+    ['Entry Type','Individual / Single Entry','Group entries are not accepted'],
+    ['Participant ID Prefix',CFG.PREFIX,'Sequence starts at 001 after approval'],
+    ['Payment Verification','Manual','Admin must verify bank/UPI credit'],
+    ['Photo Storage','Private Google Drive','Original and cropped images are admin-only files']
+  ]);
+  settings.setFrozenRows(1);
+  const finance=ss.insertSheet('Payment Reconciliation');
+  finance.getRange(1,1,1,FINANCE_HEADERS.length).setValues([FINANCE_HEADERS]).setFontWeight('bold');
+  finance.setFrozenRows(1);
   const root = DriveApp.createFolder('STAR SINGERS 2026 — PRIVATE FILES');
-  const photos = root.createFolder('Participant Photos');
-  const proofs = root.createFolder('Payment Proofs');
+  const photos = root.createFolder('Cropped Participant Photos');
+  const originals = root.createFolder('Original Participant Photos — Admin Only');
+  const proofs = root.createFolder('Payment Proofs — Admin Only');
   props.setProperties({
     SS26_SPREADSHEET_ID:ss.getId(),
     SS26_ROOT_FOLDER_ID:root.getId(),
     SS26_PHOTOS_FOLDER_ID:photos.getId(),
+    SS26_ORIGINALS_FOLDER_ID:originals.getId(),
     SS26_PROOFS_FOLDER_ID:proofs.getId()
   });
   Logger.log('SETUP COMPLETE. Spreadsheet: '+ss.getUrl());
@@ -137,17 +156,20 @@ function register_(p) {
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
   if(String(p.feeConsent)!=='true')throw new Error('Registration fee consent is required.');
   if(Number(p.fee)!==500)throw new Error('Registration fee must be ₹500.');
-  const photo=decodeFile_(p.photo,'Participant Photo'),proof=decodeFile_(p.paymentProof,'Payment Proof');
+  const photo=decodeFile_(p.photo,'Participant Photo');
+  const originalPhoto=decodeFile_(p.originalPhoto||p.photo,'Original Participant Photo');
+  const proof=decodeFile_(p.paymentProof,'Payment Proof');
   const lock=LockService.getScriptLock();lock.waitLock(20000);
-  let photoSaved=null,proofSaved=null;
+  let photoSaved=null,originalSaved=null,proofSaved=null;
   try {
     const sh=sheet_(CFG.REG_SHEET,REG_HEADERS);
     const ref='SS26-P'+Utilities.getUuid().replace(/-/g,'').slice(0,8).toUpperCase();
-    photoSaved=savePrivate_(folder_('SS26_PHOTOS_FOLDER_ID'),photo,ref,'PHOTO');
+    photoSaved=savePrivate_(folder_('SS26_PHOTOS_FOLDER_ID'),photo,ref,'CROPPED');
+    originalSaved=savePrivate_(folder_('SS26_ORIGINALS_FOLDER_ID'),originalPhoto,ref,'ORIGINAL');
     proofSaved=savePrivate_(folder_('SS26_PROOFS_FOLDER_ID'),proof,ref,'PAYMENT');
     const now=new Date();
     sh.appendRow([ref,'',now,name,parish,diocese,country,state,district,phone,'Individual / Single Entry',500,utr,
-      photoSaved.id,photoSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
+      photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
     const row=sh.getLastRow();sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');
     audit_('PUBLIC','REGISTRATION_SUBMITTED',ref,'Photo and payment proof stored in private Drive folders.');
     const result={success:true,trackingRef:ref,message:'Registration request received. Payment and documents are pending organiser verification.'};
@@ -155,6 +177,7 @@ function register_(p) {
     return result;
   } catch(err) {
     if(photoSaved)try{DriveApp.getFileById(photoSaved.id).setTrashed(true);}catch(ignore){}
+    if(originalSaved)try{DriveApp.getFileById(originalSaved.id).setTrashed(true);}catch(ignore){}
     if(proofSaved)try{DriveApp.getFileById(proofSaved.id).setTrashed(true);}catch(ignore){}
     throw err;
   } finally {lock.releaseLock();}
@@ -180,15 +203,15 @@ function dashboard_(p) {
   const admin=requireAdmin_(p.sessionToken),sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
   const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
   const newest=rows.slice().reverse();
-  const pendingPayment=rows.filter(r=>r[17]==='Pending Verification');
-  const pendingReview=rows.filter(r=>r[18]==='Pending Review');
-  const approved=rows.filter(r=>r[18]==='Approved');
-  const rejected=rows.filter(r=>r[18]==='Rejected');
-  const collected=approved.filter(r=>r[17]==='Verified').reduce((sum,r)=>sum+(Number(r[11])||0),0);
+  const pendingPayment=rows.filter(r=>r[19]==='Pending Verification');
+  const pendingReview=rows.filter(r=>r[20]==='Pending Review');
+  const approved=rows.filter(r=>r[20]==='Approved');
+  const rejected=rows.filter(r=>r[20]==='Rejected');
+  const collected=approved.filter(r=>r[19]==='Verified').reduce((sum,r)=>sum+(Number(r[11])||0),0);
   const pendingAmount=pendingPayment.reduce((sum,r)=>sum+(Number(r[11])||0),0);
   const cutoff=Date.now()-7*24*60*60*1000;
   const last7=rows.filter(r=>{const d=r[2] instanceof Date?r[2]:new Date(r[2]);return !isNaN(d.getTime())&&d.getTime()>=cutoff;});
-  const auditSh=sheet_(CFG.AUDIT_SHEET,['Timestamp','Admin','Action','Record ID','Details']);
+  const auditSh=sheet_(CFG.AUDIT_SHEET,AUDIT_HEADERS);
   const auditLast=auditSh.getLastRow();
   const auditRows=auditLast>1?auditSh.getRange(Math.max(2,auditLast-49),1,Math.min(50,auditLast-1),5).getValues().reverse():[];
   const auditLogs=auditRows.map(r=>({timestamp:r[0] instanceof Date?Utilities.formatDate(r[0],Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'):String(r[0]||''),admin:String(r[1]||''),action:String(r[2]||''),recordId:String(r[3]||''),details:String(r[4]||'')}));
@@ -213,11 +236,11 @@ function review_(p) {
     if(!cell)throw new Error('Registration record not found.');
     const row=cell.getRow(),r=sh.getRange(row,1,1,REG_HEADERS.length).getValues()[0];
     if(decision==='approve') {
-      if(r[17]!=='Pending Verification')throw new Error('Payment is not pending verification.');
+      if(r[19]!=='Pending Verification')throw new Error('Payment is not pending verification.');
       if(!r[1])r[1]=uniqueId_(sh);
-      r[17]='Verified';r[18]='Approved';
-    } else {r[17]='Rejected';r[18]='Rejected';}
-    r[19]=clean_(p.adminNote,500);r[20]=new Date();r[21]=admin.user;
+      r[19]='Verified';r[20]='Approved';
+    } else {r[19]='Rejected';r[20]='Rejected';}
+    r[21]=clean_(p.adminNote,500);r[22]=new Date();r[23]=admin.user;
     sh.getRange(row,1,1,REG_HEADERS.length).setValues([r]);
     audit_(admin.user,'REGISTRATION_'+decision.toUpperCase(),ref,r[19]);
     return {success:true,registration:rowObject_(r)};
@@ -243,7 +266,7 @@ function rowObject_(r) {
   const d=r[2] instanceof Date?r[2]:new Date(r[2]);
   return {trackingRef:String(r[0]||''),registrationId:String(r[1]||''),submittedAt:isNaN(d.getTime())?'':Utilities.formatDate(d,Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'),
     participantName:String(r[3]||''),parishName:String(r[4]||''),diocese:String(r[5]||''),country:String(r[6]||''),state:String(r[7]||''),district:String(r[8]||''),phone:String(r[9]||''),entryType:String(r[10]||''),fee:r[11],utr:String(r[12]||''),
-    photoUrl:String(r[14]||''),paymentProofUrl:String(r[16]||''),paymentStatus:String(r[17]||''),status:String(r[18]||''),adminNote:String(r[19]||'')};
+    photoUrl:String(r[14]||''),originalPhotoUrl:String(r[16]||''),paymentProofUrl:String(r[18]||''),paymentStatus:String(r[19]||''),status:String(r[20]||''),adminNote:String(r[21]||'')};
 }
 function manageNotices_(p) {
   const admin=requireAdmin_(p.sessionToken),action=String(p.noticeAction||'list').toLowerCase(),sh=sheet_(CFG.NOTICE_SHEET,NOTICE_HEADERS);
