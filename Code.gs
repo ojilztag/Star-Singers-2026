@@ -400,7 +400,7 @@ function viewerLogin_(p) {
   if(response.getResponseCode()!==200)throw new Error('Google sign-in could not be verified. Please sign in again.');
   const claims=JSON.parse(response.getContentText());
   const now=Math.floor(Date.now()/1000);
-  if(claims.aud!==clientId||String(claims.email_verified)!=='true'||!['accounts.google.com','https://accounts.google.com'].includes(String(claims.iss||''))||!claims.sub||!/^\\d+$/.test(String(claims.exp||''))||Number(claims.exp)<=now)throw new Error('Google account verification failed or the sign-in token has expired.');
+  if(claims.aud!==clientId||String(claims.email_verified)!=='true'||!['accounts.google.com','https://accounts.google.com'].includes(String(claims.iss||''))||!claims.sub||!/^\d+$/.test(String(claims.exp||''))||Number(claims.exp)<=now)throw new Error('Google account verification failed or the sign-in token has expired.');
   const email=String(claims.email||'').trim().toLowerCase();
   const allowed=(PropertiesService.getScriptProperties().getProperty('SS26_VIEWER_ALLOWED_EMAILS')||'').split(',').map(x=>x.trim().toLowerCase());
   if(!email||!allowed.includes(email))throw new Error('This Google account has not been authorised by the Admin.');
