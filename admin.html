@@ -8,6 +8,15 @@
 <section class="panel"><details class="section-toggle"><summary>Last 7 Days · Recent Submissions</summary><p class="muted">Participant photos and payment receipts are stored in private Google Drive folders. Open them using the links below.</p><div id="recentRecords" class="cards"></div></details></section><section class="panel"><details class="section-toggle"><summary>Admin Activity Log</summary><p class="muted">Recent admin actions, approvals, rejections, notice changes and password updates.</p><div id="auditLogs"></div></details></section><section class="panel"><details class="section-toggle"><summary>Official Notices · Manage</summary><form id="noticeForm"><input id="noticeId" type="hidden"><label>Notice Title</label><input id="noticeTitle" maxlength="180" required><label>Notice Content</label><textarea id="noticeBody" rows="4" maxlength="5000" required></textarea><div class="two"><div><label>Publish Date</label><input id="noticeDate" placeholder="e.g. 15 November 2026"></div><div><label>Status</label><select id="noticeStatus"><option>Draft</option><option>Published</option><option>Archived</option></select></div></div><div class="actions"><button>Save Notice</button><button type="button" id="newNotice" class="gold">New / Clear</button></div></form><div id="noticeStatusMsg" class="status hidden"></div><div id="notices"></div></section>
 </details></section><section class="panel"><details class="section-toggle"><summary>Security · Change Admin Password</summary><form id="passwordForm" class="two"><div><label>Current Password</label><input id="currentPass" type="password" required></div><div><label>New Password (minimum 12 characters)</label><input id="newPass" type="password" minlength="12" required></div><div><label>Confirm New Password</label><input id="confirmPass" type="password" minlength="12" required></div><div style="align-self:end"><button>Update Password</button></div></form><div id="passwordMsg" class="status hidden"></div></details></section>
 </div></main>
+<div id="entryModal" class="entry-modal" role="dialog" aria-modal="true" aria-labelledby="entryModalTitle">
+ <div class="entry-modal-box">
+  <div class="entry-modal-head"><h2 id="entryModalTitle">Official Entry Card</h2><button type="button" class="red" id="entryClose">Close</button></div>
+  <div class="entry-canvas-wrap"><canvas id="entryCanvas" width="1000" height="1400" aria-label="Participant entry card preview"></canvas></div>
+  <div id="entryCardStatus" class="entry-error"></div>
+  <div class="entry-modal-actions"><button type="button" id="entryDownload" class="gold">Download PNG</button><button type="button" id="entryWhatsApp">WhatsApp Share</button><button type="button" id="entryCopy" class="gold">Copy Message</button></div>
+  <p class="entry-help">WhatsApp opens the participant chat. Attach the downloaded PNG and paste the copied message as its caption to send both together.</p>
+ </div>
+</div>
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbxPwRrD35fv7UWOJO6EN6eqIxT5czuaIBjbU8qR9xfdFYuod6bB-RrNj6r0hDuma6Qk6Q/exec';
 let token=sessionStorage.getItem('ss26AdminSession')||'',busy=false,requestNo=0,records=[];
