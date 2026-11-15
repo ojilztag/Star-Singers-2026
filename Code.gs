@@ -164,6 +164,7 @@ function doPost(e) {
       case 'viewerdashboard': out=viewerDashboard_(p); break;
       case 'viewerproof': out=viewerProof_(p); break;
       case 'viewerlogout': out=viewerLogout_(p); break;
+      case 'getentryphoto': out=getEntryPhoto_(p); break;
       default: throw new Error('Unsupported action.');
     }
     return reply_('SS26_ADMIN_RESULT',out,p.clientToken);
@@ -429,6 +430,26 @@ function viewerProof_(p) {
 function viewerLogout_(p) {
   const token=String(p.sessionToken||'');if(token)CacheService.getScriptCache().remove('SS26_VIEWER_'+token);
   return {success:true};
+}
+
+function getEntryPhoto_(p) {
+  requireAdmin_(p.sessionToken);
+  const ref=clean_(p.trackingRef,40),participantId=clean_(p.participantId,60);
+  if(!ref&&!participantId)throw new Error('Tracking Reference or Participant ID is required.');
+  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  if(last<2)throw new Error('No registration found.');
+  let cell=null;
+  if(ref)cell=sh.getRange(2,1,last-1,1).createTextFinder(ref).matchEntireCell(true).findNext();
+  else cell=sh.getRange(2,2,last-1,1).createTextFinder(participantId).matchEntireCell(true).findNext();
+  if(!cell)throw new Error('Registration not found.');
+  const row=sh.getRange(cell.getRow(),1,1,REG_HEADERS.length).getValues()[0];
+  const fileId=String(row[13]||'');
+  if(!fileId)throw new Error('Participant photo is not available.');
+  const blob=DriveApp.getFileById(fileId).getBlob(),bytes=blob.getBytes();
+  if(bytes.length>CFG.MAX_FILE_BYTES)throw new Error('Participant photo exceeds the secure preview limit.');
+  const mime=blob.getContentType()||'application/octet-stream';
+  if(!/^image\\/(jpeg|png|webp|heic)$/.test(mime))throw new Error('Unsupported participant photo type.');
+  return {success:true,mimeType:mime,photoBase64:Utilities.base64Encode(bytes)};
 }
 
 function verifyPayment_(p) {
