@@ -1,64 +1,94 @@
-# STAR SINGERS 2026 — Google Sheets + Drive Backend Setup
+# STAR SINGERS 2026 — Google Apps Script Backend & Launch Checklist
 
-This is a separate backend for **NAKSHATHRA GAYAKAR – STAR SINGERS 2026**. It does not reuse CAROLIA's spreadsheet, Drive folders, registration IDs or admin credentials.
+Website: https://jkjcreations.org  
+Repository: https://github.com/ojilztag/Star-Singers-2026
 
-## What is included
-- `Code.gs`: Google Apps Script API, Sheets database, private Drive uploads, admin authentication, manual payment review, ID generation, notices and audit log.
-- `backend-client.js`: sends the existing public registration form and both uploaded files to Apps Script.
-- `admin.html`: Admin login, dashboard analytics, search, participant/payment proof Drive links, approve/reject, WhatsApp share, notices management and admin activity log.
-- `notices-data.js` + `notices.html`: public published notices feed.
+## Backend architecture
 
-## A. Create the Google backend
-1. Sign in to the Google account that will own the event records.
-2. Open https://script.google.com/ and create a New project named `STAR SINGERS 2026 Backend`.
-3. Replace the editor's contents with this repository's complete `Code.gs`. Save.
-4. In Project Settings → Script Properties, add `ADMIN_USER` = the admin username and `ADMIN_PASSWORD` = a strong password of at least 12 characters.
-5. Run `setupStarSingersBackend` once. Approve Google Sheets and Drive permissions. It creates a new spreadsheet with `Registrations`, `Notices`, and `AuditLog` tabs, plus a private Drive folder with `Participant Photos` and `Payment Proofs` subfolders. It stores the generated IDs in Script Properties and logs the spreadsheet and folder URLs.
-6. Run `initializeStarSingersAdmin` once. It hashes the password and removes the plaintext `ADMIN_PASSWORD` property. Do not run it again.
-7. Deploy → New deployment → Web app. Execute as: Me. Who has access: Anyone (public form submissions need this; admin actions still require the server-side session token). Deploy and copy the Web app URL ending in `/exec`.
+The public website is hosted from GitHub Pages. Registration, private file storage, admin authentication, payment review and notices use a separate Google Apps Script Web App backed by Google Sheets and private Google Drive folders.
 
-## B. Connect the website to Apps Script
-Replace `PASTE_STAR_SINGERS_APPS_SCRIPT_EXEC_URL_HERE` with the deployed `/exec` URL in `backend-client.js`, `admin.html`, and `notices-data.js`. Commit the changes to GitHub. Whenever `Code.gs` changes, deploy a New version in Apps Script. The `/exec` URL usually remains the same when editing the existing deployment.
+Frontend files currently point to the deployed Web App URL in:
+- `backend-client.js` — registration form submissions
+- `admin.html` — admin dashboard actions
+- `notices-data.js` — public Published notices
 
-## C. Registration workflow
-1. Participant completes the existing form and pays the displayed ₹500 fee.
-2. Participant uploads their photo, payment screenshot/receipt and enters UTR.
-3. Apps Script saves the form record in `Registrations`, and uploads both files to private Drive folders.
-4. The application is marked `Pending Verification` / `Pending Review`. No official Participant ID is issued yet.
-5. Admin opens `/admin.html`, logs in, reviews the details and opens the two private Drive links.
-6. Admin checks the payment in the UPI/bank account independently, then selects **Approve & Generate ID** or **Reject**.
-7. On approval, the backend generates a unique `JKJ-CC26-M-001, JKJ-CC26-M-002, JKJ-CC26-M-003, and onward` ID. Admin can share the participant's ID and details through the device share sheet / WhatsApp.
+Do not change the URL unless a new Apps Script deployment has been created and tested.
 
-**Payment screenshot and UTR are not automatic payment verification.** The organiser must confirm the actual credit in the bank/UPI account before approval.
+## One-time backend installation
 
-## D. Admin dashboard analytics
-- Total registrations, payment-verification pending count, registration-review pending count, approved count and rejected count.
-- Collected amount counts only rows that are both `Verified` and `Approved` after organiser review.
-- Pending amount sums the registration fees whose payment status remains `Pending Verification`.
-- Last 7 days shows submissions received in the rolling seven-day window, with participant photo and payment proof links.
-- Admin Activity Log shows the latest 50 recorded actions, including registration submissions, approvals/rejections, notice changes and password updates.
-- These figures are calculated from the `Registrations` and `AuditLog` sheets. They are not bank-account reconciliation; the organiser must compare verified entries with actual bank/UPI credits.
+Only do this if the Google Apps Script backend has not already been installed. **Do not run the installer against an existing live backend.**
 
-## E. Notices
-Admin can create a Draft, Published or Archived notice. Only Published notices appear on the public Notices page. Public notices are read from the `Notices` sheet; no manual editing of `notices-data.js` is required after the endpoint is connected.
+1. Sign in to the Google account that should own the event records and private participant files.
+2. Open https://script.google.com/ and create a new Apps Script project named `STAR SINGERS 2026 Backend`.
+3. Copy the complete `Code.gs` file from this repository into the Apps Script editor and save.
+4. Run `installStarSingers2026()` once. Approve the requested Google Sheets and Drive permissions.
+5. Open the execution log and securely save the generated initial admin username and password. The generated password is shown during this one-time installation. Do not put it in GitHub or share it.
+6. The installer creates the database tabs (`Registrations`, `Notices`, `AuditLog`, `Settings`, `Payment Reconciliation`, and `Dashboard`) and private Drive folders for cropped photos, original photos and payment proofs.
+7. In Apps Script, select **Deploy → New deployment → Web app**. Set **Execute as: Me** and **Who has access: Anyone**. Deploy and copy the URL ending in `/exec`.
+8. Confirm the URL matches the configured endpoint in all three frontend files listed above. If it differs, update all three files consistently.
+9. Open the `/exec` URL in a browser. It should return the plain-text health response: `STAR SINGERS 2026 API is active.`
 
-## F. File handling and privacy
-- Files are stored in private Drive folders owned by the Apps Script account. They are not made public.
-- Admin sees **View Participant Photo** and **View Payment Proof** links. The browser must be signed into the Google account that owns the files (or another account explicitly granted access).
-- Each file must be 3 MB or smaller. Accepted participant photo formats: JPG, PNG, WebP, HEIC. Payment proof: image or PDF.
-- Keep the spreadsheet and Drive folder private. Do not publish their URLs.
-- Keep the admin password private. Do not put it in GitHub or website JavaScript.
-- The website currently asks for one individual entry and a ₹500 fee. Confirm the event's final privacy/retention policy before collecting real participant data.
+If a backend already exists, do not run `installStarSingers2026()` or `setupStarSingersBackend()` again. Inspect the existing Script Properties, spreadsheet and Drive folders first.
 
-## G. Test checklist before opening registration
-- Submit one clearly labelled test registration with a test photo and test payment receipt.
-- Confirm one row appears in `Registrations`.
-- Confirm both files appear in their private Drive subfolders and open for the authorised admin.
-- Confirm the admin dashboard shows the pending record and its two file links.
-- Approve the test record and confirm it receives one `JKJ-CC26-M-001, JKJ-CC26-M-002, JKJ-CC26-M-003, and onward` ID.
-- Search by ID/name/phone and test the WhatsApp share action.
-- Publish a test notice and confirm it appears on the public Notices page.
-- Delete test data only after verifying the workflow; do not delete real entries.
+## Deploying backend code updates
 
-## Important current limitation
-The code has been committed to GitHub, but the Apps Script project has **not** been deployed from the user's Google account in this workflow. Until the setup steps are completed and the real `/exec` URL is added to the three frontend files, the website will not save registrations or uploads. Do not announce registration as live before completing the checklist.
+Whenever `Code.gs` changes:
+1. Open the existing Apps Script project that owns the configured `/exec` URL.
+2. Replace its code with the reviewed repository version and save.
+3. Select **Deploy → Manage deployments → Edit** on the existing Web App deployment.
+4. Select **New version**, keep Execute as **Me** and access as **Anyone**, then deploy.
+5. Re-test the health URL, a public notice read, admin login and a controlled test registration.
+
+A GitHub commit or GitHub Pages deployment does **not** publish a new Apps Script version. The Apps Script deployment is a separate release step.
+
+## Registration and payment workflow
+
+1. Participant completes the individual registration form, provides a WhatsApp number with country code, participant photo, UTR and payment proof.
+2. The current website/backend configuration specifies a ₹500 registration fee. Confirm that this remains the approved event fee before opening registration.
+3. The backend stores the registration in the private spreadsheet and uploads cropped photo, original photo and payment proof to private Drive folders.
+4. New registrations remain **Pending Verification / Pending Review**. No Participant ID is issued at this stage.
+5. Admin independently checks the actual bank/UPI credit. A screenshot or UTR alone is not proof of credited funds.
+6. Admin verifies payment, then approves or rejects the registration.
+7. On approval, the backend issues the next sequential Participant ID (for example `JKJ-CC26-M-001`). The public Entry Card must show the Participant ID only; internal tracking references must not be printed as a second ID.
+
+## Notices publishing workflow
+
+1. Sign in to `https://jkjcreations.org/admin.html`.
+2. Create or edit the notice and choose **Published** to make it public. Draft and Archived notices must remain private.
+3. Save the notice and confirm the admin list shows the updated status.
+4. Open `https://jkjcreations.org/notices.html` and the homepage in a fresh tab. Confirm the notice title, date, summary and full content appear.
+5. If the notice does not appear, verify the deployed Apps Script version contains the current `doGet(e)`, `publicNotices_()` and `manageNotices_()` functions and that the Web App is deployed with public access.
+
+## Privacy and security
+
+- Keep the spreadsheet and Drive folders private. Do not publish their URLs.
+- Admin actions require a server-side session; never place admin passwords or Script Properties in frontend code.
+- Participant photos, original images and payment proofs should remain private and be opened only by authorised organisers.
+- Verify payments against the actual bank/UPI account before approval.
+- Define and publish an appropriate privacy, retention and contact policy before collecting real participant data.
+- Do not share test registrations or real participant information in public notices.
+
+## Pre-launch acceptance tests
+
+Complete these tests on a test record before announcing the registration system as live:
+
+- [ ] Health endpoint responds.
+- [ ] Registration submission creates exactly one spreadsheet row.
+- [ ] Duplicate name + WhatsApp submission is blocked without blocking different participants who share a family phone.
+- [ ] Cropped photo, original photo and payment proof are stored in the intended private folders.
+- [ ] Admin login works; invalid credentials are rejected.
+- [ ] Admin dashboard counts match the spreadsheet.
+- [ ] Payment cannot be approved without manual verification.
+- [ ] Approval issues one unique Participant ID; rejection does not issue an ID.
+- [ ] Entry Card preview, PNG download and WhatsApp sharing work on a phone and desktop.
+- [ ] Entry Card displays only the Participant ID, not the internal tracking reference or a second card ID.
+- [ ] Draft and Archived notices are hidden publicly.
+- [ ] Published notices appear on both the public Notices page and homepage ticker.
+- [ ] Notice edits and deletions are reflected after refresh.
+- [ ] Password change invalidates the previous admin session.
+- [ ] Public pages work at 320px, 375px, 430px, tablet widths, 1366px laptop and 1920px desktop.
+- [ ] Test records are removed only after the complete flow is verified.
+
+## Current verification boundary
+
+GitHub Pages build status can be checked in the repository Actions tab. Google Apps Script deployment and the live Google account data must be checked by an authorised owner in Apps Script; a GitHub commit cannot prove those external services are correctly deployed or that a real bank payment has been received.
