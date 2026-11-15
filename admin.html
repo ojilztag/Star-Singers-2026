@@ -9,7 +9,7 @@
 <section class="panel"><h2>Change Admin Password</h2><form id="passwordForm" class="two"><div><label>Current Password</label><input id="currentPass" type="password" required></div><div><label>New Password (minimum 12 characters)</label><input id="newPass" type="password" minlength="12" required></div><div><label>Confirm New Password</label><input id="confirmPass" type="password" minlength="12" required></div><div style="align-self:end"><button>Update Password</button></div></form><div id="passwordMsg" class="status hidden"></div></section>
 </div></main>
 <script>
-const API_URL='PASTE_STAR_SINGERS_APPS_SCRIPT_EXEC_URL_HERE';
+const API_URL='https://script.google.com/macros/s/AKfycbxGurOD8VovynfDyXizd2Thq8M-_tt5HRNqDCEzgo3elKDvHZ6oT4jMNiXehSfwKf7b/exec';
 let token=sessionStorage.getItem('ss26AdminSession')||'',busy=false,requestNo=0,records=[];
 const $=id=>document.getElementById(id);
 function msg(id,text,error){const el=$(id);el.textContent=text;el.classList.remove('hidden');el.classList.toggle('error',!!error);}
