@@ -58,7 +58,14 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     busy=false;if(submit){submit.disabled=false;submit.textContent='Submit Registration & Payment Proof';}
     if(!result.success){status(result.error||'Registration could not be submitted.',true);return;}
     form.reset();if(modal){modal.hidden=true;document.body.style.overflow='';}
-    status('Registration request received. Reference: '+result.trackingRef+'. Payment verification is pending. The official Registration ID will be issued only after organiser approval.',false);
+    // Lock the completed form and replace it with a clear confirmation notice.
+    Array.from(form.children).forEach(node=>{if(node!==message)node.hidden=true;});
+    message.style.whiteSpace='pre-line';
+    message.style.display='block';
+    message.style.padding='22px';
+    message.style.border='1px solid #d9bd78';
+    message.style.borderRadius='16px';
+    message.textContent='REGISTRATION SUBMITTED SUCCESSFULLY ✓\\nReference Number: '+result.trackingRef+'\\n\\nനിങ്ങളുടെ അപേക്ഷ വിജയകരമായി ലഭിച്ചു. വീണ്ടും Registration Form പൂരിപ്പിക്കേണ്ടതില്ല.\\n\\nPayment verification and document checking are pending. Organisers will review your submission and publish the next instructions through the official website / notice section. Please keep your Reference Number safe.\\n\\nഒരേ Participant Name + WhatsApp Number ഉപയോഗിച്ച് വീണ്ടും അപേക്ഷിക്കരുത്. പരിശോധന പൂർത്തിയാകുന്നതുവരെ കാത്തിരിക്കുക.\\n\\nYour official Registration ID / Entry Card will be issued only after payment verification and organiser approval.';
    });
   }catch(err){busy=false;if(submit){submit.disabled=false;submit.textContent='Submit Registration & Payment Proof';}status(err.message||'Upload failed. Please try again.',true);}
  },true);
