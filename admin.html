@@ -95,7 +95,7 @@ function loadCardImage(src,crossOrigin){
   const im=new Image();
   if(crossOrigin)im.crossOrigin='anonymous';
   im.onload=()=>resolve(im);
-  im.onerror=()=>reject(new Error('Could not load the image. The Drive photo link may not permit browser PNG export. Check that the cropped participant photo link is accessible.'));
+  im.onerror=()=>reject(new Error('Could not load the image. Please check that the image file is available.'));
   im.src=src;
  });
 }
@@ -149,7 +149,7 @@ function drawEntryCard(r,photo,logo){
  ctx.fillStyle='#f4d88e';ctx.font='bold 22px Arial';ctx.fillText('JKJ ENTRY CARD ID  ·  '+entryCardId(r),W/2,1353);
 }
 function entryMessage(r){
- return '🎄 NAKSHATHRA GAYAKAR – STAR SINGERS 2026\\nOFFICIAL ENTRY CARD\\n\\nParticipant: '+(r.participantName||'')+'\\nParticipant ID: '+(r.registrationId||'')+'\\nJKJ Entry Card ID: '+entryCardId(r)+'\\n\\nYour participation is officially approved. Please keep this Entry Card safe.\\n\\nJKJ CREATIONS';
+ return '🎄 NAKSHATHRA GAYAKAR – STAR SINGERS 2026\nOFFICIAL ENTRY CARD\n\nParticipant: '+(r.participantName||'')+'\nParticipant ID: '+(r.registrationId||'')+'\nJKJ Entry Card ID: '+entryCardId(r)+'\n\nYour participation is officially approved. Please keep this Entry Card safe.\n\nJKJ CREATIONS';
 }
 async function openEntryCard(r){
  activeEntryRecord=r;entryCaption=entryMessage(r);$('entryCardStatus').textContent='Preparing your card…';$('entryModal').classList.add('open');
