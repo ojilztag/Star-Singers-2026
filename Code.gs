@@ -118,8 +118,8 @@ function decodeFile_(obj,label) {
   const bytes=Utilities.base64Decode(String(obj.data));
   if(!bytes.length||bytes.length>CFG.MAX_FILE_BYTES)throw new Error(label+' must be smaller than 3 MB.');
   const mime=String(obj.mimeType);
-  if(label==='Participant Photo'&&!/^image\\/(jpeg|png|webp)$/.test(mime))throw new Error('Participant photo must be JPG, PNG or WebP.');
-  if(label==='Payment Proof'&&!/^image\\/(jpeg|png|webp|heic)|application\\/pdf$/.test(mime))throw new Error('Payment proof must be an image or PDF.');
+  if(label==='Participant Photo'&&!/^image\\/(jpeg|png|webp|heic)$/.test(mime))throw new Error('Participant photo must be JPG, PNG, WebP or HEIC.');
+  if(label==='Payment Proof'&&!(/^image\\/(jpeg|png|webp|heic)$/.test(mime)||mime==='application/pdf'))throw new Error('Payment proof must be an image or PDF.');
   const safeName=String(obj.name).replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,90);
   return Utilities.newBlob(bytes,mime,safeName);
 }
@@ -128,6 +128,8 @@ function savePrivate_(folder,file,ref,label) {
   return {id:f.getId(),url:f.getUrl()};
 }
 function register_(p) {
+  const clientToken=clean_(p.clientToken,100);
+  if(clientToken){const cached=CacheService.getScriptCache().get('SS26_SUBMIT_'+clientToken);if(cached)return JSON.parse(cached);}
   const name=clean_(p.participantName,120),parish=clean_(p.parishName,160),diocese=clean_(p.diocese,160);
   const country=clean_(p.country,100),state=clean_(p.state,100),district=clean_(p.district,100);
   const phone=String(p.phone||'').trim(),utr=clean_(p.utr,100);
@@ -148,7 +150,9 @@ function register_(p) {
       photoSaved.id,photoSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
     const row=sh.getLastRow();sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');
     audit_('PUBLIC','REGISTRATION_SUBMITTED',ref,'Photo and payment proof stored in private Drive folders.');
-    return {success:true,trackingRef:ref,message:'Registration request received. Payment and documents are pending organiser verification.'};
+    const result={success:true,trackingRef:ref,message:'Registration request received. Payment and documents are pending organiser verification.'};
+    if(clientToken)CacheService.getScriptCache().put('SS26_SUBMIT_'+clientToken,JSON.stringify(result),21600);
+    return result;
   } catch(err) {
     if(photoSaved)try{DriveApp.getFileById(photoSaved.id).setTrashed(true);}catch(ignore){}
     if(proofSaved)try{DriveApp.getFileById(proofSaved.id).setTrashed(true);}catch(ignore){}
