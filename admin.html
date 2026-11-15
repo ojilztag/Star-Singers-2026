@@ -1,264 +1,60 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Star Singers 2026 · Admin</title><style>
-:root{--navy:#071b31;--green:#10372f;--gold:#d9bd78;--paper:#f4f0e6;--ink:#1c3031}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 Arial,sans-serif}header{background:linear-gradient(120deg,#061827,#0b302d 65%,#35172b);color:#fff;padding:22px 16px;border-bottom:3px solid var(--gold)}.wrap{max-width:1100px;margin:auto;padding:0 16px}.head{display:flex;justify-content:space-between;align-items:center;gap:12px}h1{font:700 clamp(22px,4vw,32px) Georgia,serif;color:#f4d994;margin:0}header a{color:#f4d994;text-decoration:none;font-weight:bold}main{padding:24px 0 60px}.panel{background:#fffdf8;border:1px solid #e4d6b8;border-radius:15px;padding:18px;margin:15px 0;box-shadow:0 8px 24px #25170d0a}h2{font:700 21px Georgia,serif;color:#0c4c37;margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{background:#f8f3e8;border:1px solid #e5d8bd;border-radius:12px;padding:14px}.stat b{font-size:26px;color:#8b6725;display:block}.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}input,textarea,select{font:inherit;width:100%;padding:11px;border:1px solid #b9b5a8;border-radius:9px;background:#fff;color:#182b2b}label{display:block;font-weight:bold;font-size:13px;margin:9px 0 5px}.field{flex:1;min-width:190px}button,.btn{border:0;border-radius:9px;background:var(--green);color:#fff;padding:10px 14px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}button.gold{background:#86611f}button.red{background:#8e2932}button:disabled{opacity:.5;cursor:wait}.muted{color:#68746e;font-size:13px}.status{padding:10px 12px;background:#fff4d8;border:1px solid #dfc77d;border-radius:9px;margin:10px 0}.error{background:#fff0ef;border-color:#d69a95;color:#842b2b}.cards{display:grid;gap:12px}.actions button{min-height:44px;padding:11px 17px;border-radius:10px}.actions button[data-action=approve]{background:#0c5943}.actions button[data-action=verify]{background:#86611f}.actions button[data-action=share]{background:#176b82}.expand{border:1px solid #e8dfcd;border-radius:11px;padding:10px 12px;margin-top:10px;background:#fffdf8}.expand summary,.section-toggle summary{cursor:pointer;font-weight:bold;color:#174b3b;list-style:none}.expand summary::-webkit-details-marker,.section-toggle summary::-webkit-details-marker{display:none}.expand summary:after,.section-toggle summary:after{content:'＋';float:right;color:#86611f}.expand[open] summary:after,.section-toggle[open] summary:after{content:'−'}.expand-body{padding-top:10px}.section-toggle{border:1px solid #e5d9c1;border-radius:12px;padding:12px 14px;margin-top:12px;background:#fff}.section-toggle summary{font:700 18px Georgia,serif;color:#0c4c37}.section-toggle>p,.section-toggle>form,.section-toggle>#auditLogs,.section-toggle>#notices,.section-toggle>#recentRecords{margin-top:14px}.card{border:1px solid #e5d9c1;border-radius:12px;padding:14px;background:#fff}.cardtop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.id{font-weight:bold;color:#805c1b}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px;margin:12px 0}.details div{overflow-wrap:anywhere}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.filelinks a{margin-right:12px}.tag{display:inline-block;padding:3px 8px;border-radius:20px;background:#f4ead1;font-size:12px;font-weight:bold}.notice{border-top:1px solid #e7dfce;padding:12px 0}.hidden{display:none!important}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.head{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr 1fr}.details,.two{grid-template-columns:1fr}.field{min-width:100%}}
-.entry-actions{margin-top:12px;padding-top:10px;border-top:1px dashed #dfd2b8}.entry-actions .entry-label{font-size:12px;font-weight:bold;color:#7b5a20;letter-spacing:.06em;margin-bottom:7px}.entry-actions button{background:#8c2028}.entry-actions button[data-action=entry-preview]{background:#174b3b}.entry-actions button[data-action=entry-download]{background:#8b6725}.entry-actions button[data-action=entry-whatsapp]{background:#176b82}.entry-modal{position:fixed;inset:0;background:#07131ee8;z-index:9999;display:none;overflow:auto;padding:18px}.entry-modal.open{display:flex;align-items:flex-start;justify-content:center}.entry-modal-box{width:min(100%,560px);background:#fffdf8;border:1px solid #d9bd78;border-radius:16px;padding:14px;margin:auto}.entry-modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.entry-modal-head h2{margin:0}.entry-canvas-wrap{background:#eee8db;border-radius:12px;padding:8px;text-align:center}.entry-canvas-wrap canvas{display:block;width:min(100%,420px);height:auto;margin:auto;border-radius:8px}.entry-modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.entry-modal-actions button{flex:1;min-width:130px}.entry-help{font-size:12px;color:#68746e;margin:9px 0 0}.entry-error{color:#9b2929;font-size:13px;margin-top:8px;white-space:pre-wrap}.photo-modal{position:fixed;inset:0;background:#07131ee8;z-index:10000;display:none;overflow:auto;padding:18px}.photo-modal.open{display:flex;align-items:center;justify-content:center}.photo-modal-box{width:min(100%,620px);background:#fffdf8;border:1px solid #d9bd78;border-radius:16px;padding:14px;margin:auto}.photo-modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.photo-modal-head h2{margin:0}.photo-preview{display:block;max-width:100%;max-height:75vh;object-fit:contain;margin:auto;border-radius:10px;background:#eee8db}.photo-modal-status{font-size:13px;color:#68746e;margin-top:10px;white-space:pre-wrap}@media(max-width:500px){.entry-modal,.photo-modal{padding:8px}.entry-modal-box,.photo-modal-box{padding:10px}}\n</style><link rel="stylesheet" href="responsive-polish.css?v=20261115"></head><body><header><div class="wrap head"><div><h1>STAR SINGERS 2026 · ADMIN</h1><div>JKJ CREATIONS · Registration & Notice Control</div></div><a href="index.html">← Event Website</a></div></header><main class="wrap">
-<section id="login" class="panel"><h2>Admin Login</h2><p class="muted">Authorised organiser access only.</p><form id="loginForm"><div class="two"><div><label>Username</label><input id="username" autocomplete="username" required></div><div><label>Password</label><input id="password" type="password" autocomplete="current-password" required></div></div><p><button id="loginBtn">Login</button></p></form><div id="loginStatus" class="status hidden"></div></section>
-<div id="app" class="hidden">
-<section class="panel"><div class="row" style="justify-content:space-between"><h2>Dashboard</h2><div class="row"><button id="refresh" class="gold">Refresh</button><button id="logout" class="red">Logout</button></div></div><div class="grid"><div class="stat"><span>Total Registrations</span><b id="total">0</b></div><div class="stat"><span>Payment Verification Pending</span><b id="pendingPayment">0</b></div><div class="stat"><span>Registration Review Pending</span><b id="pending">0</b></div><div class="stat"><span>Approved</span><b id="approved">0</b></div><div class="stat"><span>Rejected</span><b id="rejected">0</b></div><div class="stat"><span>Collected Amount</span><b id="collected">₹0</b></div><div class="stat"><span>Pending Amount</span><b id="pendingAmount">₹0</b></div><div class="stat"><span>Last 7 Days</span><b id="last7Count">0</b></div></div><p class="muted">Collected Amount includes only payments manually verified and approved by an organiser. Pending Amount is the value awaiting payment verification.</p><div id="dashStatus" class="status hidden"></div></section>
-<section class="panel"><h2>New Registration Email Alerts</h2><p class="muted">Main Admin and every assigned Admin / Staff email entered here receive an email only when a new participant form is successfully submitted. Other actions do not send email.</p><label for="notificationEmails">Notification recipient email addresses (comma-separated)</label><textarea id="notificationEmails" rows="3" placeholder="mainadmin@example.com, staff1@example.com"></textarea><div class="actions"><button type="button" id="saveNotificationEmails" class="gold">Save Email Recipients</button><button type="button" id="reloadNotificationEmails">Reload</button></div><div id="notificationStatus" class="status hidden" aria-live="polite"></div></section>
-<section class="panel"><h2>Secure Viewer Access</h2><p class="muted">Only these Google accounts can open the participant viewer. Forwarding the viewer link does not grant access to other accounts. Revoke access by removing an email address.</p><label for="viewerEmails">Authorised Google email addresses (comma-separated)</label><textarea id="viewerEmails" rows="3" placeholder="viewer1@gmail.com, viewer2@gmail.com"></textarea><div class="actions"><button type="button" id="saveViewerEmails" class="gold">Save Viewer Access</button><button type="button" id="reloadViewerEmails">Reload</button><a class="btn" href="viewer.html" target="_blank" rel="noopener">Open Viewer Page</a></div><div id="viewerAccessStatus" class="status hidden" aria-live="polite"></div><p class="muted">Google OAuth Client ID must also be configured in Apps Script Script Properties as GOOGLE_OAUTH_CLIENT_ID before sign-in can work.</p></section>
-<section class="panel"><h2>Participant Records Export</h2><p class="muted">Export participant details and payment status only. No participant photos or payment receipt files are included.</p><div class="row" style="gap:10px;flex-wrap:wrap;align-items:end"><div class="field"><label for="exportFilter">Records to export</label><select id="exportFilter"><option value="all">All registrations</option><option value="approved">Approved participants</option><option value="pending-payment">Payment verification pending</option><option value="pending-review">Payment verified · Approval pending</option><option value="rejected">Rejected registrations</option></select></div><button type="button" id="exportExcel" class="gold">Download Excel (CSV)</button><button type="button" id="exportPdf">Print / Save PDF</button></div><div id="exportStatus" class="status hidden" aria-live="polite"></div></section>
-<section class="panel"><h2>Registration Review</h2><form id="searchForm" class="row"><div class="field"><input id="query" placeholder="Search Participant ID, tracking reference, name, WhatsApp, UTR / Transaction ID"></div><button>Search</button><button type="button" id="clearSearch" class="gold">Show Latest</button></form><div id="records" class="cards" style="margin-top:14px"></div></section>
-<section class="panel"><details class="section-toggle"><summary>Last 7 Days · Recent Submissions</summary><p class="muted">Participant photos and payment receipts are stored in private Google Drive folders. Open them using the links below.</p><div id="recentRecords" class="cards"></div></details></section><section class="panel"><details class="section-toggle"><summary>Admin Activity Log</summary><p class="muted">Recent admin actions, approvals, rejections, notice changes and password updates.</p><div id="auditLogs"></div></details></section><section class="panel"><details class="section-toggle"><summary>Official Notices · Manage</summary><form id="noticeForm"><input id="noticeId" type="hidden"><label>Notice Title</label><input id="noticeTitle" maxlength="180" required><label>Notice Content</label><textarea id="noticeBody" rows="4" maxlength="5000" required></textarea><div class="two"><div><label>Publish Date</label><input id="noticeDate" placeholder="e.g. 15 November 2026"></div><div><label>Status</label><select id="noticeStatus"><option>Draft</option><option>Published</option><option>Archived</option></select></div></div><div class="actions"><button>Save Notice</button><button type="button" id="newNotice" class="gold">New / Clear</button></div></form><div id="noticeStatusMsg" class="status hidden"></div><div id="notices"></div></section>
-</details></section><section class="panel"><details class="section-toggle"><summary>Security · Change Admin Password</summary><form id="passwordForm" class="two"><div><label>Current Password</label><input id="currentPass" type="password" required></div><div><label>New Password (minimum 12 characters)</label><input id="newPass" type="password" minlength="12" required></div><div><label>Confirm New Password</label><input id="confirmPass" type="password" minlength="12" required></div><div style="align-self:end"><button>Update Password</button></div></form><div id="passwordMsg" class="status hidden"></div></details></section>
-</div></main>
-<div id="entryModal" class="entry-modal" role="dialog" aria-modal="true" aria-labelledby="entryModalTitle">
- <div class="entry-modal-box">
-  <div class="entry-modal-head"><h2 id="entryModalTitle">Official Entry Card</h2><button type="button" class="red" id="entryClose">Close</button></div>
-  <div class="entry-canvas-wrap"><canvas id="entryCanvas" width="1000" height="1400" aria-label="Participant entry card preview"></canvas></div>
-  <div id="entryCardStatus" class="entry-error"></div>
-  <div class="entry-modal-actions"><button type="button" id="entryDownload" class="gold">Download PNG</button><button type="button" id="entryWhatsApp">WhatsApp Share</button><button type="button" id="entryCopy" class="gold">Copy Message</button></div>
-  <p class="entry-help">WhatsApp opens the participant chat. Attach the downloaded PNG and paste the copied message as its caption to send both together.</p>
- </div>
-</div>
-<div id="photoModal" class="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle"><div class="photo-modal-box"><div class="photo-modal-head"><h2 id="photoModalTitle">Participant Photo</h2><button type="button" class="red" id="photoClose">Close</button></div><img id="photoPreview" class="photo-preview hidden" alt="Private participant photo"><div id="photoModalStatus" class="photo-modal-status">Loading secure photo…</div></div></div>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>STAR SINGERS 2026 · Admin</title>
+<style>
+:root{--navy:#071b31;--green:#10372f;--gold:#d9bd78;--paper:#f4f0e6;--ink:#1c3031;--red:#8b2929}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 Arial,sans-serif}header{background:linear-gradient(120deg,#061827,#0b302d 65%,#35172b);color:white;padding:20px 16px;border-bottom:3px solid var(--gold)}.wrap{max-width:1250px;margin:auto;padding:0 15px}h1{color:#f4d994;margin:0;font:700 clamp(22px,4vw,30px) Georgia,serif}main{padding:20px 0 55px}.panel{background:#fffdf8;border:1px solid #e4d6b8;border-radius:14px;padding:17px;margin:14px 0;box-shadow:0 3px 12px #10251b0a}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.metric{background:#f5f0e4;border:1px solid #e4d6b8;border-radius:10px;padding:12px}.metric b{display:block;font-size:24px;color:#10372f}.muted{color:#68746e;font-size:13px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.right{margin-left:auto}input,textarea,select{font:inherit;padding:10px;border:1px solid #cfc5b2;border-radius:8px;background:white;max-width:100%}input[type=text],input[type=password],input[type=email],textarea{width:100%}textarea{min-height:90px}label{display:block;font-weight:bold;margin:9px 0 4px}button{border:0;border-radius:8px;background:var(--green);color:white;padding:10px 13px;font-weight:bold;cursor:pointer}button.gold{background:#86611f}button.red{background:var(--red)}button:disabled{opacity:.5}.status{padding:10px 12px;background:#fff4d8;border:1px solid #dfc77d;border-radius:9px;margin:10px 0;white-space:pre-wrap}.error{background:#fff0ef;border-color:#d69a95;color:#842b2b}.hidden{display:none!important}.table-wrap{overflow:auto;margin-top:12px}table{border-collapse:collapse;width:100%;min-width:1050px;background:white}th,td{border:1px solid #ded5c3;padding:7px;text-align:left;vertical-align:top}th{background:#123b31;color:white;position:sticky;top:0}tr:nth-child(even){background:#f8f4ea}.tabs{display:flex;gap:7px;overflow:auto;padding:4px 0}.tabs button{white-space:nowrap;background:#d8d0bd;color:#20332e}.tabs button.active{background:#10372f;color:white}.field{min-width:220px;flex:1}.actions{display:flex;gap:5px;flex-wrap:wrap}.small{font-size:12px;padding:7px 9px}.notice{border:1px solid #e4d6b8;border-radius:9px;padding:10px;margin:8px 0}@media(max-width:600px){.panel{padding:12px}.field{min-width:100%}}
+</style></head><body>
+<header><div class="wrap"><h1>STAR SINGERS 2026 · ADMIN DASHBOARD</h1><div>JKJ CREATIONS · Secure organiser access</div></div></header>
+<main class="wrap">
+<section id="login" class="panel"><h2>Admin Sign-in</h2><p class="muted">Use the Admin username and password configured for this STAR SINGERS 2026 Apps Script project.</p><label>Username</label><input id="username" autocomplete="username" value="admin"><label>Password</label><input id="password" type="password" autocomplete="current-password"><div class="row" style="margin-top:12px"><button id="loginBtn">Sign in</button></div><div id="loginStatus" class="status hidden"></div></section>
+<section id="app" class="hidden">
+<div class="panel row"><div><b id="welcome">Admin</b><div class="muted">Session expires after inactivity.</div></div><div class="right row"><button id="refresh" class="gold">Refresh data</button><button id="logout" class="red">Sign out</button></div></div>
+<div id="globalStatus" class="status hidden"></div>
+<div class="grid" id="metrics"></div>
+<div class="panel"><div class="tabs"><button data-tab="registrations" class="active">Registrations</button><button data-tab="notifications">Email alerts</button><button data-tab="viewers">Viewer access</button><button data-tab="notices">Notices</button><button data-tab="security">Password</button></div>
+<section id="tab-registrations"><h2>Participant registrations</h2><div class="row"><input class="field" id="search" placeholder="Search tracking ref, participant ID, name or WhatsApp"><button id="searchBtn">Search</button><button id="allBtn" class="gold">Show latest</button><select id="exportFilter"><option value="all">All records</option><option value="approved">Approved</option><option value="pending-payment">Pending payment</option><option value="pending-review">Pending review</option><option value="rejected">Rejected</option></select><button id="exportBtn">Download Excel data</button></div><div class="muted">Latest 100 registrations are shown. Search to find a specific participant. Export contains registration details; private files are excluded.</div><div class="table-wrap"><table><thead><tr><th>Tracking Ref</th><th>Participant ID</th><th>Name</th><th>Parish / Diocese</th><th>Location</th><th>WhatsApp</th><th>UTR</th><th>Payment</th><th>Registration</th><th>Admin note</th><th>Actions</th></tr></thead><tbody id="regRows"></tbody></table></div></section>
+<section id="tab-notifications" class="hidden"><h2>New registration email alerts</h2><p class="muted">Enter the Main Admin and any additional Admin / Staff email addresses. Separate addresses with commas or new lines. These addresses receive an email only when a new participant registration is successfully submitted.</p><label>Notification recipient email addresses</label><textarea id="notifyEmails" placeholder="admin@example.com&#10;staff@example.com"></textarea><button id="saveNotify">Save email recipients</button><div id="notifyStatus" class="status hidden"></div></section>
+<section id="tab-viewers" class="hidden"><h2>Authorised participant viewer accounts</h2><p class="muted">Only listed Google accounts can sign in to the participant viewer. Remove an email to revoke access. Separate addresses with commas or new lines.</p><label>Allowed Google email addresses</label><textarea id="viewerEmails" placeholder="viewer@example.com"></textarea><button id="saveViewers">Save viewer access list</button><div id="viewerStatus" class="status hidden"></div><p class="muted">Viewer page: <a href="https://ojilztag.github.io/Star-Singers-2026/viewer.html" target="_blank" rel="noopener">Open Participant Viewer</a></p></section>
+<section id="tab-notices" class="hidden"><h2>Official notices</h2><input id="noticeId" type="hidden"><label>Notice title</label><input id="noticeTitle" placeholder="Notice title"><label>Notice content</label><textarea id="noticeBody" placeholder="Write the official notice"></textarea><div class="row"><div class="field"><label>Publish date</label><input id="noticeDate" type="date"></div><div class="field"><label>Status</label><select id="noticeState"><option>Draft</option><option>Published</option><option>Archived</option></select></div></div><div class="row" style="margin-top:10px"><button id="saveNotice">Save notice</button><button id="clearNotice" class="gold">Clear form</button></div><div id="noticeList"></div></section>
+<section id="tab-security" class="hidden"><h2>Change Admin password</h2><p class="muted">Use at least 12 characters. Changing the password ends the current Admin session and requires a fresh sign-in.</p><label>Current password</label><input id="currentPassword" type="password" autocomplete="current-password"><label>New password</label><input id="newPassword" type="password" autocomplete="new-password"><label>Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password"><button id="changePassword" style="margin-top:12px">Change password</button><div id="passwordStatus" class="status hidden"></div></section>
+</div></section></main>
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbxPwRrD35fv7UWOJO6EN6eqIxT5czuaIBjbU8qR9xfdFYuod6bB-RrNj6r0hDuma6Qk6Q/exec';
-let token=sessionStorage.getItem('ss26AdminSession')||'',busy=false,requestNo=0,records=[];
+let sessionToken=sessionStorage.getItem('ss26AdminSession')||'',seq=0,busy=false,registrations=[];
 const $=id=>document.getElementById(id);
-function msg(id,text,error){const el=$(id);el.textContent=text;el.classList.remove('hidden');el.classList.toggle('error',!!error);}
+function show(id,msg,error){$(id).textContent=msg;$(id).classList.remove('hidden');$(id).classList.toggle('error',!!error);}
+function hide(id){$(id).classList.add('hidden');}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function request(payload,callback){
- if(busy){callback({success:false,error:'Please wait for the current request.'});return;}
- busy=true;
- const requestToken='ADM-'+Date.now()+'-'+Math.random().toString(16).slice(2);
- const requestPayload=Object.assign({},payload,{clientToken:requestToken});
- const name='ss26-admin-'+(++requestNo),frame=document.createElement('iframe');
- frame.name=name;frame.title='Secure admin response';frame.style.cssText='position:absolute;width:1px;height:1px;left:-10px;bottom:0;border:0;opacity:0';document.body.appendChild(frame);
- const form=document.createElement('form');form.method='POST';form.action=API_URL;form.target=name;form.style.display='none';
- const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(requestPayload);form.appendChild(input);document.body.appendChild(form);
- let done=false;
- const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;};
- const timer=setTimeout(()=>{cleanup();callback({success:false,error:'The Apps Script Web App did not respond. The latest Code.gs must be deployed as a new Web App version with access set to Anyone.'});},45000);
- function onMessage(e){const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT'||d.token!==requestToken)return;cleanup();callback(d);}
- window.addEventListener('message',onMessage);
- try{form.submit();}catch(err){cleanup();callback({success:false,error:'Could not send request: '+String(err.message||err)});}
+function request(payload,done){
+ if(busy){done({success:false,error:'Please wait for the current request.'});return;}
+ busy=true;const token='ADMIN-'+Date.now()+'-'+Math.random().toString(16).slice(2),name='ss26-admin-'+(++seq),frame=document.createElement('iframe');
+ frame.name=name;frame.hidden=true;document.body.appendChild(frame);
+ const form=document.createElement('form');form.method='POST';form.action=API_URL;form.target=name;form.hidden=true;
+ const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(Object.assign({},payload,{clientToken:token}));form.appendChild(input);document.body.appendChild(form);
+ let ended=false;const cleanup=()=>{if(ended)return;ended=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;};
+ const timer=setTimeout(()=>{cleanup();done({success:false,error:'Server did not respond. Please retry.'});},60000);
+ function onMessage(e){const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT'||d.token!==token)return;cleanup();done(d);}
+ window.addEventListener('message',onMessage);form.submit();
 }
-
-function loadViewerSettings(){
- request({action:'getviewersettings',sessionToken:token},d=>{
-  if(!d.success){msg('viewerAccessStatus',d.error||'Could not load viewer access list.',true);return;}
-  $('viewerEmails').value=(d.emails||[]).join(', ');
-  msg('viewerAccessStatus',(d.emails||[]).length+' authorised viewer account(s).',false);
- });
-}
-$('saveViewerEmails').addEventListener('click',()=>{
- request({action:'saveviewersettings',sessionToken:token,emails:$('viewerEmails').value},d=>{
-  if(!d.success){msg('viewerAccessStatus',d.error||'Could not save viewer access.',true);return;}
-  $('viewerEmails').value=(d.emails||[]).join(', ');
-  msg('viewerAccessStatus','Saved. '+d.emails.length+' Google account(s) are authorised.',false);
- });
-});
-$('reloadViewerEmails').addEventListener('click',loadViewerSettings);
-function loadNotificationSettings(afterLoad){
- request({action:'getnotificationsettings',sessionToken:token},d=>{
-  if(!d.success){msg('notificationStatus',d.error||'Could not load notification recipients.',true);return;}
-  $('notificationEmails').value=(d.emails||[]).join(', ');
-  msg('notificationStatus',(d.emails||[]).length+' email recipient(s) configured.',false);
-  if(typeof afterLoad==='function')afterLoad();
- });
-}
-$('saveNotificationEmails').addEventListener('click',()=>{
- const emails=$('notificationEmails').value;
- request({action:'savenotificationsettings',sessionToken:token,emails:emails},d=>{
-  if(!d.success){msg('notificationStatus',d.error||'Could not save email recipients.',true);return;}
-  $('notificationEmails').value=(d.emails||[]).join(', ');
-  msg('notificationStatus','Saved. '+d.emails.length+' recipient(s) will receive every new registration notification.',false);
- });
-});
-$('reloadNotificationEmails').addEventListener('click',loadNotificationSettings);
-function loginView(){token='';sessionStorage.removeItem('ss26AdminSession');$('login').classList.remove('hidden');$('app').classList.add('hidden');}
-function loadDashboard(){
- request({action:'admindashboard',sessionToken:token},d=>{
-  if(!d.success){msg('dashStatus',d.error||'Dashboard failed.',true);if((d.error||'').toLowerCase().includes('session'))loginView();return;}
-  $('total').textContent=d.total;$('pending').textContent=d.pending;$('pendingPayment').textContent=d.pendingPayment;$('approved').textContent=d.approved;$('rejected').textContent=d.rejected;$('collected').textContent='₹'+Number(d.collectedAmount||0).toLocaleString('en-IN');$('pendingAmount').textContent='₹'+Number(d.pendingAmount||0).toLocaleString('en-IN');$('last7Count').textContent=d.last7DaysCount||0;
-  renderRecords(d.registrations||[]);renderRecent(d.last7Days||[]);renderAudit(d.auditLogs||[]);renderNotices(d.notices||[]);loadNotificationSettings(loadViewerSettings);
- });
-}
-
-const EXPORT_COLUMNS=[['submittedAt','Submitted At'],['participantId','Participant ID'],['participantName','Participant Name'],['parish','Parish'],['diocese','Diocese'],['country','Country'],['state','State / Province'],['district','District'],['whatsapp','WhatsApp Number'],['entryType','Entry Type'],['registrationFee','Registration Fee (INR)'],['utr','UTR / Transaction ID'],['paymentStatus','Payment Status'],['registrationStatus','Registration Status'],['adminNote','Admin Note']];
-function getExportRecords(callback){
- const filter=$('exportFilter').value;msg('exportStatus','Preparing secure export…',false);
- request({action:'exportregistrations',sessionToken:token,filter:filter},d=>{
-  if(!d.success){msg('exportStatus',d.error||'Export failed.',true);return;}
-  msg('exportStatus',d.count+' records ready. Photos and payment receipts are excluded.',false);callback(d.records||[],filter);
- });
-}
-function csvCell(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}
-function downloadExcelCsv(rows,filter){
- const lines=[EXPORT_COLUMNS.map(c=>csvCell(c[1])).join(',')];
- rows.forEach(r=>lines.push(EXPORT_COLUMNS.map(c=>csvCell(r[c[0]])).join(',')));
- const blob=new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'});
- const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='Star-Singers-2026-'+filter+'-participants.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
- msg('exportStatus','Excel-compatible CSV downloaded. Open with Microsoft Excel or Google Sheets.',false);
-}
-function printExportPdf(rows,filter){
- const w=window.open('','_blank');if(!w){msg('exportStatus','Allow pop-ups for this Admin page to create the PDF print view.',true);return;}
- const h=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const head=EXPORT_COLUMNS.map(c=>'<th>'+h(c[1])+'</th>').join('');
- const body=rows.map(r=>'<tr>'+EXPORT_COLUMNS.map(c=>'<td>'+h(r[c[0]])+'</td>').join('')+'</tr>').join('');
- const title='STAR SINGERS 2026 — PARTICIPANT REGISTER';
- w.document.open();
- w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+title+'</title><style>@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}body{font:10px Arial,sans-serif;color:#142b27}h1{font-size:18px;margin:0 0 5px;color:#7a1820}p{margin:0 0 14px;color:#555}table{border-collapse:collapse;width:100%;table-layout:auto}th,td{border:1px solid #b9b09b;padding:5px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{background:#123b31;color:#fff;font-size:9px}tr:nth-child(even){background:#f5f0e4}thead{display:table-header-group}tr{break-inside:avoid}</style></head><body><h1>'+title+'</h1><p>Filter: '+h(filter)+' · Total records: '+rows.length+' · Generated: '+h(new Date().toLocaleString())+'<br>Participant photos and payment receipt files are excluded.</p><table><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table><script>window.onload=function(){window.print();};<\/script></body></html>');
- w.document.close();
-}
-
-function renderRecent(list){
- $('recentRecords').innerHTML=list.length?list.map(r=>'<article class="card"><div class="cardtop"><div><b>'+esc(r.participantName)+'</b><div class="muted">'+esc(r.submittedAt)+' · '+esc(r.status)+'</div></div><span class="tag">'+esc(r.paymentStatus)+'</span></div><div class="id">'+esc(r.registrationId||'ID not issued')+'</div><details class="expand"><summary>View participant details & documents</summary><div class="expand-body"><div class="details"><div><b>Tracking:</b> '+esc(r.trackingRef)+'</div><div><b>Participant ID:</b> '+esc(r.registrationId||'Not issued')+'</div><div><b>WhatsApp:</b> '+esc(r.phone)+'</div><div><b>UTR:</b> '+esc(r.utr||'Not provided')+'</div></div><div class="filelinks"><button type="button" class="gold" data-photo-ref="'+esc(r.trackingRef)+'">View Participant Photo</button> <a target="_blank" rel="noopener" href="'+esc(r.originalPhotoUrl||'')+'">Original Photo (Admin Only) ↗</a> <a target="_blank" rel="noopener" href="'+esc(r.paymentProofUrl)+'">Payment Proof ↗</a></div></div></details></article>').join(''):'<p class="muted">No submissions in the last 7 days.</p>';
-}
-function renderAudit(list){
- $('auditLogs').innerHTML=list.length?list.map(x=>'<div class="notice"><b>'+esc(x.action)+'</b> <span class="tag">'+esc(x.admin)+'</span><div class="muted">'+esc(x.timestamp)+' · '+esc(x.recordId)+'</div><div>'+esc(x.details)+'</div></div>').join(''):'<p class="muted">No admin activity recorded yet.</p>';
-}
-function renderRecords(list){
- records=list;$('records').innerHTML=list.length?list.map((r,i)=>'<article class="card"><div class="cardtop"><div><div class="id">'+esc(r.registrationId||r.trackingRef)+'</div><b>'+esc(r.participantName)+'</b><div class="muted">'+esc(r.submittedAt)+' · '+esc(r.status)+'</div></div><span class="tag">'+esc(r.paymentStatus)+'</span></div><details class="expand"><summary>Expand full registration details</summary><div class="expand-body"><div class="details"><div><b>Tracking:</b> '+esc(r.trackingRef)+'</div><div><b>UTR:</b> '+esc(r.utr||'Not provided')+'</div><div><b>Parish:</b> '+esc(r.parishName)+'</div><div><b>Diocese:</b> '+esc(r.diocese)+'</div><div><b>Residence:</b> '+esc([r.country,r.state,r.district].filter(Boolean).join(', '))+'</div><div><b>WhatsApp:</b> '+esc(r.phone)+'</div><div><b>Fee:</b> ₹'+esc(r.fee)+'</div><div><b>Entry:</b> '+esc(r.entryType)+'</div></div><div class="filelinks"><button type="button" class="gold" data-photo-ref="'+esc(r.trackingRef)+'">View Participant Photo</button> <a target="_blank" rel="noopener" href="'+esc(r.paymentProofUrl)+'">View Payment Proof ↗</a></div><label>Admin note</label><input id="note-'+i+'" value="'+esc(r.adminNote)+'" placeholder="Optional verification note"><div class="actions">'+(r.status==='Pending Review'&&r.paymentStatus==='Pending Verification'?'<button class="gold" data-action="verify" data-index="'+i+'">Verify Payment</button>':'')+(r.status==='Pending Review'&&r.paymentStatus==='Verified'?'<button data-action="approve" data-index="'+i+'">Approve & Generate ID</button><button class="red" data-action="reject" data-index="'+i+'">Reject</button>':'')+(r.registrationId?'<button class="gold" data-action="share" data-index="'+i+'">Share ID on WhatsApp</button>':'')+(String(r.status||'').toLowerCase()==='approved'&&r.registrationId&&r.photoUrl?'<div class="entry-actions"><div class="entry-label">JKJ CREATIONS · OFFICIAL ENTRY CARD</div><button data-action="entry-preview" data-index="'+i+'">Preview Card</button><button data-action="entry-download" data-index="'+i+'">Download PNG</button><button data-action="entry-whatsapp" data-index="'+i+'">Share Card on WhatsApp</button></div>':'')+'</div></div></details></article>').join(''):'<p class="muted">No registrations found.</p>';
-}
-
-let activeEntryRecord=null,entryCaption='';
-function fetchParticipantPhoto(record){
- return new Promise((resolve,reject)=>{
-  const payload={action:'getentryphoto',sessionToken:token};
-  if(record&&record.trackingRef)payload.trackingRef=record.trackingRef;
-  else if(record&&record.registrationId)payload.participantId=record.registrationId;
-  else {reject(new Error('Tracking Reference or Participant ID is missing.'));return;}
-  request(payload,d=>{
-   if(!d.success){reject(new Error(d.error||'Secure photo retrieval failed.'));return;}
-   if(!d.photoBase64||!d.mimeType){reject(new Error('The server returned an incomplete photo response.'));return;}
-   resolve('data:'+d.mimeType+';base64,'+d.photoBase64);
-  });
- });
-}
-function openParticipantPhoto(record){
- $('photoPreview').classList.add('hidden');$('photoPreview').removeAttribute('src');
- $('photoModalStatus').textContent='Loading photo securely from the private Google Drive folder…';
- $('photoModal').classList.add('open');
- fetchParticipantPhoto(record).then(src=>{
-  $('photoPreview').onload=()=>{$('photoPreview').classList.remove('hidden');$('photoModalStatus').textContent='Photo loaded through the authenticated Admin session.';};
-  $('photoPreview').onerror=()=>{$('photoModalStatus').textContent='The photo data could not be displayed.';};
-  $('photoPreview').src=src;
- }).catch(err=>{$('photoModalStatus').textContent=err.message||'Unable to retrieve participant photo.';});
-}
-function loadCardImage(src,crossOrigin){
- return new Promise((resolve,reject)=>{
-  if(!src){reject(new Error('Participant photo is not available.'));return;}
-  const im=new Image();
-  if(crossOrigin)im.crossOrigin='anonymous';
-  im.onload=()=>resolve(im);
-  im.onerror=()=>reject(new Error('Could not load the image. Please check that the image file is available.'));
-  im.src=src;
- });
-}
-function rr(ctx,x,y,w,h,r){
- ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
-}
-function fitText(ctx,text,maxWidth){
- let s=String(text||'');
- while(s.length>3&&ctx.measureText(s).width>maxWidth)s=s.slice(0,-2)+'…';
- return s;
-}
-function drawEntryCard(r,photo,logo){
- const c=$('entryCanvas'),ctx=c.getContext('2d'),W=c.width,H=c.height;
- ctx.clearRect(0,0,W,H);
- // Premium, balanced portrait layout: compact event header, prominent photo, clean identity block.
- const bg=ctx.createLinearGradient(0,0,W,H);bg.addColorStop(0,'#720d19');bg.addColorStop(.52,'#a91a25');bg.addColorStop(1,'#102b24');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
- for(let i=0;i<48;i++){const x=(i*173)%W,y=(i*251)%H;ctx.beginPath();ctx.arc(x,y,1.5+(i%3),0,Math.PI*2);ctx.fillStyle='rgba(255,220,140,'+(.07+(i%3)*.025)+')';ctx.fill();}
- ctx.strokeStyle='#e7bd61';ctx.lineWidth=18;rr(ctx,18,18,W-36,H-36,46);ctx.stroke();
- ctx.strokeStyle='rgba(255,236,176,.78)';ctx.lineWidth=3;rr(ctx,40,40,W-80,H-80,34);ctx.stroke();
- ctx.textAlign='center';ctx.textBaseline='alphabetic';
- ctx.fillStyle='#e9c875';ctx.font='bold 25px Georgia';ctx.fillText('✦  ✧  ✦',W/2,91);
- if(logo){const maxW=210,maxH=92,scale=Math.min(maxW/logo.width,maxH/logo.height);ctx.drawImage(logo,(W-logo.width*scale)/2,103,logo.width*scale,logo.height*scale);}else{ctx.fillStyle='#fff4d4';ctx.font='bold 48px Georgia';ctx.fillText('JKJ',W/2,160);ctx.font='bold 23px Arial';ctx.fillText('CREATIONS',W/2,190);}
- ctx.fillStyle='#f5d98d';ctx.font='bold 21px Arial';ctx.fillText('FAITH  •  CREATIVITY  •  SERVICE',W/2,218);
- ctx.fillStyle='#fff4dc';ctx.font='bold 43px Georgia';ctx.fillText('NAKSHATHRA GAYAKAR',W/2,285);
- ctx.fillStyle='#f7d27d';ctx.font='bold 35px Arial';ctx.fillText('STAR SINGERS 2026',W/2,333);
- ctx.fillStyle='#fff';ctx.font='21px Arial';ctx.fillText('AN ONLINE CHRISTMAS CAROL SINGING COMPETITION',W/2,371);
- const ribbon=ctx.createLinearGradient(135,0,W-135,0);ribbon.addColorStop(0,'#8b641f');ribbon.addColorStop(.5,'#fff0b8');ribbon.addColorStop(1,'#8b641f');
- ctx.fillStyle=ribbon;rr(ctx,115,397,W-230,68,18);ctx.fill();
- ctx.fillStyle='#68121a';ctx.font='bold 33px Georgia';ctx.fillText('OFFICIAL ENTRY CARD',W/2,442);
- // Photo is framed consistently and centred, with breathing room above and below.
- const pw=390,ph=420,px=(W-pw)/2,py=500;
- ctx.save();rr(ctx,px-11,py-11,pw+22,ph+22,30);ctx.fillStyle='#f3d17b';ctx.fill();
- ctx.beginPath();rr(ctx,px,py,pw,ph,21);ctx.clip();
- const scale=Math.max(pw/photo.width,ph/photo.height),sw=pw/scale,sh=ph/scale,sx=(photo.width-sw)/2,sy=(photo.height-sh)/2;
- ctx.drawImage(photo,sx,sy,sw,sh,px,py,pw,ph);ctx.restore();
- // Name: one clean, centred plate. Font scales down for long names instead of clipping.
- ctx.fillStyle='#fff0c5';rr(ctx,105,966,W-210,100,22);ctx.fill();
- ctx.strokeStyle='#d5a844';ctx.lineWidth=5;rr(ctx,105,966,W-210,100,22);ctx.stroke();
- let nameFont=48;ctx.font='bold '+nameFont+'px Arial';while(nameFont>30&&ctx.measureText(String(r.participantName||'PARTICIPANT')).width>W-270){nameFont-=2;ctx.font='bold '+nameFont+'px Arial';}
- ctx.fillStyle='#6f151c';ctx.fillText(String(r.participantName||'PARTICIPANT'),W/2,1030);
- // Participant ID is visually subordinate to the name, but remains easy to read.
- ctx.fillStyle='#f7d78d';ctx.font='bold 25px Arial';ctx.fillText('PARTICIPANT ID',W/2,1114);
- ctx.fillStyle='#0b382b';rr(ctx,155,1135,W-310,82,18);ctx.fill();
- ctx.strokeStyle='#d7b45c';ctx.lineWidth=4;rr(ctx,155,1135,W-310,82,18);ctx.stroke();
- let idFont=37;ctx.font='bold '+idFont+'px Arial';while(idFont>25&&ctx.measureText(String(r.registrationId||'')).width>W-370){idFont-=2;ctx.font='bold '+idFont+'px Arial';}
- ctx.fillStyle='#fff6d8';ctx.fillText(String(r.registrationId||''),W/2,1188);
- // Restrained footer anchors the composition and balances the lower margin.
- ctx.fillStyle='rgba(255,239,196,.9)';ctx.font='bold 19px Arial';ctx.fillText('JKJ CREATIONS  •  OFFICIAL PARTICIPANT',W/2,1282);
- ctx.fillStyle='rgba(255,239,196,.75)';ctx.font='17px Arial';ctx.fillText('Keep this Entry Card safe',W/2,1312);
-}
-function entryMessage(r){
- return '🎄 NAKSHATHRA GAYAKAR – STAR SINGERS 2026\nOFFICIAL ENTRY CARD\n\nParticipant: '+(r.participantName||'')+'\nParticipant ID: '+(r.registrationId||'')+'\n\nYour participation is officially approved. Please keep this Entry Card safe.\n\nJKJ CREATIONS';
-}
-async function openEntryCard(r){
- activeEntryRecord=r;entryCaption=entryMessage(r);$('entryCardStatus').textContent='Preparing your card…';$('entryModal').classList.add('open');
- try{
-  const [photoData,logo]=await Promise.all([
-   fetchParticipantPhoto({trackingRef:r.trackingRef}),
-   loadCardImage('assets/jkj-creations-logo.webp',false).catch(()=>null)
-  ]);
-  const photo=await loadCardImage(photoData,false);
-  drawEntryCard(r,photo,logo);$('entryCardStatus').textContent='';
- }catch(err){$('entryCardStatus').textContent=err.message;}
-}
-function downloadEntryPng(){
- const c=$('entryCanvas');
- try{const a=document.createElement('a');a.download=((activeEntryRecord&&activeEntryRecord.registrationId)||'JKJ-Entry-Card')+'.png';a.href=c.toDataURL('image/png');a.click();}
- catch(err){$('entryCardStatus').textContent='PNG export failed. Please reopen the card and try again.';}
-}
-function openEntryWhatsApp(){
- if(!activeEntryRecord)return;
- const digits=String(activeEntryRecord.phone||'').replace(/\D/g,'');
- if(!digits){$('entryCardStatus').textContent='No valid WhatsApp number is saved for this participant.';return;}
- window.open('https://wa.me/'+digits,'_blank','noopener');
- try{navigator.clipboard?.writeText(entryCaption);$('entryCardStatus').textContent='WhatsApp opened. Message copied if clipboard permission is available. Attach the downloaded PNG and paste the caption.';}
- catch(e){$('entryCardStatus').textContent='WhatsApp opened. Attach the downloaded PNG and use Copy Message for its caption.';}
-}
-$('entryClose').onclick=()=>$('entryModal').classList.remove('open');
-$('photoClose').onclick=()=>$('photoModal').classList.remove('open');
-$('photoModal').addEventListener('click',e=>{if(e.target===$('photoModal'))$('photoModal').classList.remove('open');});
-$('entryModal').addEventListener('click',e=>{if(e.target===$('entryModal'))$('entryModal').classList.remove('open');});
-$('entryDownload').onclick=downloadEntryPng;
-$('entryWhatsApp').onclick=openEntryWhatsApp;
-$('entryCopy').onclick=()=>{if(!activeEntryRecord)return;navigator.clipboard?.writeText(entryCaption).then(()=>$('entryCardStatus').textContent='Participant details copied.').catch(()=>$('entryCardStatus').textContent='Clipboard permission unavailable.');};
-
-$('exportExcel').addEventListener('click',()=>getExportRecords((rows,filter)=>downloadExcelCsv(rows,filter)));
-$('exportPdf').addEventListener('click',()=>getExportRecords((rows,filter)=>printExportPdf(rows,filter)));
-$('recentRecords').addEventListener('click',e=>{const b=e.target.closest('button[data-photo-ref]');if(b)openParticipantPhoto({trackingRef:b.dataset.photoRef});});
-$('records').addEventListener('click',e=>{
- const photoButton=e.target.closest('button[data-photo-ref]');if(photoButton){openParticipantPhoto({trackingRef:photoButton.dataset.photoRef});return;}
- const b=e.target.closest('button[data-action]');if(!b)return;const r=records[Number(b.dataset.index)],action=b.dataset.action;
- if(action==='entry-preview'||action==='entry-download'||action==='entry-whatsapp'){openEntryCard(r).then(()=>{if(action==='entry-download')setTimeout(downloadEntryPng,250);if(action==='entry-whatsapp')setTimeout(openEntryWhatsApp,250);});return;}
- if(action==='share'){const text='⭐ NAKSHATHRA GAYAKAR — STAR SINGERS 2026\nREGISTRATION CONFIRMED\n━━━━━━━━━━━━━━\n🆔 Participant ID: '+r.registrationId+'\n👤 Name: '+r.participantName+'\n⛪ Parish: '+r.parishName+'\n✝️ Diocese: '+r.diocese+'\n🌍 Residence: '+[r.country,r.state,r.district].filter(Boolean).join(', ')+'\n\nYour registration has been approved. Please keep this Participant ID safe.\n\nOfficial Website: https://www.jkjcreations.org';const digits=String(r.phone||'').replace(/\D/g,'');if(!digits){msg('dashStatus','No valid WhatsApp number is saved for this registration.',true);return;}window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(text),'_blank','noopener');return;}
- const note=$('note-'+b.dataset.index).value;
- b.disabled=true;request(action==='verify'?{action:'verifypayment',sessionToken:token,trackingRef:r.trackingRef,adminNote:note}:{action:'reviewregistration',sessionToken:token,trackingRef:r.trackingRef,decision:action,adminNote:note},d=>{if(!d.success){msg('dashStatus',d.error||'Review failed.',true);return;}msg('dashStatus',action==='verify'?'Payment verified. Approval is now enabled.':action==='approve'?'Approved. Participant ID: '+d.registration.registrationId:'Registration rejected.',false);loadDashboard();});
-});
-$('loginForm').addEventListener('submit',e=>{e.preventDefault();if(API_URL.includes('PASTE_')){msg('loginStatus','Apps Script URL has not been configured.',true);return;}msg('loginStatus','Connecting securely to the Admin server…',false);$('loginBtn').disabled=true;request({action:'adminlogin',username:$('username').value.trim(),password:$('password').value},d=>{$('loginBtn').disabled=false;if(!d.success){msg('loginStatus',d.error||'Login failed.',true);return;}token=d.sessionToken;sessionStorage.setItem('ss26AdminSession',token);$('password').value='';$('login').classList.add('hidden');$('app').classList.remove('hidden');loadDashboard();});});
-$('refresh').onclick=loadDashboard;$('logout').onclick=()=>request({action:'adminlogout',sessionToken:token},loginView);
-$('searchForm').addEventListener('submit',e=>{e.preventDefault();const q=$('query').value.trim();if(!q){loadDashboard();return;}request({action:'adminsearch',sessionToken:token,query:q},d=>{if(!d.success){msg('dashStatus',d.error,true);return;}renderRecords(d.registrations||[]);});});
-$('clearSearch').onclick=()=>{$('query').value='';loadDashboard();};
-function noticeRequest(payload,cb){request(Object.assign({action:'adminnotices',sessionToken:token},payload),cb);}
-function renderNotices(list){$('notices').innerHTML=list.map(n=>'<div class="notice"><b>'+esc(n.title)+'</b> <span class="tag">'+esc(n.status)+'</span><div class="muted">'+esc(n.publishDate)+'</div><p>'+esc(n.body)+'</p><div class="actions"><button class="gold" data-edit="'+esc(n.id)+'">Edit</button><button class="red" data-delete="'+esc(n.id)+'">Delete</button></div></div>').join('')||'<p class="muted">No notices yet.</p>'; }
-$('notices').addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit){noticeRequest({noticeAction:'list'},d=>{const n=(d.notices||[]).find(x=>x.id===edit.dataset.edit);if(!n)return;$('noticeId').value=n.id;$('noticeTitle').value=n.title;$('noticeBody').value=n.body;$('noticeDate').value=n.publishDate;$('noticeStatus').value=n.status;window.scrollTo({top:$('noticeForm').offsetTop,behavior:'smooth'});});}if(del&&confirm('Delete this notice?'))noticeRequest({noticeAction:'delete',noticeId:del.dataset.delete},d=>{if(!d.success){msg('noticeStatusMsg',d.error,true);return;}renderNotices(d.notices||[]);msg('noticeStatusMsg','Notice deleted successfully.',false);loadDashboard();});});
-$('noticeForm').addEventListener('submit',e=>{e.preventDefault();const submittedStatus=$('noticeStatus').value;noticeRequest({noticeAction:'save',noticeId:$('noticeId').value,title:$('noticeTitle').value,body:$('noticeBody').value,publishDate:$('noticeDate').value,status:submittedStatus},d=>{if(!d.success){msg('noticeStatusMsg',d.error,true);return;}renderNotices(d.notices||[]);$('noticeForm').reset();$('noticeId').value='';msg('noticeStatusMsg',submittedStatus==='Published'?'Notice published successfully. Public notices feed has been refreshed.':'Notice saved as '+submittedStatus+'.',false);loadDashboard();});});
-$('newNotice').onclick=()=>{$('noticeForm').reset();$('noticeId').value='';};
-$('passwordForm').addEventListener('submit',e=>{e.preventDefault();if($('newPass').value!==$('confirmPass').value){msg('passwordMsg','New passwords do not match.',true);return;}request({action:'changepassword',sessionToken:token,currentPassword:$('currentPass').value,newPassword:$('newPass').value},d=>{if(!d.success){msg('passwordMsg',d.error,true);return;}msg('passwordMsg',d.message,false);setTimeout(loginView,1000);});});
-if(token&&!API_URL.includes('PASTE_')){$('login').classList.add('hidden');$('app').classList.remove('hidden');loadDashboard();}
+function admin(payload,cb){request(Object.assign({},payload,{sessionToken}),d=>{if(!d.success&&/session|login/i.test(d.error||'')){logout(false);show('loginStatus',d.error||'Please sign in again.',true);return;}cb(d);});}
+function signIn(){hide('loginStatus');$('loginBtn').disabled=true;request({action:'adminlogin',username:$('username').value,password:$('password').value},d=>{$('loginBtn').disabled=false;if(!d.success){show('loginStatus',d.error||'Sign-in failed.',true);return;}sessionToken=d.sessionToken;sessionStorage.setItem('ss26AdminSession',sessionToken);$('password').value='';enter(d.username);});}
+function enter(username){$('login').classList.add('hidden');$('app').classList.remove('hidden');$('welcome').textContent='Signed in: '+(username||'Admin');loadDashboard();}
+function logout(callServer=true){const old=sessionToken;sessionToken='';sessionStorage.removeItem('ss26AdminSession');$('app').classList.add('hidden');$('login').classList.remove('hidden');if(callServer&&old)request({action:'adminlogout',sessionToken:old},()=>{});}
+function loadDashboard(){show('globalStatus','Loading dashboard…',false);admin({action:'admindashboard'},d=>{if(!d.success){show('globalStatus',d.error||'Could not load dashboard.',true);return;}registrations=d.registrations||[];renderDashboard(d);hide('globalStatus');});}
+function renderDashboard(d){const items=[['Total registrations',d.total],['Pending payment',d.pendingPayment],['Pending review',d.pending],['Approved',d.approved],['Rejected',d.rejected],['Verified collection','₹'+Number(d.collectedAmount||0).toLocaleString('en-IN')],['Pending amount','₹'+Number(d.pendingAmount||0).toLocaleString('en-IN')],['Last 7 days',d.last7DaysCount]];$('metrics').innerHTML=items.map(x=>'<div class="metric"><span class="muted">'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>').join('');renderRows(registrations);renderNotices(d.notices||[]);}
+function renderRows(rows){$('regRows').innerHTML=rows.map(r=>'<tr><td>'+esc(r.trackingRef)+'</td><td>'+esc(r.registrationId||'—')+'</td><td>'+esc(r.participantName)+'</td><td>'+esc(r.parishName)+'<br>'+esc(r.diocese)+'</td><td>'+esc([r.district,r.state,r.country].filter(Boolean).join(', '))+'</td><td>'+esc(r.phone)+'</td><td>'+esc(r.utr)+'</td><td>'+esc(r.paymentStatus)+'</td><td>'+esc(r.status)+'</td><td>'+esc(r.adminNote)+'</td><td><div class="actions">'+(r.paymentStatus==='Pending Verification'?'<button class="small" data-act="verify" data-ref="'+esc(r.trackingRef)+'">Verify payment</button>':'')+(r.status==='Pending Review'&&r.paymentStatus==='Verified'?'<button class="small" data-act="approve" data-ref="'+esc(r.trackingRef)+'">Approve</button>':'')+(r.status!=='Approved'&&r.status!=='Rejected'?'<button class="small red" data-act="reject" data-ref="'+esc(r.trackingRef)+'">Reject</button>':'')+'</div></td></tr>').join('')||'<tr><td colspan="11">No registrations found.</td></tr>';}
+function search(){const q=$('search').value.trim();if(!q){loadDashboard();return;}show('globalStatus','Searching…',false);admin({action:'adminsearch',query:q},d=>{if(!d.success){show('globalStatus',d.error,true);return;}renderRows(d.registrations||[]);show('globalStatus',(d.count||0)+' matching record(s).',false);});}
+function act(action,ref){let note=prompt('Optional Admin note (leave blank if none):','')||'';if(action==='reject'&&!confirm('Reject this registration?'))return;if(action==='approve'&&!confirm('Approve this participant?'))return;if(action==='verify'&&!confirm('Confirm that the payment is credited in the bank / UPI account?'))return;admin(action==='verify'?{action:'verifypayment',trackingRef:ref,adminNote:note}:{action:'reviewregistration',trackingRef:ref,decision:action,adminNote:note},d=>{if(!d.success){show('globalStatus',d.error,true);return;}show('globalStatus',action==='verify'?'Payment verified.':('Registration '+action+'d.'),false);loadDashboard();});}
+function download(data,filename,mime){const blob=new Blob([data],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url);}
+function exportData(){admin({action:'exportregistrations',filter:$('exportFilter').value},d=>{if(!d.success){show('globalStatus',d.error,true);return;}const rows=d.records||[],cols=rows.length?Object.keys(rows[0]):['submittedAt','participantId','participantName','parish','diocese','country','state','district','whatsapp','entryType','registrationFee','utr','paymentStatus','registrationStatus','adminNote'];const csv=[cols,...rows.map(r=>cols.map(k=>r[k]??''))].map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');download('\ufeff'+csv,'STAR-SINGERS-2026-'+d.filter+'.csv','text/csv;charset=utf-8');show('globalStatus',rows.length+' record(s) exported as CSV (opens in Excel).',false);});}
+function loadSettings(){admin({action:'getnotificationsettings'},d=>{if(d.success)$('notifyEmails').value=(d.emails||[]).join('\n');else show('notifyStatus',d.error,true);});admin({action:'getviewersettings'},d=>{if(d.success)$('viewerEmails').value=(d.emails||[]).join('\n');else show('viewerStatus',d.error,true);});}
+function saveList(action,field,statusId){admin({action:action,emails:$(field).value},d=>{if(!d.success){show(statusId,d.error,true);return;}$(field).value=(d.emails||[]).join('\n');show(statusId,'Saved successfully. '+d.emails.length+' email address(es) configured.',false);});}
+function clearNotice(){$('noticeId').value='';$('noticeTitle').value='';$('noticeBody').value='';$('noticeDate').value='';$('noticeState').value='Draft';}
+function saveNotice(){admin({action:'adminnotices',noticeAction:'save',noticeId:$('noticeId').value,title:$('noticeTitle').value,body:$('noticeBody').value,publishDate:$('noticeDate').value,status:$('noticeState').value},d=>{if(!d.success){show('globalStatus',d.error,true);return;}renderNotices(d.notices||[]);clearNotice();show('globalStatus','Notice saved.',false);});}
+function renderNotices(list){$('noticeList').innerHTML='<h3>Saved notices</h3>'+(list.map(n=>'<div class="notice"><b>'+esc(n.title)+'</b> · '+esc(n.status)+'<p>'+esc(n.body)+'</p><div class="actions"><button class="small gold" data-notice-edit="'+esc(n.id)+'">Edit</button><button class="small red" data-notice-delete="'+esc(n.id)+'">Delete</button></div><span class="muted">'+esc(n.publishDate)+'</span></div>').join('')||'<p class="muted">No notices yet.</p>');}
+function changePassword(){const a=$('currentPassword').value,b=$('newPassword').value;if(b.length<12){show('passwordStatus','New password must contain at least 12 characters.',true);return;}if(b!==$('confirmPassword').value){show('passwordStatus','New password and confirmation do not match.',true);return;}admin({action:'changepassword',currentPassword:a,newPassword:b},d=>{if(!d.success){show('passwordStatus',d.error,true);return;}show('passwordStatus',d.message||'Password changed.',false);logout(false);});}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));['registrations','notifications','viewers','notices','security'].forEach(t=>$('tab-'+t).classList.toggle('hidden',t!==b.dataset.tab));if(b.dataset.tab==='notifications'||b.dataset.tab==='viewers')loadSettings();}));
+$('loginBtn').onclick=signIn;$('password').addEventListener('keydown',e=>{if(e.key==='Enter')signIn();});$('refresh').onclick=loadDashboard;$('logout').onclick=()=>logout();$('searchBtn').onclick=search;$('allBtn').onclick=()=>{$('search').value='';loadDashboard();};$('search').addEventListener('keydown',e=>{if(e.key==='Enter')search();});$('exportBtn').onclick=exportData;$('saveNotify').onclick=()=>saveList('savenotificationsettings','notifyEmails','notifyStatus');$('saveViewers').onclick=()=>saveList('saveviewersettings','viewerEmails','viewerStatus');$('saveNotice').onclick=saveNotice;$('clearNotice').onclick=clearNotice;$('changePassword').onclick=changePassword;
+$('regRows').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b)act(b.dataset.act,b.dataset.ref);});
+$('noticeList').addEventListener('click',e=>{const edit=e.target.closest('[data-notice-edit]'),del=e.target.closest('[data-notice-delete]');if(edit){admin({action:'adminnotices',noticeAction:'list'},d=>{const n=(d.notices||[]).find(x=>x.id===edit.dataset.noticeEdit);if(n){$('noticeId').value=n.id;$('noticeTitle').value=n.title;$('noticeBody').value=n.body;$('noticeDate').value=n.publishDate;$('noticeState').value=n.status;}});}if(del&&confirm('Delete this notice?'))admin({action:'adminnotices',noticeAction:'delete',noticeId:del.dataset.noticeDelete},d=>{if(d.success)renderNotices(d.notices||[]);else show('globalStatus',d.error,true);});});
+if(sessionToken){$('login').classList.add('hidden');$('app').classList.remove('hidden');loadDashboard();} 
 </script></body></html>
