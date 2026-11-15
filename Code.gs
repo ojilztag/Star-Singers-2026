@@ -119,6 +119,7 @@ function doPost(e) {
       case 'adminlogin': out=login_(p); break;
       case 'admindashboard': out=dashboard_(p); break;
       case 'adminsearch': out=search_(p); break;
+      case 'verifypayment': out=verifyPayment_(p); break;
       case 'reviewregistration': out=review_(p); break;
       case 'adminnotices': out=manageNotices_(p); break;
       case 'changepassword': out=changePassword_(p); break;
@@ -215,7 +216,7 @@ function dashboard_(p) {
   const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
   const newest=rows.slice().reverse();
   const pendingPayment=rows.filter(r=>r[19]==='Pending Verification');
-  const pendingReview=rows.filter(r=>r[20]==='Pending Review');
+  const pendingReview=rows.filter(r=>r[20]==='Pending Review'&&r[19]==='Verified');
   const approved=rows.filter(r=>r[20]==='Approved');
   const rejected=rows.filter(r=>r[20]==='Rejected');
   const collected=approved.filter(r=>r[19]==='Verified').reduce((sum,r)=>sum+(Number(r[11])||0),0);
@@ -236,6 +237,26 @@ function search_(p) {
   const found=rows.filter(r=>r.join(' ').toLowerCase().includes(q)).reverse().slice(0,100);
   return {success:true,count:found.length,registrations:found.map(rowObject_)};
 }
+
+function verifyPayment_(p) {
+  const admin=requireAdmin_(p.sessionToken),ref=clean_(p.trackingRef,40);
+  const lock=LockService.getScriptLock();lock.waitLock(20000);
+  try {
+    const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+    if(last<2)throw new Error('No registrations found.');
+    const cell=sh.getRange(2,1,last-1,1).createTextFinder(ref).matchEntireCell(true).findNext();
+    if(!cell)throw new Error('Registration record not found.');
+    const row=cell.getRow(),r=sh.getRange(row,1,1,REG_HEADERS.length).getValues()[0];
+    if(r[19]==='Verified')throw new Error('Payment is already verified.');
+    if(r[19]==='Rejected'||r[20]==='Rejected')throw new Error('Rejected registration cannot be verified.');
+    if(!r[17])throw new Error('Payment proof file is missing.');
+    r[19]='Verified';r[21]=clean_(p.adminNote,500);r[22]=new Date();r[23]=admin.user;
+    sh.getRange(row,1,1,REG_HEADERS.length).setValues([r]);
+    audit_(admin.user,'PAYMENT_VERIFIED',ref,'Admin manually confirmed bank/UPI credit.');
+    return {success:true,registration:rowObject_(r)};
+  } finally {lock.releaseLock();}
+}
+
 function review_(p) {
   const admin=requireAdmin_(p.sessionToken),ref=clean_(p.trackingRef,40),decision=String(p.decision||'').toLowerCase();
   if(!['approve','reject'].includes(decision))throw new Error('Choose approve or reject.');
@@ -247,10 +268,14 @@ function review_(p) {
     if(!cell)throw new Error('Registration record not found.');
     const row=cell.getRow(),r=sh.getRange(row,1,1,REG_HEADERS.length).getValues()[0];
     if(decision==='approve') {
-      if(r[19]!=='Pending Verification')throw new Error('Payment is not pending verification.');
+      if(r[19]!=='Verified')throw new Error('Verify the payment first. Approval is locked until payment is manually verified.');
+      if(r[20]!=='Pending Review')throw new Error('This registration is not awaiting approval.');
       if(!r[1])r[1]=uniqueId_(sh);
-      r[19]='Verified';r[20]='Approved';
-    } else {r[19]='Rejected';r[20]='Rejected';}
+      r[20]='Approved';
+    } else {
+      if(r[20]==='Approved')throw new Error('An approved registration cannot be rejected from this screen.');
+      r[19]='Rejected';r[20]='Rejected';
+    }
     r[21]=clean_(p.adminNote,500);r[22]=new Date();r[23]=admin.user;
     sh.getRange(row,1,1,REG_HEADERS.length).setValues([r]);
     audit_(admin.user,'REGISTRATION_'+decision.toUpperCase(),ref,r[19]);
