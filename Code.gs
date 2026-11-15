@@ -156,6 +156,8 @@ function doPost(e) {
       case 'adminnotices': out=manageNotices_(p); break;
       case 'changepassword': out=changePassword_(p); break;
       case 'adminlogout': out=logout_(p); break;
+      case 'getnotificationsettings': out=getNotificationSettings_(p); break;
+      case 'savenotificationsettings': out=saveNotificationSettings_(p); break;
       default: throw new Error('Unsupported action.');
     }
     return reply_('SS26_ADMIN_RESULT',out,p.clientToken);
@@ -225,6 +227,8 @@ function register_(p) {
       photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
     const row=sh.getLastRow();sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');
     audit_('PUBLIC','REGISTRATION_SUBMITTED',ref,'Photo and payment proof stored in private Drive folders.');
+    // Email is sent only after a new registration has been committed successfully.
+    sendRegistrationNotification_(ref, {name:name, parish:parish, diocese:diocese, country:country, state:state, district:district, phone:phone, fee:500});
     const result={success:true,trackingRef:ref,message:'Registration request received. Payment and documents are pending organiser verification.'};
     if(clientToken)CacheService.getScriptCache().put('SS26_SUBMIT_'+clientToken,JSON.stringify(result),21600);
     return result;
@@ -302,6 +306,56 @@ function exportRegistrations_(p) {
   }));
   audit_(admin.user,'REGISTRATION_EXPORT',filter,'Exported '+data.length+' participant records; photo and payment-proof files excluded.');
   return {success:true,count:data.length,filter:filter,records:data};
+}
+
+
+function getNotificationSettings_(p) {
+  requireAdmin_(p.sessionToken);
+  const raw=PropertiesService.getScriptProperties().getProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS')||'';
+  return {success:true,emails:raw.split(/[;,\\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)};
+}
+function saveNotificationSettings_(p) {
+  const admin=requireAdmin_(p.sessionToken);
+  const raw=String(p.emails||'');
+  const emails=[...new Set(raw.split(/[;,\\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean))];
+  if(emails.length>30)throw new Error('A maximum of 30 notification email addresses is allowed.');
+  const invalid=emails.filter(x=>!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(x));
+  if(invalid.length)throw new Error('Invalid email address: '+invalid[0]);
+  if(!emails.length)throw new Error('Add at least the Main Admin email address.');
+  PropertiesService.getScriptProperties().setProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS',emails.join(','));
+  audit_(admin.user,'NOTIFICATION_RECIPIENTS_UPDATED','EMAIL',emails.length+' recipient(s) configured.');
+  return {success:true,emails:emails};
+}
+function sendRegistrationNotification_(ref, info) {
+  try {
+    const props=PropertiesService.getScriptProperties();
+    const recipients=(props.getProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS')||'').split(',').map(x=>x.trim()).filter(x=>/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(x));
+    if(!recipients.length) {
+      audit_('SYSTEM','REGISTRATION_EMAIL_NOT_SENT',ref,'No notification recipients configured.');
+      return;
+    }
+    const subject='STAR SINGERS 2026 — New Participant Registration: '+ref;
+    const body=[
+      'A new participant registration was successfully submitted.',
+      '',
+      'Tracking Reference: '+ref,
+      'Participant Name: '+info.name,
+      'Parish: '+info.parish,
+      'Diocese: '+info.diocese,
+      'Country: '+info.country,
+      'State / Province: '+info.state,
+      'District: '+info.district,
+      'WhatsApp: '+info.phone,
+      'Registration Fee: INR '+info.fee,
+      '',
+      'This is the only automatic email notification configured for this workflow. Payment review, approval, rejection and other admin actions do not send email.'
+    ].join('\\n');
+    MailApp.sendEmail({to:recipients.join(','),subject:subject,body:body,name:'STAR SINGERS 2026'});
+    audit_('SYSTEM','REGISTRATION_EMAIL_SENT',ref,'Notification sent to '+recipients.length+' configured recipient(s).');
+  } catch(err) {
+    // Do not roll back a valid registration because the email service failed.
+    audit_('SYSTEM','REGISTRATION_EMAIL_FAILED',ref,String(err&&err.message||err).slice(0,250));
+  }
 }
 
 function verifyPayment_(p) {
