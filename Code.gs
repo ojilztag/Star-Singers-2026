@@ -58,7 +58,18 @@ function setupStarSingersBackend() {
   settings.setFrozenRows(1);
   const finance=ss.insertSheet('Payment Reconciliation');
   finance.getRange(1,1,1,FINANCE_HEADERS.length).setValues([FINANCE_HEADERS]).setFontWeight('bold');
+  finance.getRange('A2').setFormula('=QUERY(Registrations!A:U,"select C,A,D,M,L,T where A is not null",1)');
   finance.setFrozenRows(1);
+  const dash=ss.insertSheet('Dashboard',0);
+  dash.getRange('A1:B1').merge().setValue('STAR SINGERS 2026 — LIVE SUMMARY').setFontWeight('bold').setFontSize(16);
+  dash.getRange('A3:B10').setValues([
+    ['Metric','Live Value'],['Total Registrations',''],['Payment Verification Pending',''],['Registration Review Pending',''],['Approved',''],['Rejected',''],['Verified Collection (INR)',''],['Pending Amount (INR)','']
+  ]).setFontWeight('bold');
+  dash.getRange('B4:B9').setFormulas([
+    ['=COUNTA(Registrations!A2:A)'],['=COUNTIF(Registrations!T2:T,"Pending Verification")'],['=COUNTIF(Registrations!U2:U,"Pending Review")'],['=COUNTIF(Registrations!U2:U,"Approved")'],['=COUNTIF(Registrations!U2:U,"Rejected")'],['=SUMIFS(Registrations!L2:L,Registrations!T2:T,"Verified",Registrations!U2:U,"Approved")']
+  ]);
+  dash.getRange('B10').setFormula('=SUMIF(Registrations!T2:T,"Pending Verification",Registrations!L2:L)');
+  dash.setColumnWidths(1,2,240);dash.setFrozenRows(3);
   const root = DriveApp.createFolder('STAR SINGERS 2026 — PRIVATE FILES');
   const photos = root.createFolder('Cropped Participant Photos');
   const originals = root.createFolder('Original Participant Photos — Admin Only');
