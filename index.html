@@ -289,7 +289,7 @@ body{padding-top:80px}
 
 <div class="form-grid payment-fields">
 <label>Payment Screenshot / Receipt *<input name="paymentProof" id="paymentProof" type="file" accept="image/*,application/pdf" required><small>Required. Upload the successful payment screenshot or receipt.</small><div id="paymentProofPreview" class="payment-proof-preview" hidden aria-live="polite"></div></label>
-<label>UTR / Transaction ID *<input name="utr" id="utr" type="text" required maxlength="80" placeholder="Enter UTR / Transaction ID"><small>Used only to identify and verify your payment. It does not replace the mandatory screenshot.</small></label>
+<label>UTR / Transaction ID (Optional)<input name="utr" id="utr" type="text" maxlength="80" placeholder="Enter UTR / Transaction ID (if available)"><small>Optional. You may leave this blank. Payment screenshot / receipt is mandatory.</small></label>
 </div>
 <button class="btn red form-submit" type="submit">Submit Registration & Payment Proof</button>
 <p class="payment-disclaimer">Submitting proof does not mean payment is automatically verified. Your registration remains pending until the organisers check and approve it. No ID or Entry Card is generated at this stage.</p>
