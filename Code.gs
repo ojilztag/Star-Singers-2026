@@ -72,7 +72,7 @@ function initializeStarSingersAdmin() {
 function doGet(e) {
   const action=String(e&&e.parameter&&e.parameter.action||'health');
   if(action==='notices') {
-    const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\\\u003c');
+    const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\u003c');
     return HtmlService.createHtmlOutput('<!doctype html><html><body><script>parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
   return ContentService.createTextOutput('STAR SINGERS 2026 API is active.').setMimeType(ContentService.MimeType.TEXT);
@@ -112,14 +112,14 @@ function db_(){const id=PropertiesService.getScriptProperties().getProperty('SS2
 function sheet_(name,headers){const s=db_().getSheetByName(name);if(!s)throw new Error('Missing sheet: '+name);const h=s.getRange(1,1,1,headers.length).getDisplayValues()[0];if(headers.some((v,i)=>h[i]!==v))throw new Error('Sheet headers do not match. No data was changed.');return s;}
 function folder_(key){const id=PropertiesService.getScriptProperties().getProperty(key);if(!id)throw new Error('Drive folder not configured.');return DriveApp.getFolderById(id);}
 function clean_(v,n){return String(v==null?'':v).replace(/[<>]/g,'').trim().slice(0,n);}
-function digits_(v){return String(v||'').replace(/\\D/g,'');}
+function digits_(v){return String(v||'').replace(/\D/g,'');}
 function decodeFile_(obj,label) {
   if(!obj||!obj.data||!obj.name||!obj.mimeType)throw new Error(label+' is required.');
   const bytes=Utilities.base64Decode(String(obj.data));
   if(!bytes.length||bytes.length>CFG.MAX_FILE_BYTES)throw new Error(label+' must be smaller than 3 MB.');
   const mime=String(obj.mimeType);
-  if(label==='Participant Photo'&&!/^image\\/(jpeg|png|webp|heic)$/.test(mime))throw new Error('Participant photo must be JPG, PNG, WebP or HEIC.');
-  if(label==='Payment Proof'&&!(/^image\\/(jpeg|png|webp|heic)$/.test(mime)||mime==='application/pdf'))throw new Error('Payment proof must be an image or PDF.');
+  if(label==='Participant Photo'&&!/^image\/(jpeg|png|webp|heic)$/.test(mime))throw new Error('Participant photo must be JPG, PNG, WebP or HEIC.');
+  if(label==='Payment Proof'&&!(/^image\/(jpeg|png|webp|heic)$/.test(mime)||mime==='application/pdf'))throw new Error('Payment proof must be an image or PDF.');
   const safeName=String(obj.name).replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,90);
   return Utilities.newBlob(bytes,mime,safeName);
 }
@@ -134,7 +134,7 @@ function register_(p) {
   const country=clean_(p.country,100),state=clean_(p.state,100),district=clean_(p.district,100);
   const phone=String(p.phone||'').trim(),utr=clean_(p.utr,100);
   if(!name||!parish||!diocese||!country||!state||!district||!phone||!utr)throw new Error('Complete all required fields.');
-  if(!/^\\+[1-9]\\d{6,14}$/.test(phone.replace(/[\\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
+  if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
   if(String(p.feeConsent)!=='true')throw new Error('Registration fee consent is required.');
   if(Number(p.fee)!==500)throw new Error('Registration fee must be ₹500.');
   const photo=decodeFile_(p.photo,'Participant Photo'),proof=decodeFile_(p.paymentProof,'Payment Proof');
