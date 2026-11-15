@@ -240,7 +240,7 @@ function adminNotices_() {
   const sh=sheet_(CFG.NOTICE_SHEET,NOTICE_HEADERS),last=sh.getLastRow();
   return last<2?[]:sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues().reverse().map(r=>({id:String(r[0]),title:String(r[3]),body:String(r[4]),publishDate:String(r[5]||''),status:String(r[6])}));
 }
-function publicNotices_(){return adminNotices_().filter(n=>n.status==='Published');}
+function publicNotices_(){return adminNotices_().filter(n=>n.status==='Published').map(n=>({date:n.publishDate,title:n.title,summary:n.body.slice(0,220),content:n.body,category:'Official Notice'}));}
 function audit_(user,action,id,details){try{db_().getSheetByName(CFG.AUDIT_SHEET).appendRow([new Date(),user,action,id,details]);}catch(ignore){}}
 function changePassword_(p) {
   const admin=requireAdmin_(p.sessionToken),props=PropertiesService.getScriptProperties(),cur=String(p.currentPassword||''),next=String(p.newPassword||'');
