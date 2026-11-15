@@ -103,7 +103,7 @@ function doGet(e) {
   const action=String(e&&e.parameter&&e.parameter.action||'health');
   if(action==='notices') {
     const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\u003c');
-    return HtmlService.createHtmlOutput('<!doctype html><html><body><script>parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.top.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
   return ContentService.createTextOutput('STAR SINGERS 2026 API is active.').setMimeType(ContentService.MimeType.TEXT);
 }
@@ -135,7 +135,7 @@ function doPost(e) {
 function reply_(type,data,token) {
   const msg=Object.assign({type},data||{}); if(token) msg.token=token;
   const json=JSON.stringify(msg).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026');
-  return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+json+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.top.postMessage('+json+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 function json_(v){return ContentService.createTextOutput(JSON.stringify(v)).setMimeType(ContentService.MimeType.JSON);}
 function db_(){const id=PropertiesService.getScriptProperties().getProperty('SS26_SPREADSHEET_ID');if(!id)throw new Error('Run setupStarSingersBackend() first.');return SpreadsheetApp.openById(id);}
