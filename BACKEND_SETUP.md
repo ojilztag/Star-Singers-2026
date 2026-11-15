@@ -5,7 +5,7 @@ This is a separate backend for **NAKSHATHRA GAYAKAR – STAR SINGERS 2026**. It 
 ## What is included
 - `Code.gs`: Google Apps Script API, Sheets database, private Drive uploads, admin authentication, manual payment review, ID generation, notices and audit log.
 - `backend-client.js`: sends the existing public registration form and both uploaded files to Apps Script.
-- `admin.html`: Admin login, dashboard, search, participant/payment proof Drive links, approve/reject, WhatsApp share and notices management.
+- `admin.html`: Admin login, dashboard analytics, search, participant/payment proof Drive links, approve/reject, WhatsApp share, notices management and admin activity log.
 - `notices-data.js` + `notices.html`: public published notices feed.
 
 ## A. Create the Google backend
@@ -31,10 +31,18 @@ Replace `PASTE_STAR_SINGERS_APPS_SCRIPT_EXEC_URL_HERE` with the deployed `/exec`
 
 **Payment screenshot and UTR are not automatic payment verification.** The organiser must confirm the actual credit in the bank/UPI account before approval.
 
-## D. Notices
+## D. Admin dashboard analytics
+- Total registrations, payment-verification pending count, registration-review pending count, approved count and rejected count.
+- Collected amount counts only rows that are both `Verified` and `Approved` after organiser review.
+- Pending amount sums the registration fees whose payment status remains `Pending Verification`.
+- Last 7 days shows submissions received in the rolling seven-day window, with participant photo and payment proof links.
+- Admin Activity Log shows the latest 50 recorded actions, including registration submissions, approvals/rejections, notice changes and password updates.
+- These figures are calculated from the `Registrations` and `AuditLog` sheets. They are not bank-account reconciliation; the organiser must compare verified entries with actual bank/UPI credits.
+
+## E. Notices
 Admin can create a Draft, Published or Archived notice. Only Published notices appear on the public Notices page. Public notices are read from the `Notices` sheet; no manual editing of `notices-data.js` is required after the endpoint is connected.
 
-## E. File handling and privacy
+## F. File handling and privacy
 - Files are stored in private Drive folders owned by the Apps Script account. They are not made public.
 - Admin sees **View Participant Photo** and **View Payment Proof** links. The browser must be signed into the Google account that owns the files (or another account explicitly granted access).
 - Each file must be 3 MB or smaller. Accepted participant photo formats: JPG, PNG, WebP, HEIC. Payment proof: image or PDF.
@@ -42,7 +50,7 @@ Admin can create a Draft, Published or Archived notice. Only Published notices a
 - Keep the admin password private. Do not put it in GitHub or website JavaScript.
 - The website currently asks for one individual entry and a ₹500 fee. Confirm the event's final privacy/retention policy before collecting real participant data.
 
-## F. Test checklist before opening registration
+## G. Test checklist before opening registration
 - Submit one clearly labelled test registration with a test photo and test payment receipt.
 - Confirm one row appears in `Registrations`.
 - Confirm both files appear in their private Drive subfolders and open for the authorised admin.
