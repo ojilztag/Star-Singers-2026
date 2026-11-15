@@ -1,81 +1,34 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>STAR SINGERS 2026 · Participant Viewer</title>
-<script src="https://accounts.google.com/gsi/client" async defer></script>\n<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-:root{--navy:#071b31;--green:#10372f;--gold:#d9bd78;--paper:#f4f0e6;--ink:#1c3031}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 Arial,sans-serif}header{background:linear-gradient(120deg,#061827,#0b302d 65%,#35172b);color:white;padding:22px 16px;border-bottom:3px solid var(--gold)}.wrap{max-width:1250px;margin:auto;padding:0 16px}h1{color:#f4d994;margin:0;font:700 clamp(22px,4vw,32px) Georgia,serif}main{padding:22px 0 60px}.panel{background:#fffdf8;border:1px solid #e4d6b8;border-radius:15px;padding:18px;margin:15px 0}.muted{color:#68746e;font-size:13px}.status{padding:10px 12px;background:#fff4d8;border:1px solid #dfc77d;border-radius:9px;margin:10px 0;white-space:pre-wrap}.error{background:#fff0ef;border-color:#d69a95;color:#842b2b}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}button{border:0;border-radius:9px;background:var(--green);color:#fff;padding:10px 14px;font-weight:bold;cursor:pointer}button.gold{background:#86611f}button:disabled{opacity:.5}.hidden{display:none!important}.table-wrap{overflow:auto;margin-top:14px}table{border-collapse:collapse;width:100%;min-width:1100px;background:#fff}th,td{border:1px solid #ded5c3;padding:8px;text-align:left;vertical-align:top}th{background:#123b31;color:#fff;position:sticky;top:0}tr:nth-child(even){background:#f8f4ea}.proof{padding:6px 9px;font-size:12px}.modal{position:fixed;inset:0;background:#07131eee;z-index:9;display:none;align-items:center;justify-content:center;padding:14px}.modal.open{display:flex}.modalbox{background:#fffdf8;border-radius:14px;padding:14px;max-width:900px;width:100%;max-height:90vh;overflow:auto}.preview{max-width:100%;max-height:70vh;display:block;margin:12px auto}.right{margin-left:auto}@media(max-width:600px){.panel{padding:12px}}
+*{box-sizing:border-box}body{margin:0;background:#f4f0e6;color:#1c3031;font:14px/1.5 Arial,sans-serif}header{background:linear-gradient(120deg,#061827,#0b302d 65%,#35172b);color:white;padding:22px 16px;border-bottom:3px solid #d9bd78}.wrap{max-width:1100px;margin:auto;padding:0 14px}h1{color:#f4d994;margin:0;font:700 clamp(21px,4vw,29px) Georgia,serif}main{padding:20px 0 50px}.panel{background:#fffdf8;border:1px solid #e4d6b8;border-radius:13px;padding:17px;margin:13px 0;box-shadow:0 3px 12px #10251b0a}button{border:0;border-radius:8px;background:#10372f;color:white;padding:10px 14px;font-weight:bold;cursor:pointer}button:disabled{opacity:.5}.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.right{margin-left:auto}.muted{color:#68746e;font-size:13px}.status{padding:10px 12px;background:#fff4d8;border:1px solid #dfc77d;border-radius:9px;margin:10px 0;white-space:pre-wrap}.error{background:#fff0ef;border-color:#d69a95;color:#842b2b}.hidden{display:none!important}.table-wrap{overflow:auto;margin-top:12px}table{border-collapse:collapse;width:100%;min-width:900px;background:white}th,td{border:1px solid #ded5c3;padding:9px;text-align:left;vertical-align:top}th{background:#123b31;color:white;position:sticky;top:0}tr:nth-child(even){background:#f8f4ea}.metric{background:#f5f0e4;border:1px solid #e4d6b8;border-radius:10px;padding:12px}.metric b{display:block;font-size:24px;color:#10372f}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px}.small{font-size:12px;padding:7px 10px}.proof{max-width:100%;max-height:70vh;display:block;margin:12px auto}.pdf{width:100%;height:65vh;border:0}.actions{display:flex;gap:6px;flex-wrap:wrap}@media(max-width:600px){.panel{padding:12px}}
 </style></head><body>
-<header><div class="wrap"><h1>STAR SINGERS 2026 · PARTICIPANT VIEWER</h1><div>JKJ CREATIONS · Authorised Google Account Access</div></div></header>
+<header><div class="wrap"><h1>STAR SINGERS 2026 · PARTICIPANT VIEWER</h1><div>JKJ CREATIONS · Authorised Google account access</div></div></header>
 <main class="wrap">
-<section id="login" class="panel"><h2>Viewer Sign-in</h2><p class="muted">Sign in using the Google account authorised by the Admin. Sharing this page does not grant access to an unauthorised account.</p><div id="googleButton"></div><div id="loginStatus" class="status hidden"></div></section>
-<section id="app" class="panel hidden"><div class="row"><div><h2>Participant Register</h2><div id="viewerEmail" class="muted"></div></div><div class="right row"><button id="refresh" class="gold">Refresh</button><button id="csv">Download Excel (.xlsx)</button><button id="pdf" class="gold">Download / Print PDF</button><button id="logout">Sign out</button></div></div><div id="dataStatus" class="status">Loading participants…</div><div class="table-wrap"><table><thead><tr><th>Participant ID</th><th>Participant Name</th><th>Parish</th><th>Diocese</th><th>Country</th><th>State / Province</th><th>District</th><th>WhatsApp Number</th><th>Entry Type</th><th>Registration Status</th><th>Payment Proof</th></tr></thead><tbody id="rows"></tbody></table></div></section>
-</main>
-<div id="proofModal" class="modal"><div class="modalbox"><div class="row"><b>Payment Proof · Secure Viewer</b><button id="closeProof" class="right">Close</button></div><div id="proofStatus" class="muted">Loading…</div><img id="proofImage" class="preview hidden" alt="Payment proof"><iframe id="proofPdf" class="preview hidden" style="width:100%;height:70vh;border:0"></iframe></div></div>
+<section id="signin" class="panel"><h2>Secure Google Sign-in</h2><p class="muted">Only Google email addresses approved by the event Admin can view participant records. A forwarded link alone does not grant access.</p><div id="g_id_onload" data-client_id="96691726006-qso86p9s5pq6mjrfiionmene5qhovp5f.apps.googleusercontent.com" data-callback="onGoogleCredential" data-auto_prompt="false"></div><div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with" data-shape="rectangular"></div><div id="signStatus" class="status hidden"></div></section>
+<section id="viewer" class="hidden">
+<div class="panel row"><div><b id="signedEmail"></b><div class="muted">Authorised participant records</div></div><div class="right actions"><button id="refresh">Refresh</button><button id="logout">Sign out</button></div></div>
+<div id="mainStatus" class="status hidden"></div><div class="grid" id="summary"></div>
+<div class="panel"><div class="row"><div><h2>Participant list</h2><div class="muted">Only approved viewer fields are displayed. Private photo links, UTR, Admin notes and original files are not shown.</div></div><div class="right actions"><button id="csv">Download Excel-compatible CSV</button><button id="print">Print / Save PDF</button></div></div>
+<div class="table-wrap"><table><thead><tr><th>Participant ID</th><th>Participant Name</th><th>Parish</th><th>Diocese</th><th>Country</th><th>State / Province</th><th>District</th><th>WhatsApp</th><th>Entry Type</th><th>Registration Status</th><th>Payment Proof</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+<section id="proofPanel" class="panel hidden"><div class="row"><h2>Payment Proof</h2><button class="right" id="closeProof">Close</button></div><div id="proofContent"></div></section>
+</section></main>
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbxPwRrD35fv7UWOJO6EN6eqIxT5czuaIBjbU8qR9xfdFYuod6bB-RrNj6r0hDuma6Qk6Q/exec';
-const GOOGLE_CLIENT_ID='96691726006-qso86p9s5pq6mjrfiionmene5qhovp5f.apps.googleusercontent.com';
-let sessionToken=sessionStorage.getItem('ss26ViewerSession')||'',rows=[],seq=0,busy=false;
+let sessionToken=sessionStorage.getItem('ss26ViewerSession')||'',records=[];
 const $=id=>document.getElementById(id);
-function status(id,text,error){$(id).textContent=text;$(id).classList.remove('hidden');$(id).classList.toggle('error',!!error);}
+function status(id,msg,error){$(id).textContent=msg;$(id).classList.remove('hidden');$(id).classList.toggle('error',!!error);}
+function hide(id){$(id).classList.add('hidden');}
+function request(payload,callback){const token='VIEW-'+Date.now()+'-'+Math.random().toString(16).slice(2),name='ss26-view-'+Date.now(),frame=document.createElement('iframe'),form=document.createElement('form');frame.name=name;frame.hidden=true;document.body.appendChild(frame);form.method='POST';form.action=API_URL;form.target=name;form.hidden=true;const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(Object.assign({},payload,{clientToken:token}));form.appendChild(input);document.body.appendChild(form);let done=false;const finish=d=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',listener);frame.remove();form.remove();callback(d);};const listener=e=>{const d=e.data;if(d&&d.type==='SS26_ADMIN_RESULT'&&d.token===token)finish(d);};window.addEventListener('message',listener);const timer=setTimeout(()=>finish({success:false,error:'Server did not respond. Check the Web App URL and try again.'}),60000);form.submit();}
+window.onGoogleCredential=function(response){hide('signStatus');if(!response||!response.credential){status('signStatus','Google sign-in did not return a credential.',true);return;}request({action:'viewerlogin',idToken:response.credential},d=>{if(!d.success){status('signStatus',d.error||'Access denied.',true);return;}sessionToken=d.sessionToken;sessionStorage.setItem('ss26ViewerSession',sessionToken);enter(d.email);});};
+function enter(email){$('signin').classList.add('hidden');$('viewer').classList.remove('hidden');$('signedEmail').textContent='Signed in as '+email;loadRecords();}
+function signOut(){const old=sessionToken;sessionToken='';sessionStorage.removeItem('ss26ViewerSession');$('viewer').classList.add('hidden');$('signin').classList.remove('hidden');$('proofPanel').classList.add('hidden');if(old)request({action:'viewerlogout',sessionToken:old},()=>{});}
+function loadRecords(){status('mainStatus','Loading participant records…',false);request({action:'viewerdashboard',sessionToken},d=>{if(!d.success){status('mainStatus',d.error||'Could not load records.',true);if(/session|sign in|revoked/i.test(d.error||''))signOut();return;}records=d.records||[];render();hide('mainStatus');});}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function request(payload,done){
- if(busy){done({success:false,error:'Please wait for the current request.'});return;}busy=true;
- const token='VIEW-'+Date.now()+'-'+Math.random().toString(16).slice(2),name='ss26-view-'+(++seq),frame=document.createElement('iframe');
- frame.name=name;frame.hidden=true;document.body.appendChild(frame);
- const form=document.createElement('form');form.method='POST';form.action=API_URL;form.target=name;form.hidden=true;
- const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(Object.assign({},payload,{clientToken:token}));form.appendChild(input);document.body.appendChild(form);
- let ended=false;const cleanup=()=>{if(ended)return;ended=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;};
- const timer=setTimeout(()=>{cleanup();done({success:false,error:'Server did not respond. Please retry.'});},60000);
- function onMessage(e){const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT'||d.token!==token)return;cleanup();done(d);}
- window.addEventListener('message',onMessage);form.submit();
-}
-function signIn(response){
- status('loginStatus','Verifying Google account…',false);
- request({action:'viewerlogin',idToken:response.credential},d=>{
-  if(!d.success){status('loginStatus',d.error||'Sign-in failed.',true);return;}
-  sessionToken=d.sessionToken;sessionStorage.setItem('ss26ViewerSession',sessionToken);
-  $('login').classList.add('hidden');$('app').classList.remove('hidden');$('viewerEmail').textContent='Signed in as '+d.email;load();
- });
-}
-function initGoogle(){
- if(GOOGLE_CLIENT_ID.startsWith('YOUR_')){status('loginStatus','Admin must set GOOGLE_OAUTH_CLIENT_ID in Apps Script Script Properties and replace GOOGLE_CLIENT_ID in viewer.html with the same OAuth Client ID.',true);return;}
- if(!window.google||!google.accounts||!google.accounts.id){setTimeout(initGoogle,400);return;}
- google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:signIn});
- google.accounts.id.renderButton($('googleButton'),{theme:'outline',size:'large',shape:'rectangular',text:'signin_with',width:280});
-}
-function load(){
- status('dataStatus','Loading current participant list…',false);
- request({action:'viewerdashboard',sessionToken:sessionToken},d=>{
-  if(!d.success){status('dataStatus',d.error||'Could not load participant list.',true);if((d.error||'').toLowerCase().includes('session')||(d.error||'').toLowerCase().includes('revoked'))logout(false);return;}
-  rows=d.records||[];
-  $('rows').innerHTML=rows.map(r=>'<tr><td>'+esc(r.participantId)+'</td><td>'+esc(r.participantName)+'</td><td>'+esc(r.parish)+'</td><td>'+esc(r.diocese)+'</td><td>'+esc(r.country)+'</td><td>'+esc(r.state)+'</td><td>'+esc(r.district)+'</td><td>'+esc(r.whatsapp)+'</td><td>'+esc(r.entryType)+'</td><td>'+esc(r.registrationStatus)+'</td><td>'+(r.paymentProofAvailable?'<button class="proof" data-proof="'+esc(r.trackingRef)+'">View Proof</button>':'Not available')+'</td></tr>').join('');
-  status('dataStatus',rows.length+' participant record(s). This list includes new registrations automatically when refreshed.',false);
- });
-}
-function logout(callServer=true){
- const old=sessionToken;sessionToken='';sessionStorage.removeItem('ss26ViewerSession');$('app').classList.add('hidden');$('login').classList.remove('hidden');
- if(callServer&&old)request({action:'viewerlogout',sessionToken:old},()=>{});
-}
-$('refresh').onclick=load;$('logout').onclick=()=>logout();
-$('rows').addEventListener('click',e=>{const b=e.target.closest('[data-proof]');if(!b)return;
- $('proofImage').classList.add('hidden');$('proofPdf').classList.add('hidden');$('proofModal').classList.add('open');$('proofStatus').textContent='Loading payment proof through an authorised session…';
- request({action:'viewerproof',sessionToken:sessionToken,trackingRef:b.dataset.proof},d=>{
-  if(!d.success){$('proofStatus').textContent=d.error||'Could not load proof.';return;}
-  const src='data:'+d.mimeType+';base64,'+d.base64;
-  if(d.mimeType.startsWith('image/')){$('proofImage').src=src;$('proofImage').classList.remove('hidden');$('proofStatus').textContent='Private proof shown after server-side access verification.';}
-  else if(d.mimeType==='application/pdf'){$('proofPdf').src=src;$('proofPdf').classList.remove('hidden');$('proofStatus').textContent='Private PDF proof shown after server-side access verification.';}
-  else $('proofStatus').textContent='Unsupported proof file type.';
- });
-});
-$('closeProof').onclick=()=>{$('proofModal').classList.remove('open');$('proofImage').removeAttribute('src');$('proofPdf').removeAttribute('src');};
-const columns=[['participantId','Participant ID'],['participantName','Participant Name'],['parish','Parish'],['diocese','Diocese'],['country','Country'],['state','State / Province'],['district','District'],['whatsapp','WhatsApp Number'],['entryType','Entry Type'],['registrationStatus','Registration Status']];
-$('csv').onclick=()=>{
- if(!window.XLSX){status('dataStatus','Excel workbook library could not load. Check your internet connection and retry.',true);return;}
- const data=rows.map(r=>Object.fromEntries(columns.map(([key,label])=>[label,r[key]??''])));
- const ws=XLSX.utils.json_to_sheet(data,{header:columns.map(x=>x[1])});
- ws['!cols']=columns.map(x=>({wch:Math.max(16,Math.min(30,x[1].length+4))}));
- const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Participants');
- XLSX.writeFile(wb,'Star-Singers-2026-Viewer-Participants.xlsx');
-};
-$('pdf').onclick=()=>{const w=window.open('','_blank');if(!w){status('dataStatus','Allow pop-ups to print or save PDF.',true);return;}const head=columns.map(x=>'<th>'+esc(x[1])+'</th>').join(''),body=rows.map(r=>'<tr>'+columns.map(x=>'<td>'+esc(r[x[0]])+'</td>').join('')+'</tr>').join('');w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>STAR SINGERS 2026 Viewer Register</title><style>@page{size:A4 landscape;margin:10mm}body{font:10px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #999;padding:5px;text-align:left}th{background:#123b31;color:white}h2{color:#123b31}</style></head><body><h2>STAR SINGERS 2026 — VIEWER REGISTER</h2><p>Authorised viewer export · '+rows.length+' records</p><table><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table><script>window.onload=()=>window.print();<\/script></body></html>');w.document.close();};
-if(sessionToken){$('login').classList.add('hidden');$('app').classList.remove('hidden');load();}else initGoogle();
+function render(){$('summary').innerHTML=[['Total participants',records.length],['Approved',records.filter(r=>r.registrationStatus==='Approved').length],['Pending review',records.filter(r=>r.registrationStatus==='Pending Review').length],['Rejected',records.filter(r=>r.registrationStatus==='Rejected').length]].map(x=>'<div class="metric"><span class="muted">'+x[0]+'</span><b>'+x[1]+'</b></div>').join('');$('rows').innerHTML=records.map(r=>'<tr><td>'+esc(r.participantId||'—')+'</td><td>'+esc(r.participantName)+'</td><td>'+esc(r.parish)+'</td><td>'+esc(r.diocese)+'</td><td>'+esc(r.country)+'</td><td>'+esc(r.state)+'</td><td>'+esc(r.district)+'</td><td>'+esc(r.whatsapp)+'</td><td>'+esc(r.entryType)+'</td><td>'+esc(r.registrationStatus)+'</td><td>'+(r.paymentProofAvailable?'<button class="small" data-proof="'+esc(r.trackingRef)+'">View proof</button>':'Not available')+'</td></tr>').join('')||'<tr><td colspan="11">No participant records found.</td></tr>';}
+function showProof(ref){$('proofContent').textContent='Loading secure proof…';$('proofPanel').classList.remove('hidden');$('proofPanel').scrollIntoView({behavior:'smooth'});request({action:'viewerproof',sessionToken,trackingRef:ref},d=>{if(!d.success){$('proofContent').textContent=d.error||'Unable to load proof.';return;}const url='data:'+d.mimeType+';base64,'+d.base64;if(d.mimeType==='application/pdf')$('proofContent').innerHTML='<iframe class="pdf" title="Payment proof PDF" src="'+url+'"></iframe>';else if(/^image\//.test(d.mimeType))$('proofContent').innerHTML='<img class="proof" alt="Payment proof" src="'+url+'">';else $('proofContent').textContent='Unsupported proof format.';});}
+function csvDownload(){const cols=['participantId','participantName','parish','diocese','country','state','district','whatsapp','entryType','registrationStatus'];const csv=[cols,...records.map(r=>cols.map(k=>r[k]??''))].map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='STAR-SINGERS-2026-participants.csv';a.click();URL.revokeObjectURL(url);}
+$('rows').addEventListener('click',e=>{const b=e.target.closest('[data-proof]');if(b)showProof(b.dataset.proof);});$('refresh').onclick=loadRecords;$('logout').onclick=signOut;$('closeProof').onclick=()=>{$('proofPanel').classList.add('hidden');$('proofContent').innerHTML='';};$('csv').onclick=csvDownload;$('print').onclick=()=>window.print();
+if(sessionToken){request({action:'viewerdashboard',sessionToken},d=>{if(d.success)enter(d.email);else{sessionToken='';sessionStorage.removeItem('ss26ViewerSession');}});}
 </script></body></html>
