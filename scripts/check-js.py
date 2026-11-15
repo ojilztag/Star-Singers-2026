@@ -7,7 +7,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = ["index.html", "admin.html", "notices.html"]
-SCRIPT = re.compile(r"<script\\b([^>]*)>(.*?)</script\\s*>", re.I | re.S)
+SCRIPT = re.compile(r"<script\b([^>]*)>(.*?)</script\s*>", re.I | re.S)
 checked = 0
 with tempfile.TemporaryDirectory() as tmp:
     tmp = Path(tmp)
@@ -19,9 +19,9 @@ with tempfile.TemporaryDirectory() as tmp:
         source = (ROOT / name).read_text(encoding="utf-8")
         for index, match in enumerate(SCRIPT.finditer(source), 1):
             attrs, body = match.groups()
-            if re.search(r"\\bsrc\\s*=", attrs, re.I):
+            if re.search(r"\bsrc\s*=", attrs, re.I):
                 continue
-            kind = re.search(r"""\\btype\\s*=\\s*["']([^"']+)["']""", attrs, re.I)
+            kind = re.search(r"""\btype\s*=\s*["']([^"']+)["']""", attrs, re.I)
             if kind and kind.group(1).lower() not in ("text/javascript", "application/javascript", "module"):
                 continue
             if not body.strip():
