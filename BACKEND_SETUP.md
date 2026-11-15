@@ -24,10 +24,10 @@ Replace `PASTE_STAR_SINGERS_APPS_SCRIPT_EXEC_URL_HERE` with the deployed `/exec`
 1. Participant completes the existing form and pays the displayed ₹500 fee.
 2. Participant uploads their photo, payment screenshot/receipt and enters UTR.
 3. Apps Script saves the form record in `Registrations`, and uploads both files to private Drive folders.
-4. The application is marked `Pending Verification` / `Pending Review`. No official Registration ID is issued yet.
+4. The application is marked `Pending Verification` / `Pending Review`. No official Participant ID is issued yet.
 5. Admin opens `/admin.html`, logs in, reviews the details and opens the two private Drive links.
 6. Admin checks the payment in the UPI/bank account independently, then selects **Approve & Generate ID** or **Reject**.
-7. On approval, the backend generates a unique `SS26-XXXXXX` ID. Admin can share the participant's ID and details through the device share sheet / WhatsApp.
+7. On approval, the backend generates a unique `JKJ-CC26-M-001, JKJ-CC26-M-002, JKJ-CC26-M-003, and onward` ID. Admin can share the participant's ID and details through the device share sheet / WhatsApp.
 
 **Payment screenshot and UTR are not automatic payment verification.** The organiser must confirm the actual credit in the bank/UPI account before approval.
 
@@ -47,7 +47,7 @@ Admin can create a Draft, Published or Archived notice. Only Published notices a
 - Confirm one row appears in `Registrations`.
 - Confirm both files appear in their private Drive subfolders and open for the authorised admin.
 - Confirm the admin dashboard shows the pending record and its two file links.
-- Approve the test record and confirm it receives one `SS26-XXXXXX` ID.
+- Approve the test record and confirm it receives one `JKJ-CC26-M-001, JKJ-CC26-M-002, JKJ-CC26-M-003, and onward` ID.
 - Search by ID/name/phone and test the WhatsApp share action.
 - Publish a test notice and confirm it appears on the public Notices page.
 - Delete test data only after verifying the workflow; do not delete real entries.
