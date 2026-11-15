@@ -13,7 +13,9 @@ with tempfile.TemporaryDirectory() as tmp:
     tmp = Path(tmp)
     for name in ["Code.gs", "backend-client.js", "notices-data.js"]:
         path = ROOT / name
-        subprocess.run(["node", "--check", str(path)], check=True)
+        js = tmp / name.replace(".gs", ".js")
+        js.write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
+        subprocess.run(["node", "--check", str(js)], check=True)
         checked += 1
     for name in FILES:
         source = (ROOT / name).read_text(encoding="utf-8")
