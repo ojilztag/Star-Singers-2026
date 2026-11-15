@@ -71,7 +71,10 @@ function initializeStarSingersAdmin() {
 
 function doGet(e) {
   const action=String(e&&e.parameter&&e.parameter.action||'health');
-  if(action==='notices') return json_({success:true,notices:publicNotices_()});
+  if(action==='notices') {
+    const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\\\u003c');
+    return HtmlService.createHtmlOutput('<!doctype html><html><body><script>parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
   return ContentService.createTextOutput('STAR SINGERS 2026 API is active.').setMimeType(ContentService.MimeType.TEXT);
 }
 function doPost(e) {
