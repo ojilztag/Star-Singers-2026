@@ -315,14 +315,7 @@ if(registrationForm){
  const closePayment=()=>{paymentModal.hidden=true;document.body.style.overflow='';};
  document.getElementById('closePayment').addEventListener('click',closePayment);
  paymentModal.addEventListener('click',e=>{if(e.target===paymentModal)closePayment();});
- registrationForm.addEventListener('submit',function(event){
-  event.preventDefault();
-  if(!registrationForm.reportValidity())return;
-  const fullPhone=phoneInput.value.trim();
-  const message=document.getElementById('registrationMessage');
-  message.textContent='Frontend preview only. Your details and payment proof have not been uploaded or saved. Mobile: '+fullPhone+'. Registration is pending organiser verification; no Participant ID or Entry Card has been generated.';
-  closePayment();
- });
+
 }
 </script>
 <script src="backend-client.js"></script>
