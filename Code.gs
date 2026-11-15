@@ -1,10 +1,7 @@
 /**
- * STAR SINGERS 2026 — Google Apps Script backend
- * Separate database and Drive storage. Never reuse CAROLIA IDs or credentials.
- *
- * First run setupStarSingersBackend() from the Apps Script editor.
- * Then set ADMIN_USER and ADMIN_PASSWORD in Script Properties and run
- * initializeStarSingersAdmin() once.
+ * STAR SINGERS 2026 — COMPLETE GOOGLE APPS SCRIPT BACKEND
+ * Run installStarSingers2026() ONCE in a new, empty Apps Script project.
+ * It creates the database, private Drive folders and initial secure Admin login.
  */
 const CFG = {
   PREFIX: 'JKJ-CC26-M-',
@@ -66,7 +63,7 @@ function setupStarSingersBackend() {
     ['Metric','Live Value'],['Total Registrations',''],['Payment Verification Pending',''],['Registration Review Pending',''],['Approved',''],['Rejected',''],['Verified Collection (INR)',''],['Pending Amount (INR)','']
   ]).setFontWeight('bold');
   dash.getRange('B4:B9').setFormulas([
-    ['=COUNTA(Registrations!A2:A)'],['=COUNTIF(Registrations!T2:T,"Pending Verification")'],['=COUNTIF(Registrations!U2:U,"Pending Review")'],['=COUNTIF(Registrations!U2:U,"Approved")'],['=COUNTIF(Registrations!U2:U,"Rejected")'],['=SUMIFS(Registrations!L2:L,Registrations!T2:T,"Verified",Registrations!U2:U,"Approved")']
+    ['=COUNTA(Registrations!A2:A)'],['=COUNTIF(Registrations!T2:T,"Pending Verification")'],['=COUNTIFS(Registrations!U2:U,"Pending Review",Registrations!T2:T,"Verified")'],['=COUNTIF(Registrations!U2:U,"Approved")'],['=COUNTIF(Registrations!U2:U,"Rejected")'],['=SUMIFS(Registrations!L2:L,Registrations!T2:T,"Verified",Registrations!U2:U,"Approved")']
   ]);
   dash.getRange('B10').setFormula('=SUMIF(Registrations!T2:T,"Pending Verification",Registrations!L2:L)');
   dash.setColumnWidths(1,2,240);dash.setFrozenRows(3);
