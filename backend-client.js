@@ -25,9 +25,9 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxGurOD8Vo
   const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(payload);f.appendChild(input);document.body.appendChild(f);
   let finished=false;
   const cleanup=()=>{if(finished)return;finished=true;clearTimeout(timer);window.removeEventListener('message',onMessage);f.remove();frame.remove();};
-  const timer=setTimeout(()=>{cleanup();done({success:false,error:'Server response timed out. Check the Admin Panel before submitting again to avoid duplicates.'});},60000);
+  const timer=setTimeout(()=>{cleanup();done({success:false,error:'No reply was received from the Apps Script Web App after 90 seconds. Check the Admin Panel before retrying to avoid duplicate registrations.'});},90000);
   function onMessage(event){
-   if(!event.origin.endsWith('.googleusercontent.com')&&event.origin!=='https://script.google.com')return;
+   if(event.source!==frame.contentWindow)return;
    const d=event.data;if(!d||d.type!=='SS26_REGISTRATION_RESULT'||d.token!==payload.clientToken)return;
    cleanup();done(d);
   }
