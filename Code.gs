@@ -217,7 +217,7 @@ function uniqueId_(sh) {
   const ids=last>1?sh.getRange(2,2,last-1,1).getDisplayValues().flat():[];
   let highest=Number(props.getProperty('SS26_LAST_PARTICIPANT_SEQUENCE')||0);
   ids.forEach(value=>{
-    const match=String(value||'').match(/^JKJ-CC26-M-(\\d+)$/);
+    const match=String(value||'').match(/^JKJ-CC26-M-(\d+)$/);
     if(match)highest=Math.max(highest,Number(match[1]));
   });
   const next=highest+1;
