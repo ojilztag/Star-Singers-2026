@@ -83,8 +83,42 @@ function setupStarSingersBackend() {
   });
   Logger.log('SETUP COMPLETE. Spreadsheet: '+ss.getUrl());
   Logger.log('Private Drive folder: '+root.getUrl());
-  Logger.log('Keep these URLs private. Set ADMIN_USER and ADMIN_PASSWORD in Script Properties next.');
+  Logger.log('Database and private storage created. Run installStarSingers2026() for the one-time complete setup.');
   return {spreadsheetUrl:ss.getUrl(),driveFolderUrl:root.getUrl()};
+}
+
+
+/**
+ * ONE-TIME INSTALLER.
+ * Run this function once in a brand-new Apps Script project.
+ * It creates the database, private Drive folders and a secure initial Admin login.
+ * The initial password is shown once in the execution log. Copy it and keep it private.
+ */
+function installStarSingers2026() {
+  const props=PropertiesService.getScriptProperties();
+  if(props.getProperty('SS26_SPREADSHEET_ID') || props.getProperty('SS26_ROOT_FOLDER_ID')) {
+    throw new Error('Installation already exists in this project. Nothing was changed.');
+  }
+  const storage=setupStarSingersBackend();
+  const username='admin';
+  const initialPassword=Utilities.getUuid().replace(/-/g,'')+'A9!';
+  const salt=Utilities.getUuid()+Utilities.getUuid();
+  props.setProperties({
+    ADMIN_USER:username,
+    ADMIN_SALT:salt,
+    ADMIN_HASH:hash_(initialPassword,salt),
+    SESSION_VERSION:'1'
+  });
+  props.deleteProperty('ADMIN_PASSWORD');
+  Logger.log('========== SAVE THESE ADMIN LOGIN DETAILS ==========');
+  Logger.log('Admin username: '+username);
+  Logger.log('Initial password: '+initialPassword);
+  Logger.log('Change this password after your first successful login.');
+  Logger.log('Database: '+storage.spreadsheetUrl);
+  Logger.log('Private Drive folder: '+storage.driveFolderUrl);
+  Logger.log('=====================================================');
+  return {success:true,adminUsername:username,initialPassword:initialPassword,
+    spreadsheetUrl:storage.spreadsheetUrl,driveFolderUrl:storage.driveFolderUrl};
 }
 
 function initializeStarSingersAdmin() {
