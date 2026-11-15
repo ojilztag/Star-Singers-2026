@@ -16,12 +16,14 @@ function msg(id,text,error){const el=$(id);el.textContent=text;el.classList.remo
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function request(payload,callback){
  if(busy){callback({success:false,error:'Please wait for the current request.'});return;}busy=true;
+ const requestToken='ADM-'+Date.now()+'-'+Math.random().toString(16).slice(2);
+ const requestPayload=Object.assign({},payload,{clientToken:requestToken});
  const name='ss26-admin-'+(++requestNo),frame=document.createElement('iframe');frame.name=name;frame.hidden=true;document.body.appendChild(frame);
  const form=document.createElement('form');form.method='POST';form.action=API_URL;form.target=name;form.hidden=true;
- const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(payload);form.appendChild(input);document.body.appendChild(form);
+ const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(requestPayload);form.appendChild(input);document.body.appendChild(form);
  let done=false;const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;};
- const timer=setTimeout(()=>{cleanup();callback({success:false,error:'Server timeout. Please refresh before retrying.'});},30000);
- function onMessage(e){if(e.source!==frame.contentWindow||!['https://script.google.com','https://script.googleusercontent.com'].includes(e.origin))return;const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT')return;cleanup();callback(d);}
+ const timer=setTimeout(()=>{cleanup();callback({success:false,error:'Apps Script did not return a response. The request connection has been corrected; check the deployed Web App version if this continues.'});},45000);
+ function onMessage(e){if(!e.origin.endsWith('.googleusercontent.com')&&e.origin!=='https://script.google.com')return;const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT'||d.token!==requestToken)return;cleanup();callback(d);}
  window.addEventListener('message',onMessage);form.submit();
 }
 function loginView(){token='';sessionStorage.removeItem('ss26AdminSession');$('login').classList.remove('hidden');$('app').classList.add('hidden');}
