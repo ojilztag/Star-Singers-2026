@@ -596,8 +596,8 @@ if(registrationForm){
  const countryPicker=document.getElementById('countryPicker');
  const countrySearch=document.getElementById('countrySearch');
  const countryResults=document.getElementById('countryResults');
- const countryRows=[...dialCodeInput.options].map(option=>({value:option.value,label:option.textContent.replace(/\\s+/g,' ').trim()}));
- const shortCountryLabel=label=>{const m=label.match(/^(\\S+)\\s+(.+?)\\s+\\(\\+(\\d+)\\)$/);return m?m[1]+' +'+m[3]:label;};
+ const countryRows=[...dialCodeInput.options].map(option=>({value:option.value,label:option.textContent.replace(/\s+/g,' ').trim()}));
+ const shortCountryLabel=label=>{const m=label.match(/^(\S+)\s+(.+?)\s+\(\+(\\d+)\)$/);return m?m[1]+' +'+m[3]:label;};
  const renderCountryResults=()=>{
   const query=countrySearch.value.trim().toLocaleLowerCase();
   const filtered=countryRows.filter(row=>row.label.toLocaleLowerCase().includes(query)||('+'+row.value).includes(query));
@@ -613,7 +613,7 @@ if(registrationForm){
    countryResults.appendChild(button);
   });
  };
- countryTriggerText.textContent=shortCountryLabel(dialCodeInput.selectedOptions[0]?.textContent.replace(/\\s+/g,' ').trim()||'🇮🇳 India (+91)');
+ countryTriggerText.textContent=shortCountryLabel(dialCodeInput.selectedOptions[0]?.textContent.replace(/\s+/g,' ').trim()||'🇮🇳 India (+91)');
  renderCountryResults();
  countryTrigger.addEventListener('click',()=>{
   const opening=countryPicker.hidden;countryPicker.hidden=!opening;countryTrigger.setAttribute('aria-expanded',String(opening));
