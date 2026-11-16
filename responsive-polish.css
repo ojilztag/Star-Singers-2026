@@ -429,3 +429,49 @@ footer{
     padding-inline:11px;
   }
 }
+
+
+/* Country-code segment: match the phone field's shared rounded frame.
+   Preserve the dark fill, flag, selected code, select element and its behaviour. */
+.registration-form .phone-combo{
+  overflow:hidden;
+  border-radius:11px;
+  isolation:isolate;
+}
+.registration-form .phone-combo .country-select-wrap{
+  min-height:100%;
+  align-self:stretch;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  border-radius:10px 0 0 10px;
+  background:#061b2b!important;
+}
+.registration-form .phone-combo .country-select-wrap select{
+  min-height:46px;
+  height:100%;
+  max-width:100%;
+  border:0!important;
+  border-radius:10px 0 0 10px!important;
+  background:#061b2b!important;
+  color:#fff1d0!important;
+  outline-offset:-3px;
+}
+.registration-form .phone-combo .phone-divider{
+  flex:0 0 1px;
+  align-self:stretch;
+  margin-block:9px;
+}
+.registration-form .phone-combo input{
+  min-width:0;
+  border-radius:0!important;
+}
+@media(max-width:620px){
+  .registration-form .phone-combo{
+    border-radius:10px;
+  }
+  .registration-form .phone-combo .country-select-wrap,
+  .registration-form .phone-combo .country-select-wrap select{
+    border-radius:9px 0 0 9px!important;
+  }
+}
