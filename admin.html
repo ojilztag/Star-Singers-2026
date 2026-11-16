@@ -29,7 +29,7 @@ header a{display:inline-flex;align-items:center;justify-content:center;min-heigh
 <div id="demoResetConfirmArea" class="hidden" style="margin-top:14px">
 <label for="demoResetPhrase">To confirm, type exactly: RESET DEMO DATA</label>
 <input id="demoResetPhrase" autocomplete="off" placeholder="RESET DEMO DATA">
-<p class="muted">Preview-ൽ കാണിച്ച registration count മാറിയാൽ reset തടയും; വീണ്ടും Preview എടുക്കണം.</p>
+<p class="muted">Preview-ൽ കാണിച്ച registration count മാറിയാൽ reset തടയും. Reset നടത്തുന്നതിന് മുമ്പ് Admin password വീണ്ടും നൽകണം.</p><label for="demoResetPassword">Confirm current Admin password</label><input id="demoResetPassword" type="password" autocomplete="current-password">
 <button type="button" id="demoResetExecute" class="red" disabled>Reset Demo / Test Data Permanently</button>
 </div>
 <div id="demoResetStatus" class="status hidden" role="status" aria-live="polite"></div>
@@ -296,27 +296,27 @@ $('loginForm').addEventListener('submit',e=>{e.preventDefault();if(API_URL.inclu
 let demoResetExpectedCount=null;
 $('demoResetPreview').onclick=()=>{
  $('demoResetStatus').classList.add('hidden');$('demoResetPreviewResult').classList.add('hidden');
- $('demoResetConfirmArea').classList.add('hidden');$('demoResetPhrase').value='';$('demoResetExecute').disabled=true;
+ $('demoResetConfirmArea').classList.add('hidden');$('demoResetPhrase').value='';$('demoResetPassword').value='';$('demoResetExecute').disabled=true;
  request({action:'getdemoresetpreview',sessionToken:token},d=>{
   if(!d.success){msg('demoResetStatus',d.error||'Could not prepare reset preview.',true);return;}
   demoResetExpectedCount=Number(d.registrationCount||0);
-  $('demoResetPreviewResult').textContent='Preview: '+demoResetExpectedCount+' registration(s) and '+Number(d.fileCount||0)+' linked private file(s) will be removed.';
+  const files=d.files||{};$('demoResetPreviewResult').textContent='Preview: '+demoResetExpectedCount+' registration(s); '+Number(files.croppedPhotos||0)+' cropped photos; '+Number(files.originalPhotos||0)+' original photos; '+Number(files.paymentProofs||0)+' payment proofs ('+Number(d.fileCount||0)+' linked file(s) total) will be moved to Drive Trash.';
   $('demoResetPreviewResult').classList.remove('hidden');
   $('demoResetConfirmArea').classList.remove('hidden');
   $('demoResetExecute').disabled=true;
  });
 };
 $('demoResetPhrase').addEventListener('input',()=>{
- $('demoResetExecute').disabled=$('demoResetPhrase').value!=='RESET DEMO DATA'||demoResetExpectedCount===null;
+ $('demoResetExecute').disabled=$('demoResetPhrase').value!=='RESET DEMO DATA'||!$('demoResetPassword').value||demoResetExpectedCount===null;
 });
 $('demoResetExecute').onclick=()=>{
  if(demoResetExpectedCount===null||$('demoResetPhrase').value!=='RESET DEMO DATA')return;
  if(!confirm('Final confirmation: permanently remove all registration rows and their linked private files?'))return;
  $('demoResetExecute').disabled=true;
- request({action:'resetdemodata',sessionToken:token,confirmation:$('demoResetPhrase').value,expectedRegistrationCount:demoResetExpectedCount},d=>{
+ request({action:'resetdemodata',sessionToken:token,confirmation:$('demoResetPhrase').value,currentPassword:$('demoResetPassword').value,expectedRegistrationCount:demoResetExpectedCount},d=>{
   if(!d.success){msg('demoResetStatus',d.error||'Reset failed. No success was reported.',true);$('demoResetExecute').disabled=false;return;}
   msg('demoResetStatus','Reset completed: '+Number(d.removedRegistrations||0)+' registration(s) removed; '+Number(d.trashedFiles||0)+' linked file(s) moved to Drive Trash. Existing audit history was retained.',false);
-  $('demoResetConfirmArea').classList.add('hidden');$('demoResetPreviewResult').classList.add('hidden');demoResetExpectedCount=null;loadDashboard();
+  $('demoResetConfirmArea').classList.add('hidden');$('demoResetPreviewResult').classList.add('hidden');$('demoResetPassword').value='';demoResetExpectedCount=null;loadDashboard();
  });
 };
 $('refresh').onclick=loadDashboard;$('logout').onclick=()=>request({action:'adminlogout',sessionToken:token},loginView);
