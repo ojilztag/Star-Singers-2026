@@ -7,7 +7,7 @@
   if(!s||typeof s!=='object')return;
   const set=(id,value)=>{const el=document.getElementById(id);if(el&&String(value||'').trim())el.textContent=String(value).trim();};
   const fee=Number(s.registrationFee);if(Number.isFinite(fee)&&fee>0){window.SS26_REGISTRATION_FEE=fee;['siteRegistrationFeeText','sitePaymentFeeText'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='₹'+fee.toLocaleString('en-IN');});const consent=document.getElementById('siteFeeConsentText');if(consent)consent.textContent='I understand and agree that the registration fee is ₹'+fee.toLocaleString('en-IN')+' for one individual entry. I will upload the payment receipt/screenshot after payment. *';}
-  const status=String(s.registrationStatus||'').trim();if(status){const submit=document.querySelector('#participantRegistration button[type="submit"]');if(submit&&status==='Closed'){submit.disabled=true;submit.textContent='Registration Closed';}else if(submit&&status==='Coming Soon'){submit.disabled=true;submit.textContent='Registration Opening Soon';}}
+  const status=String(s.registrationStatus||'').trim();if(status){const submit=document.querySelector('#participantRegistration button[type="submit"]'),continueButton=document.getElementById('openPayment');const disabled=status!=='Open';if(submit){submit.disabled=disabled;if(disabled)submit.textContent=status==='Closed'?'Registration Closed':'Registration Opening Soon';}if(continueButton){continueButton.disabled=disabled;if(disabled)continueButton.textContent=status==='Closed'?'Registration Closed':'Registration Opening Soon';}}
   set('siteDateOpens',s.registrationOpens);
   set('siteDateCloses',s.registrationCloses);
   set('siteDateVideo',s.videoDeadline);
