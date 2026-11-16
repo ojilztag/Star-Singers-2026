@@ -501,78 +501,83 @@ function publicNotices_(){return adminNotices_().filter(n=>n.status==='Published
  * Admin credentials, AuditLog, Dashboard and formulas intact.
  * Trashes only Drive files referenced by the demo registration rows.
  */
-function demoResetPreview_(p) {
-  requireAdmin_(p.sessionToken);
+function demoResetSnapshot_() {
   const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
   const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
+  if(!rows.length)throw new Error('There are no registration records to reset. No data or participant sequence was changed.');
   const folderKeys=['SS26_PHOTOS_FOLDER_ID','SS26_ORIGINALS_FOLDER_ID','SS26_PROOFS_FOLDER_ID'];
   const folderIds=folderKeys.map(k=>PropertiesService.getScriptProperties().getProperty(k));
   if(folderIds.some(x=>!x))throw new Error('Private Drive folders are not fully configured. Reset is unavailable.');
-  const seen={},fileIds=[],counts={croppedPhotos:0,originalPhotos:0,paymentProofs:0};
-  rows.forEach(r=>{
-    [[r[13],folderIds[0]],[r[15],folderIds[1]],[r[17],folderIds[2]]].forEach(pair=>{
-      const id=String(pair[0]||'').trim();if(!id||seen[id])return;seen[id]=true;
-      if(pair[1]===folderIds[0])counts.croppedPhotos++;
-      else if(pair[1]===folderIds[1])counts.originalPhotos++;
-      else if(pair[1]===folderIds[2])counts.paymentProofs++;
+  const seen={},files=[],counts={croppedPhotos:0,originalPhotos:0,paymentProofs:0};
+  const categories=['croppedPhotos','originalPhotos','paymentProofs'];
+  rows.forEach((r,rowIndex)=>{
+    [[r[13],folderIds[0],0],[r[15],folderIds[1],1],[r[17],folderIds[2],2]].forEach(pair=>{
+      const id=String(pair[0]||'').trim();if(!id)return;
+      if(seen[id]&&seen[id]!==pair[1])throw new Error('A Drive file is linked to more than one file category. Reset is blocked.');
+      if(seen[id])return;
       const file=DriveApp.getFileById(id),parents=file.getParents();let valid=false;
       while(parents.hasNext())if(parents.next().getId()===pair[1])valid=true;
-      if(!valid)throw new Error('A linked file is outside its expected private folder. Reset is blocked.');
-      fileIds.push(id);
+      if(!valid)throw new Error('A linked file is missing from its expected private folder. Reset is blocked.');
+      seen[id]=pair[1];files.push({id:id,folderId:pair[1],category:categories[pair[2]]});
+      counts[categories[pair[2]]]++;
     });
   });
-  return {success:true,registrationCount:rows.length,fileCount:fileIds.length,files:counts};
+  const snapshot={rows:rows,files:files.map(f=>[f.id,f.folderId,f.category]),folders:folderIds};
+  const digest=Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,JSON.stringify(snapshot),Utilities.Charset.UTF_8);
+  const snapshotToken=Utilities.base64EncodeWebSafe(digest);
+  return {registrationCount:rows.length,fileCount:files.length,files:counts,snapshotToken:snapshotToken};
+}
+function demoResetPreview_(p) {
+  requireAdmin_(p.sessionToken);
+  const snapshot=demoResetSnapshot_();
+  return Object.assign({success:true},snapshot);
 }
 function resetDemoDataFromAdmin_(p) {
   const admin=requireAdmin_(p.sessionToken);
   if(String(p.confirmation||'')!=='RESET DEMO DATA')throw new Error('Type RESET DEMO DATA exactly to confirm.');
   const props=PropertiesService.getScriptProperties(),current=String(p.currentPassword||'');
   if(!equal_(hash_(current,props.getProperty('ADMIN_SALT')),props.getProperty('ADMIN_HASH')))throw new Error('Admin password verification failed. No data was changed.');
-  const preview=demoResetPreview_({sessionToken:p.sessionToken});
-  if(Number(p.expectedRegistrationCount)!==preview.registrationCount)throw new Error('Registration count changed after preview. Refresh the preview and confirm again.');
-  const result=resetDemoTestDataNow(admin.user,preview.registrationCount);
+  if(!/^[A-Za-z0-9_-]{43}$/.test(String(p.snapshotToken||'')))throw new Error('Reset preview is missing or expired. Run Preview Reset again.');
+  const result=resetDemoTestDataNow(admin.user,Number(p.expectedRegistrationCount),String(p.snapshotToken));
   return Object.assign({success:true},result);
 }
-
-function resetDemoTestDataNow(adminUser,expectedRegistrationCount) {
+function resetDemoTestDataNow(adminUser,expectedRegistrationCount,expectedSnapshotToken) {
   const lock=LockService.getScriptLock();lock.waitLock(30000);
   try {
+    const snapshot=demoResetSnapshot_();
+    if(Number(expectedRegistrationCount)!==snapshot.registrationCount||String(expectedSnapshotToken||'')!==snapshot.snapshotToken)
+      throw new Error('Registration records or linked Drive files changed after preview. No reset was performed. Run Preview Reset again.');
     const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
-    const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
-    if(expectedRegistrationCount!==undefined&&Number(expectedRegistrationCount)!==rows.length)
-      throw new Error('Registration count changed before reset. Refresh the preview and confirm again.');
+    const rows=sh.getRange(2,1,last-1,REG_HEADERS.length).getValues();
+    const files=snapshot.files||{};
+    const fileObjects=[],seen={};
     const folderKeys=['SS26_PHOTOS_FOLDER_ID','SS26_ORIGINALS_FOLDER_ID','SS26_PROOFS_FOLDER_ID'];
     const folderIds=folderKeys.map(k=>PropertiesService.getScriptProperties().getProperty(k));
-    if(folderIds.some(x=>!x))throw new Error('Private Drive folders are not fully configured. No reset was performed.');
-    const files=[],seen={};
-    rows.forEach(r=>{
-      [[r[13],folderIds[0]],[r[15],folderIds[1]],[r[17],folderIds[2]]].forEach(pair=>{
-        const id=String(pair[0]||'').trim();if(!id||seen[id])return;seen[id]=true;
-        const file=DriveApp.getFileById(id);
-        let inExpectedFolder=false,parents=file.getParents();
-        while(parents.hasNext())if(parents.next().getId()===pair[1])inExpectedFolder=true;
-        if(!inExpectedFolder)throw new Error('A linked file is outside its expected private folder. No registration rows were cleared.');
-        files.push(file);
-      });
-    });
-    if(!rows.length) {
-      PropertiesService.getScriptProperties().setProperty('SS26_LAST_PARTICIPANT_SEQUENCE','0');
-      return {success:true,removedRegistrations:0,trashedFiles:0};
-    }
-    const trashed=[],props=PropertiesService.getScriptProperties();
-    const oldSequence=props.getProperty('SS26_LAST_PARTICIPANT_SEQUENCE');
-    let rowsCleared=false;
+    rows.forEach(r=>[[r[13],folderIds[0]],[r[15],folderIds[1]],[r[17],folderIds[2]]].forEach(pair=>{
+      const id=String(pair[0]||'').trim();if(!id||seen[id])return;seen[id]=true;
+      const file=DriveApp.getFileById(id);let valid=false,parents=file.getParents();
+      while(parents.hasNext())if(parents.next().getId()===pair[1])valid=true;
+      if(!valid)throw new Error('A linked file is outside its expected private folder. No registration rows were cleared.');
+      fileObjects.push(file);
+    }));
+    const props=PropertiesService.getScriptProperties(),oldSequence=props.getProperty('SS26_LAST_PARTICIPANT_SEQUENCE');
+    const trashed=[];let rowsCleared=false,auditWritten=false;
     try {
-      files.forEach(file=>{if(!file.isTrashed()){file.setTrashed(true);trashed.push(file);}});
+      fileObjects.forEach(file=>{if(!file.isTrashed()){file.setTrashed(true);trashed.push(file);}});
       sh.getRange(2,1,last-1,REG_HEADERS.length).clearContent();rowsCleared=true;
       props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE','0');
-      audit_(adminUser||'SYSTEM','DEMO_TEST_DATA_RESET','ALL','Cleared '+rows.length+' demo/test registrations and trashed '+trashed.length+' linked private files. Audit history retained.');
-      SpreadsheetApp.flush();
-      return {success:true,removedRegistrations:rows.length,trashedFiles:trashed.length};
+      const auditSh=sheet_(CFG.AUDIT_SHEET,AUDIT_HEADERS);
+      auditSh.appendRow([new Date(),adminUser||'SYSTEM','DEMO_TEST_DATA_RESET','ALL',
+        'Cleared '+rows.length+' registration(s); Drive Trash: '+trashed.length+' linked file(s) (cropped '+Number(files.croppedPhotos||0)+', original '+Number(files.originalPhotos||0)+', payment '+Number(files.paymentProofs||0)+'). Audit history retained.']);
+      SpreadsheetApp.flush();auditWritten=true;
+      const auditLast=auditSh.getLastRow(),auditRow=auditSh.getRange(auditLast,1,1,5).getValues()[0];
+      if(String(auditRow[2])!=='DEMO_TEST_DATA_RESET'||String(auditRow[3])!=='ALL')throw new Error('Audit log confirmation failed.');
+      return {success:true,removedRegistrations:rows.length,trashedFiles:trashed.length,files:files};
     } catch(err) {
       if(rowsCleared)try{sh.getRange(2,1,rows.length,REG_HEADERS.length).setValues(rows);}catch(restoreError){}
       if(oldSequence===null)props.deleteProperty('SS26_LAST_PARTICIPANT_SEQUENCE');else props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE',oldSequence);
       trashed.forEach(file=>{try{file.setTrashed(false);}catch(ignore){}});
+      if(auditWritten)try{audit_(adminUser||'SYSTEM','DEMO_TEST_DATA_RESET_ROLLED_BACK','ALL','Reset failed and data restoration was attempted: '+safe_(err));}catch(ignore){}
       throw err;
     }
   } finally {lock.releaseLock();}
