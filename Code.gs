@@ -207,7 +207,10 @@ function register_(p) {
   if(!name||!parish||!diocese||!country||!state||!district||!phone)throw new Error('Complete all required fields.');
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
   if(String(p.feeConsent)!=='true')throw new Error('Registration fee consent is required.');
-  const configuredFee=Number(readSiteSettings_()['Registration Fee']||500);
+  const siteSettings=readSiteSettings_();
+  const registrationStatus=String(siteSettings['Registration Status']||'Open');
+  if(registrationStatus!=='Open')throw new Error(registrationStatus==='Closed'?'Registration is currently closed.':'Registration has not opened yet. Please check the official notices.');
+  const configuredFee=Number(siteSettings['Registration Fee']||500);
   if(!Number.isFinite(configuredFee)||configuredFee<=0)throw new Error('Registration fee is not configured correctly.');
   if(Number(p.fee)!==configuredFee)throw new Error('Registration fee has changed. Refresh the page and review the current fee.');
   const photo=decodeFile_(p.photo,'Participant Photo');
