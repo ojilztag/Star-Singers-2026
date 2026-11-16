@@ -644,6 +644,12 @@ if(registrationForm){
   if(phoneError){phoneError.textContent=msg;phoneError.hidden=!msg;}
   return valid;
  };
+ // Explicit bridge for the separately loaded registration backend script.
+ window.ss26PhoneBridge={
+  validate:validateInternationalPhone,
+  getPhone:()=>phoneInput.value,
+  focusCountryCode:()=>countryTrigger.focus()
+ };
  [dialCodeInput,localPhoneInput].forEach(el=>{el.addEventListener('input',validateInternationalPhone);el.addEventListener('change',validateInternationalPhone);el.addEventListener('blur',validateInternationalPhone);});
  const paymentModal=document.getElementById('paymentModal'),openPayment=document.getElementById('openPayment');
  const proofInput=document.getElementById('paymentProof'),proofPreview=document.getElementById('paymentProofPreview');
@@ -777,7 +783,7 @@ if(registrationForm){
 })();;
 </script>
 
-<script src="backend-client.js?v=20261116-uploadprogress3"></script>
+<script src="backend-client.js?v=20261116-finalbridge4"></script>
 <div id="registrationSuccessModal" class="registration-success-modal" hidden role="dialog" aria-modal="true" aria-labelledby="registrationSuccessTitle">
  <div class="registration-success-card">
   <div class="registration-success-mark" aria-hidden="true">✓</div>
