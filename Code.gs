@@ -565,7 +565,7 @@ function publicNotices_(){
   return adminNotices_().filter(n=>{
     if(n.status!=='Published')return false;
     const date=String(n.publishDate||'').trim();
-    return !date || (/^\\d{4}-\\d{2}-\\d{2}$/.test(date) && date<=today);
+    return !date || (/^\d{4}-\d{2}-\d{2}$/.test(date) && date<=today);
   }).map(n=>({date:n.publishDate,title:n.title,summary:n.body.slice(0,220),content:n.body,category:'Official Notice'}));
 }
 function audit_(user,action,id,details){try{db_().getSheetByName(CFG.AUDIT_SHEET).appendRow([new Date(),user,action,id,details]);}catch(ignore){}}
