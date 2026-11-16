@@ -14,47 +14,58 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
  function elapsedText(){const seconds=Math.max(0,Math.floor((Date.now()-uploadStartedAt)/1000));return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');}
  function status(text,isError){
   message.textContent=text;message.classList.toggle('is-uploading',!isError&&/preparing|uploading/i.test(text));message.style.color=isError?'#ffb7b7':'';
-  if(statusPanel){statusPanel.hidden=false;statusPanel.classList.toggle('is-error',!!isError);if(statusTitle)statusTitle.textContent=isError?'Upload needs attention':/uploading/i.test(text)?'Uploading securely…':/prepared/i.test(text)?'Files prepared':/preparing/i.test(text)?'Preparing your files…':'Registration status';if(statusDetail)statusDetail.textContent=text;if(elapsedLabel)elapsedLabel.textContent=uploadStartedAt?elapsedText():'00:00';}
+  if(statusPanel){statusPanel.hidden=false;statusPanel.classList.toggle('is-error',!!isError);if(statusTitle)statusTitle.textContent=isError?'Upload needs attention':/step 2|sending|uploading/i.test(text)?'Uploading securely…':/files are ready|prepared/i.test(text)?'Files prepared':/step 1|preparing/i.test(text)?'Preparing your files…':'Registration status';if(statusDetail)statusDetail.textContent=text;if(elapsedLabel)elapsedLabel.textContent=uploadStartedAt?elapsedText():'00:00';}
   if(isError&&uploadClock){clearInterval(uploadClock);uploadClock=null;}
  }
  function startUploadClock(){uploadStartedAt=Date.now();if(uploadClock)clearInterval(uploadClock);if(statusPanel)statusPanel.hidden=false;uploadClock=setInterval(()=>{if(elapsedLabel)elapsedLabel.textContent=elapsedText();},1000);}
  function stopUploadClock(){if(uploadClock){clearInterval(uploadClock);uploadClock=null;}}
- function compressImage(file,label){
+ function compressImage(file,label,maxBytes){
   return new Promise((resolve,reject)=>{
-   const makeBlob=(image)=>{
+   const makeBlob=async(image)=>{
     try{
      const width=image.width||image.naturalWidth,height=image.height||image.naturalHeight;
      if(!width||!height)throw new Error('Could not read '+label+'. Please choose another image.');
-     const scale=Math.min(1,1600/Math.max(width,height));
-     const canvas=document.createElement('canvas');
-     canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
-     const ctx=canvas.getContext('2d',{alpha:false});
-     if(!ctx)throw new Error('Image compression is not supported in this browser.');
-     ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
-     ctx.drawImage(image,0,0,canvas.width,canvas.height);
-     canvas.toBlob(blob=>{
-      if(!blob){reject(new Error('Could not compress '+label+'. Please try another image.'));return;}
-      resolve(new File([blob],file.name.replace(/\\.[^.]+$/,'')+'.jpg',{type:'image/jpeg',lastModified:Date.now()}));
-     },'image/jpeg',.78);
+     let scale=Math.min(1,2400/Math.max(width,height));
+     for(let dimensionPass=0;dimensionPass<5;dimensionPass++){
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
+      const ctx=canvas.getContext('2d',{alpha:false});
+      if(!ctx)throw new Error('Image compression is not supported in this browser.');
+      ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+      ctx.drawImage(image,0,0,canvas.width,canvas.height);
+      for(const quality of [.92,.89,.86,.83]){
+       const blob=await new Promise(done=>canvas.toBlob(done,'image/jpeg',quality));
+       if(!blob)throw new Error('Could not compress '+label+'. Please try another image.');
+       if(blob.size<=maxBytes*.97){
+        const cleanName=file.name.replace(/\.[^.]+$/,'');
+        resolve(new File([blob],cleanName+'.jpg',{type:'image/jpeg',lastModified:Date.now()}));
+        return;
+       }
+      }
+      scale*=.86;
+      if(Math.max(width,height)*scale<1200)break;
+     }
+     throw new Error('This image is still too large after high-quality compression. Please choose a smaller image.');
     }catch(err){reject(err);}
    };
    if(window.createImageBitmap){
-    createImageBitmap(file).then(bitmap=>{makeBlob(bitmap);bitmap.close();}).catch(()=>loadFallback());
+    createImageBitmap(file).then(bitmap=>{makeBlob(bitmap).finally(()=>bitmap.close());}).catch(()=>loadFallback());
    }else loadFallback();
    function loadFallback(){
     const url=URL.createObjectURL(file),img=new Image();
-    img.onload=()=>{makeBlob(img);URL.revokeObjectURL(url);};
+    img.onload=()=>{makeBlob(img).finally(()=>URL.revokeObjectURL(url));};
     img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Could not open '+label+'. Use JPG, PNG or WebP.'));};
     img.src=url;
    }
   });
  }
- async function fileData(file,maxBytes,label,compress){
+ function fileData(file,maxBytes,label,compress){
   if(!file)throw new Error(label+' is required.');
   let uploadFile=file;
-  if(compress&&file.type.startsWith('image/')){
-   status('Preparing '+label+' and reducing its file size…',false);
-   uploadFile=await compressImage(file,label);
+  if(compress&&file.type.startsWith('image/')&&file.size>maxBytes){
+   status('Preparing '+label+' and carefully reducing the large image…',false);
+   uploadFile=await compressImage(file,label,maxBytes);
   }
   if(uploadFile.size>maxBytes)throw new Error(label+' is too large ('+(uploadFile.size/1024/1024).toFixed(2)+' MB). Maximum allowed size is 3 MB. Please choose a smaller file.');
   return await new Promise((resolve,reject)=>{
@@ -91,10 +102,10 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   const utr=form.querySelector('[name="utr"]').value.trim();
   busy=true;const submit=form.querySelector('[type="submit"]');if(submit){submit.disabled=true;submit.textContent='Submitting securely…';}
   startUploadClock();
-  status('Preparing your files. Please keep this page open…',false);
+  status('Step 1 of 2 · Preparing your photos and payment receipt. Small images keep their original quality; only oversized images are compressed.',false);
   try{
    const [photoData,originalPhotoData,proofData]=await Promise.all([fileData(photo,3*1024*1024,'Cropped participant photo',true),fileData(originalPhoto,3*1024*1024,'Original participant photo',true),fileData(proof,3*1024*1024,'Payment proof',true)]);
-   status('Files prepared. Uploading securely to the registration server… Please do not close or refresh this page.',false);
+   status('Step 2 of 2 · Files are ready. Sending your registration and documents securely. Please keep this page open until confirmation.',false);
    const payload={
     action:'register',clientToken:'SS26-'+Date.now()+'-'+Math.random().toString(16).slice(2),
     participantName:form.elements.participantName.value,parishName:form.elements.parishName.value,
