@@ -54,18 +54,16 @@ A GitHub commit or GitHub Pages deployment does **not** publish a new Apps Scrip
 
 ## Admin-managed public event information
 
-The Admin Panel includes an **Important Event Information · Website Content** editor. It controls registration status, registration fee, key dates, participation details, rules summary, prize details, video-submission instructions and organiser contact details. Values are stored in the existing `Settings` sheet; no new spreadsheet is required.
+The Admin Panel includes an **Important Event Information · Website Content** editor. It controls registration fee, key dates, participation details, rules summary, prize details, video-submission instructions and organiser contact details. Values are stored in the existing `Settings` sheet; no new spreadsheet is required.
 
-- Registration defaults to **Coming Soon** until an Admin explicitly selects **Open**.
-- The backend independently blocks new registrations unless the saved status is **Open**.
+- Registration remains available; there is no Coming Soon / Closed switch or server-side status lock.
 - The registration fee shown on the public form is read from Settings and is checked again by the backend at submission time.
 - Public dates and content are refreshed from the Apps Script Web App when the homepage loads. If the settings endpoint is unavailable, the existing authored page text remains as a fallback.
-- Do not set Registration Status to Open until the real payment QR/UPI details have replaced the current DEMO PAYMENT QR placeholder and a controlled end-to-end payment test has passed.
 
 ## Notices publishing workflow
 
 1. Sign in to `https://jkjcreations.org/admin.html`.
-2. Create or edit the notice and choose **Published** to make it public. Draft and Archived notices must remain private.
+2. Create or edit the notice and choose **Published** to make it public. Draft notices remain private.
 3. Save the notice and confirm the admin list shows the updated status.
 4. Open `https://jkjcreations.org/notices.html` and the homepage in a fresh tab. Confirm the notice title, date, summary and full content appear.
 5. If the notice does not appear, verify the deployed Apps Script version contains the current `doGet(e)`, `publicNotices_()` and `manageNotices_()` functions and that the Web App is deployed with public access.
@@ -93,18 +91,14 @@ Complete these tests on a test record before announcing the registration system 
 - [ ] Approval issues one unique Participant ID; rejection does not issue an ID.
 - [ ] Entry Card preview, PNG download and WhatsApp sharing work on a phone and desktop.
 - [ ] Entry Card displays only the Participant ID, not the internal tracking reference or a second card ID.
-- [ ] Draft and Archived notices are hidden publicly.
+- [ ] Draft notices are hidden publicly; Published notices are visible.
 - [ ] Published notices appear on both the public Notices page and homepage ticker.
-- [ ] Admin-managed dates, registration status, fee, rules, prizes and contact details appear correctly on the homepage.
-- [ ] Registration is blocked server-side when Admin status is Coming Soon or Closed; it is accepted only when status is Open.
+- [ ] Admin-managed dates, fee, rules, prizes and contact details appear correctly on the homepage.
+- [ ] Registration submission succeeds when all required fields, fee and uploads are valid.
 - [ ] Notice edits and deletions are reflected after refresh.
 - [ ] Password change invalidates the previous admin session.
 - [ ] Public pages work at 320px, 375px, 430px, tablet widths, 1366px laptop and 1920px desktop.
 - [ ] Test records are removed only after the complete flow is verified.
-
-## Demo/Test data reset
-
-The Admin-only reset is available after the test cycle. It previews the registration count and the linked cropped-photo, original-photo and payment-proof file counts; execution requires the exact phrase `RESET DEMO DATA`, the current Admin password, a valid Admin session and an unchanged registration count. It clears registration data rows, moves only referenced files inside the configured private folders to Google Drive Trash, resets the Participant ID sequence and retains sheet headers, Admin credentials, Settings, Notices, Dashboard and AuditLog history. It is intentionally not automatic. Google Drive Trash is recoverable until permanently emptied.
 
 ## Current verification boundary
 
