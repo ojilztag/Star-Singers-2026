@@ -6,8 +6,19 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
  if(!form)return;
  const modal=document.getElementById('paymentModal');
  const message=document.getElementById('registrationMessage');
- let busy=false,seq=0;
- function status(text,isError){message.textContent=text;message.classList.toggle('is-uploading',!isError&&/preparing|uploading/i.test(text));message.style.color=isError?'#ffb7b7':'';}
+ let busy=false,seq=0,uploadStartedAt=0,uploadClock=null;
+ const statusPanel=document.getElementById('uploadStatusPanel');
+ const statusTitle=document.getElementById('uploadStatusTitle');
+ const statusDetail=document.getElementById('uploadStatusDetail');
+ const elapsedLabel=document.getElementById('uploadElapsed');
+ function elapsedText(){const seconds=Math.max(0,Math.floor((Date.now()-uploadStartedAt)/1000));return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');}
+ function status(text,isError){
+  message.textContent=text;message.classList.toggle('is-uploading',!isError&&/preparing|uploading/i.test(text));message.style.color=isError?'#ffb7b7':'';
+  if(statusPanel){statusPanel.hidden=false;statusPanel.classList.toggle('is-error',!!isError);if(statusTitle)statusTitle.textContent=isError?'Upload needs attention':/uploading/i.test(text)?'Uploading securely…':/prepared/i.test(text)?'Files prepared':/preparing/i.test(text)?'Preparing your files…':'Registration status';if(statusDetail)statusDetail.textContent=text;if(elapsedLabel)elapsedLabel.textContent=uploadStartedAt?elapsedText():'00:00';}
+  if(isError&&uploadClock){clearInterval(uploadClock);uploadClock=null;}
+ }
+ function startUploadClock(){uploadStartedAt=Date.now();if(uploadClock)clearInterval(uploadClock);if(statusPanel)statusPanel.hidden=false;uploadClock=setInterval(()=>{if(elapsedLabel)elapsedLabel.textContent=elapsedText();},1000);}
+ function stopUploadClock(){if(uploadClock){clearInterval(uploadClock);uploadClock=null;}}
  function compressImage(file,label){
   return new Promise((resolve,reject)=>{
    const makeBlob=(image)=>{
@@ -79,6 +90,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   const proof=form.querySelector('[name="paymentProof"]').files[0];
   const utr=form.querySelector('[name="utr"]').value.trim();
   busy=true;const submit=form.querySelector('[type="submit"]');if(submit){submit.disabled=true;submit.textContent='Submitting securely…';}
+  startUploadClock();
   status('Preparing your files. Please keep this page open…',false);
   try{
    const [photoData,originalPhotoData,proofData]=await Promise.all([fileData(photo,3*1024*1024,'Cropped participant photo',true),fileData(originalPhoto,3*1024*1024,'Original participant photo',true),fileData(proof,3*1024*1024,'Payment proof',true)]);
@@ -91,8 +103,9 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     photo:photoData,originalPhoto:originalPhotoData,paymentProof:proofData
    };
    post(payload,result=>{
-    busy=false;if(submit){submit.disabled=false;submit.textContent='Submit Registration & Payment Proof';}
+    busy=false;stopUploadClock();if(submit){submit.disabled=false;submit.textContent='Submit Registration & Payment Proof';}
     if(!result.success){status(result.error||'Registration could not be submitted.',true);return;}
+    if(statusPanel)statusPanel.hidden=true;
     const submittedName=String(form.elements.participantName.value||'Participant').trim();
     form.reset();if(modal){modal.hidden=true;document.body.style.overflow='';}
     form.hidden=true;
@@ -108,6 +121,6 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     };
     document.getElementById('registrationSuccessHome').focus();
    });
-  }catch(err){busy=false;if(submit){submit.disabled=false;submit.textContent='Submit Registration & Payment Proof';}status(err.message||'Upload failed. Please try again.',true);}
+  }catch(err){busy=false;stopUploadClock();if(submit){submit.disabled=false;submit.textContent='Submit Registration & Payment Proof';}status(err.message||'Upload failed. Please try again.',true);}
  },true);
 })();
