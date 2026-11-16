@@ -671,7 +671,7 @@ if(registrationForm){
  });
  openPayment.addEventListener('click',()=>{
   validateInternationalPhone();
-  const requiredBeforePayment=[...registrationForm.querySelectorAll('[required]')].filter(el=>el.name!=='paymentProof');
+  const requiredBeforePayment=[...registrationForm.querySelectorAll('[required]')].filter(el=>!['paymentProof','utr'].includes(el.name));
   const missingField=requiredBeforePayment.find(field=>!field.checkValidity());
   if(missingField){focusMissingField(missingField);return;}
   clearRequiredFocus();
