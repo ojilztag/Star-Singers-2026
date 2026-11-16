@@ -316,7 +316,7 @@ $('demoResetPreview').onclick=()=>{
  });
 };
 $('demoResetPhrase').addEventListener('input',()=>{
- $('demoResetExecute').disabled=$('demoResetPhrase').value!=='RESET DEMO DATA'||!$('demoResetPassword').value||demoResetExpectedCount===null;
+ $('demoResetExecute').disabled=$('demoResetPhrase').value!=='RESET DEMO DATA'||!$('demoResetPassword').value||demoResetExpectedCount===null||demoResetExpectedCount===0||!demoResetSnapshotToken;
 });
 $('demoResetExecute').onclick=()=>{
  if(demoResetExpectedCount===null||$('demoResetPhrase').value!=='RESET DEMO DATA')return;
