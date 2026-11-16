@@ -212,7 +212,7 @@ body{padding-top:80px}
 .registration-success-ref{padding:12px;border:1px dashed var(--gold);border-radius:12px;background:#ffffff0a;font-weight:800;overflow-wrap:anywhere}
 .registration-success-card button{width:100%;min-height:52px;margin-top:18px;border:0;border-radius:13px;background:linear-gradient(100deg,#a40b43,#d51c54);color:#fff;font-weight:800;font-size:16px}
 @media(max-width:480px){.registration-success-modal{padding:12px}.registration-success-card{border-radius:18px;padding:22px 18px}.registration-success-card p{font-size:14px}}
-.registration-success-modal{padding:10px}.registration-success-card{width:min(100%,430px);max-height:82dvh;padding:20px 18px;border-radius:18px}.registration-success-mark{width:46px;height:46px;margin-bottom:9px;font-size:25px}.registration-success-card .eyebrow{font-size:10px;margin:4px 0}.registration-success-card h2{font-size:clamp(21px,5vw,26px);margin:7px 0 10px}.registration-success-card p{font-size:13px;line-height:1.5;margin:8px 0}.registration-success-ref{padding:9px}.registration-success-card button{width:auto;min-width:130px;min-height:42px;margin-top:10px;padding:9px 24px;font-size:14px}</style><link rel="stylesheet" href="responsive-polish.css?v=20261115"></head>
+.registration-success-modal{padding:10px}.registration-success-card{width:min(100%,430px);max-height:82dvh;padding:20px 18px;border-radius:18px}.registration-success-mark{width:46px;height:46px;margin-bottom:9px;font-size:25px}.registration-success-card .eyebrow{font-size:10px;margin:4px 0}.registration-success-card h2{font-size:clamp(21px,5vw,26px);margin:7px 0 10px}.registration-success-card p{font-size:13px;line-height:1.5;margin:8px 0}.registration-success-ref{padding:9px}.registration-success-card button{width:auto;min-width:130px;min-height:42px;margin-top:10px;padding:9px 24px;font-size:14px}.phone-entry{display:grid;grid-template-columns:minmax(145px,.8fr) minmax(0,1.2fr);gap:10px;align-items:start}.phone-entry>small,.phone-entry>.field-error{grid-column:1/-1;margin-top:-3px}.phone-entry label{min-width:0}.phone-entry input{width:100%;min-width:0}.phone-entry .field-error{color:#b3261e;font-size:13px}@media(max-width:560px){.phone-entry{grid-template-columns:1fr 1.35fr;gap:8px}}</style><link rel="stylesheet" href="responsive-polish.css?v=20261115"></head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 <header class="top"><div class="head">
 <a class="brand" href="#home"><picture><source srcset="assets/jkj-creations-logo.webp" type="image/webp"><img src="assets/jkj-creations-logo.webp" alt="JKJ Creations logo"></picture></a>
@@ -280,7 +280,16 @@ body{padding-top:80px}
 <label>Current Country of Residence *<input name="country" id="residenceCountry" type="text" required maxlength="100" autocomplete="country-name" placeholder="Type your country name"></label>
 <label>Current State / Province *<input name="state" type="text" required maxlength="100" placeholder="State / Province"></label>
 <label>Current District / Region *<input name="district" type="text" required maxlength="100" placeholder="District / Region"></label>
-<label class="full">Contact Mobile Number (with WhatsApp) *<input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="30" placeholder="Required: +91XXXXXXXXXX" aria-describedby="phoneHelp"><small id="phoneHelp">Enter the full WhatsApp number with + and country code, e.g. +91XXXXXXXXXX. Country code is required.</small></label>
+<div class="full phone-entry">
+ <label for="countryDialCode">Country Code * <input id="countryDialCode" type="text" list="countryDialCodeOptions" value="India (+91)" autocomplete="off" required placeholder="Search country or code" aria-describedby="phoneHelp"></label>
+ <datalist id="countryDialCodeOptions">
+  <option value="India (+91)"><option value="United States (+1)"><option value="Canada (+1)"><option value="United Kingdom (+44)"><option value="United Arab Emirates (+971)"><option value="Saudi Arabia (+966)"><option value="Qatar (+974)"><option value="Kuwait (+965)"><option value="Oman (+968)"><option value="Bahrain (+973)"><option value="Australia (+61)"><option value="New Zealand (+64)"><option value="Singapore (+65)"><option value="Malaysia (+60)"><option value="South Africa (+27)"><option value="Ireland (+353)"><option value="Germany (+49)"><option value="France (+33)"><option value="Italy (+39)"><option value="Spain (+34)"><option value="Portugal (+351)"><option value="Netherlands (+31)"><option value="Switzerland (+41)"><option value="Austria (+43)"><option value="Belgium (+32)"><option value="Sweden (+46)"><option value="Norway (+47)"><option value="Denmark (+45)"><option value="Finland (+358)"><option value="Poland (+48)"><option value="Greece (+30)"><option value="Turkey (+90)"><option value="Japan (+81)"><option value="South Korea (+82)"><option value="China (+86)"><option value="Hong Kong (+852)"><option value="Thailand (+66)"><option value="Indonesia (+62)"><option value="Philippines (+63)"><option value="Bangladesh (+880)"><option value="Pakistan (+92)"><option value="Sri Lanka (+94)"><option value="Nepal (+977)"><option value="Nigeria (+234)"><option value="Kenya (+254)"><option value="Ghana (+233)"><option value="Brazil (+55)"><option value="Mexico (+52)"><option value="Argentina (+54)"><option value="Jamaica (+1-876)">
+ </datalist>
+ <label for="phoneLocal">Mobile Number / WhatsApp * <input id="phoneLocal" type="tel" inputmode="numeric" autocomplete="tel-national" required maxlength="18" placeholder="Enter mobile number"></label>
+ <input id="phone" name="phone" type="hidden">
+ <small id="phoneHelp">Search and select your country. The country code will be added automatically; enter your number without the country code. Example: India +91.</small>
+ <p id="phoneError" class="field-error" role="alert" hidden></p>
+</div>
 <input type="file" id="participantPhotoOriginal" accept="image/*" hidden><label id="photoUploadLabel">Participant Photo *<input name="participantPhoto" id="participantPhoto" type="file" accept="image/jpeg,image/png,image/webp,image/*" required><small>Your photo will be used to generate your Entry Card / Photo ID. Choose a clear, front-facing photo with your face fully visible.</small><span id="photoCropStatus" class="crop-status" aria-live="polite">No photo selected yet.</span></label>
 <div class="photo-tools full" id="photoTools" hidden>
  <div class="photo-selected" id="photoSelected" hidden><img id="photoThumbnail" alt="Selected cropped participant photo"><span>✓ Photo ready</span><button type="button" id="changeParticipantPhoto" class="crop-control">Change Photo</button></div>
@@ -330,7 +339,27 @@ window.addEventListener('ss26:notices-load-failed',()=>{const ticker=document.ge
  
 const registrationForm=document.getElementById('participantRegistration');
 if(registrationForm){
+ const dialCodeInput=document.getElementById('countryDialCode');
+ const localPhoneInput=document.getElementById('phoneLocal');
  const phoneInput=document.getElementById('phone');
+ const phoneError=document.getElementById('phoneError');
+ const selectedDialCode=()=>{
+  const match=String(dialCodeInput.value||'').match(/\+(\d{1,3})\)?\s*$/);
+  return match?match[1]:'';
+ };
+ const validateInternationalPhone=()=>{
+  const dial=selectedDialCode();
+  const local=String(localPhoneInput.value||'').replace(/\D/g,'').replace(/^0+/,'');
+  const combined='+'+dial+local;
+  const valid=!!dial&&local.length>=5&&local.length<=12&&/^\+[1-9]\d{6,14}$/.test(combined);
+  phoneInput.value=valid?combined:'';
+  const msg=!dial?'Select a country code from the suggestions.':!local?'Enter your mobile number.':!valid?'Check the country code and mobile number. Use digits only; do not repeat the country code.':'';
+  localPhoneInput.setCustomValidity(msg);
+  dialCodeInput.setCustomValidity(dial?'':'Select a valid country code.');
+  if(phoneError){phoneError.textContent=msg;phoneError.hidden=!msg;}
+  return valid;
+ };
+ [dialCodeInput,localPhoneInput].forEach(el=>{el.addEventListener('input',validateInternationalPhone);el.addEventListener('change',validateInternationalPhone);el.addEventListener('blur',validateInternationalPhone);});
  const paymentModal=document.getElementById('paymentModal'),openPayment=document.getElementById('openPayment');
  const proofInput=document.getElementById('paymentProof'),proofPreview=document.getElementById('paymentProofPreview');
  let proofPreviewUrl='';
@@ -344,14 +373,7 @@ if(registrationForm){
   const name=document.createElement('span');name.textContent='✓ '+file.name+' · Ready to upload';proofPreview.appendChild(name);
   proofPreview.hidden=false;
  });
- const validateInternationalPhone=()=>{
-  const normalized=phoneInput.value.trim().replace(/[\s()-]/g,'');
-  const valid=/^\+[1-9]\d{6,14}$/.test(normalized);
-  phoneInput.setCustomValidity(valid?'':'Enter your WhatsApp number with + and country code, e.g. +91XXXXXXXXXX.');
-  return valid;
- };
- phoneInput.addEventListener('input',validateInternationalPhone);
- phoneInput.addEventListener('blur',validateInternationalPhone);
+
  openPayment.addEventListener('click',()=>{
   if(!validateInternationalPhone()){phoneInput.reportValidity();phoneInput.focus();return;}
   const requiredBeforePayment=[...registrationForm.querySelectorAll('[required]')].filter(el=>!['paymentProof','utr'].includes(el.name));
