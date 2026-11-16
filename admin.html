@@ -51,25 +51,31 @@ header a{display:inline-flex;align-items:center;justify-content:center;min-heigh
 <div id="photoModal" class="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle"><div class="photo-modal-box"><div class="photo-modal-head"><h2 id="photoModalTitle">Participant Photo</h2><button type="button" class="red" id="photoClose">Close</button></div><img id="photoPreview" class="photo-preview hidden" alt="Private participant photo"><div id="photoModalStatus" class="photo-modal-status">Loading secure photo…</div></div></div>
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbxPwRrD35fv7UWOJO6EN6eqIxT5czuaIBjbU8qR9xfdFYuod6bB-RrNj6r0hDuma6Qk6Q/exec';
-let token=sessionStorage.getItem('ss26AdminSession')||'',busy=false,requestNo=0,records=[];
+let token=sessionStorage.getItem('ss26AdminSession')||'',busy=false,requestNo=0,records=[],requestQueue=[];
 const $=id=>document.getElementById(id);
 function msg(id,text,error){const el=$(id);el.textContent=text;el.classList.remove('hidden');el.classList.toggle('error',!!error);}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function request(payload,callback){
- if(busy){callback({success:false,error:'Please wait for the current request.'});return;}
+/* Serialize Admin API calls instead of dropping clicks while another request is running. */
+function request(payload,callback){requestQueue.push({payload,callback});processRequestQueue();}
+function processRequestQueue(){
+ if(busy||!requestQueue.length)return;
  busy=true;
+ const job=requestQueue.shift(),payload=job.payload,callback=job.callback;
  const requestToken='ADM-'+Date.now()+'-'+Math.random().toString(16).slice(2);
  const requestPayload=Object.assign({},payload,{clientToken:requestToken});
  const name='ss26-admin-'+(++requestNo),frame=document.createElement('iframe');
  frame.name=name;frame.title='Secure admin response';frame.style.cssText='position:absolute;width:1px;height:1px;left:-10px;bottom:0;border:0;opacity:0';document.body.appendChild(frame);
  const form=document.createElement('form');form.method='POST';form.action=API_URL;form.target=name;form.style.display='none';
  const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(requestPayload);form.appendChild(input);document.body.appendChild(form);
- let done=false;
- const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;};
- const timer=setTimeout(()=>{cleanup();callback({success:false,error:'The Apps Script Web App did not respond. The latest Code.gs must be deployed as a new Web App version with access set to Anyone.'});},45000);
- function onMessage(e){const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT'||d.token!==requestToken)return;cleanup();callback(d);}
+ let done=false,timer;
+ function finish(result){
+  if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;
+  try{callback(result);}finally{processRequestQueue();}
+ }
+ timer=setTimeout(()=>finish({success:false,error:'The Apps Script Web App did not respond. Confirm the latest Code.gs deployment is active and Web App access is set to Anyone.'}),45000);
+ function onMessage(e){const d=e.data;if(!d||d.type!=='SS26_ADMIN_RESULT'||d.token!==requestToken)return;finish(d);}
  window.addEventListener('message',onMessage);
- try{form.submit();}catch(err){cleanup();callback({success:false,error:'Could not send request: '+String(err.message||err)});}
+ try{form.submit();}catch(err){finish({success:false,error:'Could not send request: '+String(err.message||err)});}
 }
 
 function loginView(){token='';sessionStorage.removeItem('ss26AdminSession');$('login').classList.remove('hidden');$('app').classList.add('hidden');}
@@ -78,6 +84,7 @@ function loadDashboard(){
   if(!d.success){msg('dashStatus',d.error||'Dashboard failed.',true);if((d.error||'').toLowerCase().includes('session'))loginView();return;}
   $('total').textContent=d.total;$('pending').textContent=d.pending;$('pendingPayment').textContent=d.pendingPayment;$('approved').textContent=d.approved;$('rejected').textContent=d.rejected;$('collected').textContent='₹'+Number(d.collectedAmount||0).toLocaleString('en-IN');$('pendingAmount').textContent='₹'+Number(d.pendingAmount||0).toLocaleString('en-IN');$('last7Count').textContent=d.last7DaysCount||0;
   renderRecords(d.registrations||[]);renderRecent(d.last7Days||[]);renderAudit(d.auditLogs||[]);renderNotices(d.notices||[]);
+  loadSiteSettings();
  });
 }
 
