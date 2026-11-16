@@ -45,7 +45,7 @@ function request(payload,callback){requestQueue.push({payload,callback});process
 function processRequestQueue(){
  if(busy||!requestQueue.length)return;
  busy=true;
- const loader=$('adminRequestLoading');if(loader){loader.hidden=false;$('adminRequestLoadingText').textContent='Processing '+String(requestQueue[0]?.payload?.action||'request').replace(/admin|registration/gi,'')+'…';}
+
  const job=requestQueue.shift(),payload=job.payload,callback=job.callback;
  const requestToken='ADM-'+Date.now()+'-'+Math.random().toString(16).slice(2);
  const requestPayload=Object.assign({},payload,{clientToken:requestToken});
@@ -56,7 +56,7 @@ function processRequestQueue(){
  let done=false,timer;
  function finish(result){
   if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onMessage);frame.remove();form.remove();busy=false;
-  const loader=$('adminRequestLoading');if(loader)loader.hidden=true;
+
   try{callback(result);}finally{processRequestQueue();}
  }
  timer=setTimeout(()=>finish({success:false,error:'The Apps Script Web App did not respond. Confirm the latest Code.gs deployment is active and Web App access is set to Anyone.'}),45000);
@@ -71,7 +71,7 @@ function loadDashboard(){
   if(!d.success){msg('dashStatus',d.error||'Dashboard failed.',true);if((d.error||'').toLowerCase().includes('session'))loginView();return;}
   $('total').textContent=d.total;$('pending').textContent=d.pending;$('pendingPayment').textContent=d.pendingPayment;$('approved').textContent=d.approved;$('rejected').textContent=d.rejected;$('collected').textContent='₹'+Number(d.collectedAmount||0).toLocaleString('en-IN');$('pendingAmount').textContent='₹'+Number(d.pendingAmount||0).toLocaleString('en-IN');$('last7Count').textContent=d.last7DaysCount||0;
   renderRecords(d.registrations||[]);renderRecent(d.last7Days||[]);renderAudit(d.auditLogs||[]);renderNotices(d.notices||[]);
-  loadSiteSettings();
+
  });
 }
 
