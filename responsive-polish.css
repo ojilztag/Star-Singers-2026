@@ -507,3 +507,38 @@ footer{
   background:#000!important;
   border:0!important;
 }
+
+
+/* Country-code area now matches the adjoining white phone-number field.
+   Retain native country select, flag emoji and calling-code option labels. */
+.registration-form .phone-combo .country-select-wrap{
+  background:#fffaf1!important;
+  border:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+  border-radius:10px 0 0 10px!important;
+}
+.registration-form .phone-combo .country-select-wrap select,
+.registration-form .phone-combo .country-select-wrap select:focus,
+.registration-form .phone-combo .country-select-wrap select:active{
+  appearance:auto;
+  -webkit-appearance:menulist;
+  background:#fffaf1!important;
+  color:#172820!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  border-radius:10px 0 0 10px!important;
+}
+.registration-form .phone-combo .country-select-wrap select option{
+  background:#fffaf1;
+  color:#172820;
+}
+.registration-form .phone-combo .phone-divider{
+  background:#dfd8c8!important;
+  border:0!important;
+}
+.registration-form .phone-combo input{
+  background:#fffaf1!important;
+  color:#174b38!important;
+}
