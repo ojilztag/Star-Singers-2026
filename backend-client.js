@@ -82,7 +82,8 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   status('Preparing your files. Please keep this page open…',false);
   try{
    const [photoData,originalPhotoData,proofData]=await Promise.all([fileData(photo,3*1024*1024,'Cropped participant photo',true),fileData(originalPhoto,3*1024*1024,'Original participant photo',true),fileData(proof,3*1024*1024,'Payment proof',true)]);
-   status('Files prepared. Uploading securely to the registration server… Please do not close or refresh this page.',false);\n   const payload={
+   status('Files prepared. Uploading securely to the registration server… Please do not close or refresh this page.',false);
+   const payload={
     action:'register',clientToken:'SS26-'+Date.now()+'-'+Math.random().toString(16).slice(2),
     participantName:form.elements.participantName.value,parishName:form.elements.parishName.value,
     diocese:form.elements.diocese.value,country:form.elements.country.value,state:form.elements.state.value,
