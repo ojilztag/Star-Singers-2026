@@ -739,3 +739,29 @@ footer{
     clip-path:inset(0 round 0 10px 10px 0);
   }
 }
+
+
+/* Keep the mobile-number input fully inside the shared rounded phone frame.
+   The parent must remain overflow:visible so the country dropdown can open;
+   constrain the input's flex width instead of clipping the whole control. */
+.registration-form .phone-combo #phoneLocal{
+  flex:1 1 0!important;
+  width:0!important;
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  border-radius:0 9px 9px 0!important;
+  clip-path:none!important;
+}
+@media(max-width:620px){
+  .registration-form .phone-combo #phoneLocal{
+    flex:1 1 0!important;
+    width:0!important;
+    min-width:0!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    border-radius:0 9px 9px 0!important;
+    clip-path:none!important;
+  }
+}
