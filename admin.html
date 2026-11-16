@@ -243,7 +243,7 @@ $('records').addEventListener('click',e=>{
     detail('✝️ Diocese',r.diocese)+
     detail('🌍 Residence',residence)+
     '\n🔒 Please save your Participant ID for future reference. Your Official Entry Card has been shared separately.\n\n📢 SHARE THE JOY · SPREAD THE TALENT!\nShare our official website with your friends and family, promote this musical initiative and invite others to join this wonderful musical journey.\n\n🌐 https://www.jkjcreations.org\n\n✨ May your voice shine and your talent inspire!\n\nWith love & best wishes,\n❤️ JKJ CREATIONS\nFaith • Creativity • Service ✨';
-   const digits=String(r.phone||'').replace(/\\D/g,'');
+   const digits=String(r.phone||'').replace(/\D/g,'');
    if(!digits){msg('dashStatus','No valid WhatsApp number is saved for this registration.',true);return;}
    window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(text),'_blank','noopener');
    return;
