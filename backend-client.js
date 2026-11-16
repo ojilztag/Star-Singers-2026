@@ -115,7 +115,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     action:'register',clientToken:'SS26-'+Date.now()+'-'+Math.random().toString(16).slice(2),
     participantName:form.elements.participantName.value,parishName:form.elements.parishName.value,
     diocese:form.elements.diocese.value,country:form.elements.country.value,state:form.elements.state.value,
-    district:form.elements.district.value,phone:phone,utr:utr,fee:500,feeConsent:String(form.elements.feeConsent.checked),
+    district:form.elements.district.value,phone:phone,utr:utr,fee:Number(window.SS26_REGISTRATION_FEE||500),feeConsent:String(form.elements.feeConsent.checked),
     photo:photoData,originalPhoto:originalPhotoData,paymentProof:proofData
    };
    post(payload,result=>{
