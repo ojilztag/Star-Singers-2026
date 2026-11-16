@@ -308,11 +308,13 @@ function renderNoticeTicker(){
  if(!ticker)return;
  const notices=(window.STAR_SINGERS_NOTICES||[]).slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
  if(!notices.length){ticker.innerHTML='<span>Official notices and announcements will appear here.</span>';return;}
- const links=notices.map((n,i)=>'<a href="notices.html#notice-'+i+'">'+String(n.title||"Official Notice")+' · '+String(n.summary||"")+'</a>').join("");
+ const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const links=notices.map((n,i)=>'<a href="notices.html#notice-'+i+'">'+safe(n.title||"Official Notice")+' · '+safe(n.summary||"")+'</a>').join("");
  ticker.innerHTML=links+links;
 }
 renderNoticeTicker();
 window.addEventListener('ss26:notices-loaded',renderNoticeTicker);
+window.addEventListener('ss26:notices-load-failed',()=>{const ticker=document.getElementById("noticeHighlightTrack");if(ticker&&!window.STAR_SINGERS_NOTICES.length)ticker.textContent="Official notices are temporarily unavailable. Please open the Notices page again shortly.";});
 (()=>{const menuButton=document.querySelector('.menu');const nav=document.querySelector('nav');if(menuButton&&nav){menuButton.addEventListener('click',()=>{const opened=nav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(opened));menuButton.setAttribute('aria-label',opened?'Close menu':'Open menu');menuButton.textContent=opened?'✕':'☰';});nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{nav.classList.remove('open');menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label','Open menu');menuButton.textContent='☰';}));}})();
  
 const registrationForm=document.getElementById('participantRegistration');
