@@ -506,26 +506,32 @@ function demoResetSnapshot_() {
   const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
   if(!rows.length)throw new Error('There are no registration records to reset. No data or participant sequence was changed.');
   const folderKeys=['SS26_PHOTOS_FOLDER_ID','SS26_ORIGINALS_FOLDER_ID','SS26_PROOFS_FOLDER_ID'];
-  const folderIds=folderKeys.map(k=>PropertiesService.getScriptProperties().getProperty(k));
-  if(folderIds.some(x=>!x))throw new Error('Private Drive folders are not fully configured. Reset is unavailable.');
-  const seen={},files=[],counts={croppedPhotos:0,originalPhotos:0,paymentProofs:0};
+  const folderIds=folderKeys.map(k=>PropertiesService.getScriptProperties().getProperty(k)||'');
   const categories=['croppedPhotos','originalPhotos','paymentProofs'];
+  const seen={},files=[],skipped=[],counts={croppedPhotos:0,originalPhotos:0,paymentProofs:0};
   rows.forEach((r,rowIndex)=>{
     [[r[13],folderIds[0],0],[r[15],folderIds[1],1],[r[17],folderIds[2],2]].forEach(pair=>{
       const id=String(pair[0]||'').trim();if(!id)return;
-      if(seen[id]&&seen[id]!==pair[1])throw new Error('A Drive file is linked to more than one file category. Reset is blocked.');
       if(seen[id])return;
-      const file=DriveApp.getFileById(id),parents=file.getParents();let valid=false;
-      while(parents.hasNext())if(parents.next().getId()===pair[1])valid=true;
-      if(!valid)throw new Error('A linked file is missing from its expected private folder. Reset is blocked.');
-      seen[id]=pair[1];files.push({id:id,folderId:pair[1],category:categories[pair[2]]});
-      counts[categories[pair[2]]]++;
+      seen[id]=true;
+      const category=categories[pair[2]],folderId=pair[1];
+      if(!folderId){skipped.push({category:category,row:rowIndex+2,reason:'Private folder ID is not configured'});return;}
+      try {
+        const file=DriveApp.getFileById(id);
+        if(file.isTrashed()){skipped.push({category:category,row:rowIndex+2,reason:'File is already in Trash'});return;}
+        const parents=file.getParents();let valid=false;
+        while(parents.hasNext())if(parents.next().getId()===folderId)valid=true;
+        if(!valid){skipped.push({category:category,row:rowIndex+2,reason:'File is not in its configured private folder'});return;}
+        files.push({id:id,folderId:folderId,category:category});counts[category]++;
+      } catch(err) {
+        skipped.push({category:category,row:rowIndex+2,reason:'File missing or Apps Script has no access'});
+      }
     });
   });
-  const snapshot={rows:rows,files:files.map(f=>[f.id,f.folderId,f.category]),folders:folderIds};
+  const snapshot={rows:rows,files:files.map(f=>[f.id,f.folderId,f.category]),skipped:skipped,folders:folderIds};
   const digest=Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,JSON.stringify(snapshot),Utilities.Charset.UTF_8);
   const snapshotToken=Utilities.base64EncodeWebSafe(digest).replace(/=+$/,'');
-  return {registrationCount:rows.length,fileCount:files.length,files:counts,snapshotToken:snapshotToken};
+  return {registrationCount:rows.length,fileCount:files.length,files:counts,skippedFileCount:skipped.length,skippedFiles:skipped,snapshotToken:snapshotToken};
 }
 function demoResetPreview_(p) {
   requireAdmin_(p.sessionToken);
@@ -549,17 +555,18 @@ function resetDemoTestDataNow(adminUser,expectedRegistrationCount,expectedSnapsh
       throw new Error('Registration records or linked Drive files changed after preview. No reset was performed. Run Preview Reset again.');
     const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
     const rows=sh.getRange(2,1,last-1,REG_HEADERS.length).getValues();
-    const files=snapshot.files||{};
-    const fileObjects=[],seen={};
-    const folderKeys=['SS26_PHOTOS_FOLDER_ID','SS26_ORIGINALS_FOLDER_ID','SS26_PROOFS_FOLDER_ID'];
-    const folderIds=folderKeys.map(k=>PropertiesService.getScriptProperties().getProperty(k));
-    rows.forEach(r=>[[r[13],folderIds[0]],[r[15],folderIds[1]],[r[17],folderIds[2]]].forEach(pair=>{
-      const id=String(pair[0]||'').trim();if(!id||seen[id])return;seen[id]=true;
-      const file=DriveApp.getFileById(id);let valid=false,parents=file.getParents();
-      while(parents.hasNext())if(parents.next().getId()===pair[1])valid=true;
-      if(!valid)throw new Error('A linked file is outside its expected private folder. No registration rows were cleared.');
-      fileObjects.push(file);
-    }));
+    const fileObjects=[];
+    snapshot.files.forEach(item=>{
+      try {
+        const file=DriveApp.getFileById(item.id);
+        if(file.isTrashed())return;
+        let valid=false,parents=file.getParents();
+        while(parents.hasNext())if(parents.next().getId()===item.folderId)valid=true;
+        if(valid)fileObjects.push(file);
+      } catch(err) {
+        // Missing/inaccessible files are reported in the preview and are not deleted.
+      }
+    });
     const props=PropertiesService.getScriptProperties(),oldSequence=props.getProperty('SS26_LAST_PARTICIPANT_SEQUENCE');
     const trashed=[];let rowsCleared=false,auditWritten=false;
     try {
@@ -568,11 +575,11 @@ function resetDemoTestDataNow(adminUser,expectedRegistrationCount,expectedSnapsh
       props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE','0');
       const auditSh=sheet_(CFG.AUDIT_SHEET,AUDIT_HEADERS);
       auditSh.appendRow([new Date(),adminUser||'SYSTEM','DEMO_TEST_DATA_RESET','ALL',
-        'Cleared '+rows.length+' registration(s); Drive Trash: '+trashed.length+' linked file(s) (cropped '+Number(files.croppedPhotos||0)+', original '+Number(files.originalPhotos||0)+', payment '+Number(files.paymentProofs||0)+'). Audit history retained.']);
+        'Cleared '+rows.length+' registration(s); Drive Trash: '+trashed.length+' accessible linked file(s); skipped/unavailable file references: '+snapshot.skippedFileCount+'. Audit history retained.']);
       SpreadsheetApp.flush();auditWritten=true;
       const auditLast=auditSh.getLastRow(),auditRow=auditSh.getRange(auditLast,1,1,5).getValues()[0];
       if(String(auditRow[2])!=='DEMO_TEST_DATA_RESET'||String(auditRow[3])!=='ALL')throw new Error('Audit log confirmation failed.');
-      return {success:true,removedRegistrations:rows.length,trashedFiles:trashed.length,files:files};
+      return {success:true,removedRegistrations:rows.length,trashedFiles:trashed.length,skippedFileCount:snapshot.skippedFileCount,skippedFiles:snapshot.skippedFiles,files:snapshot.files};
     } catch(err) {
       if(rowsCleared)try{sh.getRange(2,1,rows.length,REG_HEADERS.length).setValues(rows);}catch(restoreError){}
       if(oldSequence===null)props.deleteProperty('SS26_LAST_PARTICIPANT_SEQUENCE');else props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE',oldSequence);
