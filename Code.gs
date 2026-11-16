@@ -241,8 +241,6 @@ function register_(p) {
       photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
     const row=sh.getLastRow();rowCommitted=true;try{sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');}catch(formatError){audit_('SYSTEM','REGISTRATION_DATE_FORMAT_WARNING',ref,String(formatError&&formatError.message||formatError).slice(0,200));}
     audit_('PUBLIC','REGISTRATION_SUBMITTED',ref,'Photo and payment proof stored in private Drive folders.');
-    // Email is sent only after a new registration has been committed successfully.
-    sendRegistrationNotification_(ref, {participantId:'Not yet issued — generated after payment verification and approval', name:name, parish:parish, diocese:diocese, country:country, state:state, district:district, phone:phone, fee:500});
     const result={success:true,trackingRef:ref,message:'Registration request received. Payment and documents are pending organiser verification.'};
     if(clientToken)CacheService.getScriptCache().put('SS26_SUBMIT_'+clientToken,JSON.stringify(result),21600);
     return result;
@@ -322,57 +320,6 @@ function exportRegistrations_(p) {
   }));
   audit_(admin.user,'REGISTRATION_EXPORT',filter,'Exported '+data.length+' participant records; photo and payment-proof files excluded.');
   return {success:true,count:data.length,filter:filter,records:data};
-}
-
-
-function getNotificationSettings_(p) {
-  requireAdmin_(p.sessionToken);
-  const raw=PropertiesService.getScriptProperties().getProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS')||'';
-  return {success:true,emails:raw.split(/[;,\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)};
-}
-function saveNotificationSettings_(p) {
-  const admin=requireAdmin_(p.sessionToken);
-  const raw=String(p.emails||'');
-  const emails=[...new Set(raw.split(/[;,\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean))];
-  if(emails.length>30)throw new Error('A maximum of 30 notification email addresses is allowed.');
-  const invalid=emails.filter(x=>!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x));
-  if(invalid.length)throw new Error('Invalid email address: '+invalid[0]);
-  if(!emails.length)throw new Error('Add at least the Main Admin email address.');
-  PropertiesService.getScriptProperties().setProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS',emails.join(','));
-  audit_(admin.user,'NOTIFICATION_RECIPIENTS_UPDATED','EMAIL',emails.length+' recipient(s) configured.');
-  return {success:true,emails:emails};
-}
-function sendRegistrationNotification_(ref, info) {
-  try {
-    const props=PropertiesService.getScriptProperties();
-    const recipients=(props.getProperty('SS26_REGISTRATION_NOTIFICATION_EMAILS')||'').split(',').map(x=>x.trim()).filter(x=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x));
-    if(!recipients.length) {
-      audit_('SYSTEM','REGISTRATION_EMAIL_NOT_SENT',ref,'No notification recipients configured.');
-      return;
-    }
-    const subject='STAR SINGERS 2026 — New Participant Registration: '+ref;
-    const body=[
-      'A new participant registration was successfully submitted.',
-      '',
-      'Tracking Reference: '+ref,
-      'Participant ID: '+(info.participantId||'Not yet issued'),
-      'Participant Name: '+info.name,
-      'Parish: '+info.parish,
-      'Diocese: '+info.diocese,
-      'Country: '+info.country,
-      'State / Province: '+info.state,
-      'District: '+info.district,
-      'WhatsApp: '+info.phone,
-      'Registration Fee: INR '+info.fee,
-      '',
-      'This is the only automatic email notification configured for this workflow. Payment review, approval, rejection and other admin actions do not send email.'
-    ].join('\n');
-    MailApp.sendEmail({to:recipients.join(','),subject:subject,body:body,name:'STAR SINGERS 2026'});
-    audit_('SYSTEM','REGISTRATION_EMAIL_SENT',ref,'Notification sent to '+recipients.length+' configured recipient(s).');
-  } catch(err) {
-    // Do not roll back a valid registration because the email service failed.
-    audit_('SYSTEM','REGISTRATION_EMAIL_FAILED',ref,String(err&&err.message||err).slice(0,250));
-  }
 }
 
 
@@ -580,49 +527,3 @@ function logout_(p){const t=String(p.sessionToken||'');if(t)CacheService.getScri
 function hash_(pass,salt){let v=String(salt)+'|'+String(pass);for(let i=0;i<CFG.HASH_ROUNDS;i++)v=Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,v,Utilities.Charset.UTF_8));return v;}
 function equal_(a,b){a=String(a||'');b=String(b||'');if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0;}
 function safe_(e){return String(e&&e.message||'Unexpected server error.').slice(0,300);}
-
-/**
- * ONE-TIME ADMIN PASSWORD RECOVERY — EXISTING INSTALLATION ONLY.
- *
- * Before running:
- * 1. Add Script Property SS26_ADMIN_RESET_PASSWORD with a new password (12+ chars).
- * 2. Run this function manually from the Apps Script editor.
- * 3. The temporary password property is deleted after a successful reset.
- *
- * This function does NOT create or modify the spreadsheet or Drive folders.
- * Do NOT run installStarSingers2026() again on an existing installation.
- */
-function resetStarSingersAdminPasswordOnce() {
-  const props = PropertiesService.getScriptProperties();
-  const newPassword = String(props.getProperty('SS26_ADMIN_RESET_PASSWORD') || '');
-
-  if (newPassword.length < CFG.MIN_PASSWORD) {
-    throw new Error('Set SS26_ADMIN_RESET_PASSWORD to a password of at least 12 characters in Script Properties.');
-  }
-
-  if (!props.getProperty('SS26_SPREADSHEET_ID') ||
-      !props.getProperty('SS26_ROOT_FOLDER_ID')) {
-    throw new Error('Existing database/storage was not found. Password reset stopped; no changes were made.');
-  }
-
-  const username = String(props.getProperty('ADMIN_USER') || 'admin').trim();
-  if (!username) {
-    throw new Error('ADMIN_USER is empty. Password reset stopped; no changes were made.');
-  }
-
-  const salt = Utilities.getUuid() + Utilities.getUuid();
-  const currentVersion = Number(props.getProperty('SESSION_VERSION') || '1');
-
-  props.setProperties({
-    ADMIN_USER: username,
-    ADMIN_SALT: salt,
-    ADMIN_HASH: hash_(newPassword, salt),
-    SESSION_VERSION: String(currentVersion + 1)
-  });
-
-  props.deleteProperty('SS26_ADMIN_RESET_PASSWORD');
-
-  Logger.log('Admin password reset successfully.');
-  Logger.log('Admin username: ' + username);
-  Logger.log('All previous Admin sessions have been invalidated.');
-}
