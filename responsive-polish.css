@@ -203,3 +203,107 @@ body:has(.board) input:focus,body:has(.board) select:focus{
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
 
+
+
+/* ── Christmas palette: restrained red-to-evergreen frame treatment ──
+   Visual layer only; preserve page content, controls and all application behaviour. */
+:root{
+  --ss-xmas-red:#9f1736;
+  --ss-xmas-red-light:#c52b4c;
+  --ss-xmas-green:#0c513c;
+  --ss-xmas-green-deep:#082f27;
+  --ss-xmas-gold:#dfc27b;
+  --ss-xmas-text:#f8f3e8;
+}
+.top,
+body:has(#login) header,
+body:has(.board) header{
+  background:linear-gradient(112deg,#76132f 0%,#a51e3e 34%,#12543e 72%,#082f27 100%);
+  border-bottom:2px solid var(--ss-xmas-gold);
+}
+.hero{
+  background:
+    radial-gradient(ellipse at 18% 45%,#c52b4c30,transparent 42%),
+    radial-gradient(ellipse at 82% 55%,#1b805c35,transparent 42%),
+    linear-gradient(125deg,#421326 0%,#78152f 34%,#0d4938 72%,#082f27 100%);
+}
+/* Keep all main content frames compact, dark and consistent. */
+.section,
+.section.alt,
+.registration-form{
+  color:var(--ss-xmas-text);
+  border:1px solid var(--ss-xmas-gold);
+  background:linear-gradient(125deg,#65172f 0%,#3d1a2a 34%,#104a38 72%,#092f28 100%);
+  box-shadow:0 9px 24px #061b1433;
+}
+.section.alt .title h2,.section.alt h3,.section .title h2{
+  color:#ffe7b0;
+}
+.section.alt .title p,.section.alt .lead,.section.alt p,
+.section.alt .rule p,.section.alt .faq details p{
+  color:#f0e9df;
+}
+.section.alt .rule,.section.alt .timeline article,.section.alt .faq details{
+  border-color:#d9bd7880;
+  background:#071f1a55;
+}
+.section.alt .rule strong,.section.alt .faq summary{
+  color:#f3d58e;
+}
+.feature,.info-card,.concept-card,.vision-card{
+  border-color:#dfc27b;
+  background:linear-gradient(135deg,#741a35 0%,#3d1a2a 42%,#10513b 100%);
+}
+.feature:nth-child(3n+2),.info-card:nth-child(3n+2){
+  background:linear-gradient(135deg,#4f172e 0%,#174a39 100%);
+}
+.prizes{
+  background:linear-gradient(110deg,#8d1737 0%,#b92347 32%,#14543d 70%,#082f27 100%);
+  border-block:1px solid var(--ss-xmas-gold);
+}
+.hero .btn,.hero .btn-primary,.registration-form button[type=submit],
+.registration-success-card button,body:has(#login) #loginBtn{
+  background:linear-gradient(105deg,#a51e3e 0%,#bd294b 45%,#126044 100%);
+  border:1px solid #e8d39a;
+  color:#fff;
+}
+body:has(#login) #login{
+  border:1px solid var(--ss-xmas-gold);
+}
+body:has(#login) h2,#login h2,#app .panel>h2{
+  color:#8e1b38;
+}
+body:has(.board) .board{
+  border:1px solid var(--ss-xmas-gold);
+  background:linear-gradient(135deg,#68172f 0%,#3c1b2a 42%,#104b38 100%);
+}
+body:has(.board) .board-head h2,
+body:has(.board) .count{color:#fff0d0}
+body:has(.board) .notice{
+  background:#fffaf1;
+  border:1px solid #dfc27b;
+}
+body:has(.board) .notice h3{color:#851b37}
+body:has(.board) .notice p{color:#34443d}
+body:has(.board) .date{
+  color:#0d563e;
+  background:#edf4ec;
+  border:1px solid #b7d1bd;
+}
+body:has(.board) .tag{
+  color:#0b5139;
+  background:#e4f0e6;
+}
+@media(max-width:650px){
+  .section,.section.alt{
+    padding:22px 12px;
+    margin:12px auto;
+    border-radius:14px;
+  }
+  .feature,.info-card{padding:15px;border-radius:12px}
+  .rule{padding:13px;gap:10px}
+  .rule strong{font-size:17px}
+  .rule p{font-size:13px;line-height:1.55}
+  .section .title{margin-bottom:18px}
+  .section .title h2{font-size:clamp(22px,6vw,29px)}
+}
