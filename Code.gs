@@ -150,6 +150,7 @@ function doPost(e) {
       case 'adminlogin': out=login_(p); break;
       case 'admindashboard': out=dashboard_(p); break;
       case 'adminsearch': out=search_(p); break;
+      case 'getentryphoto': out=getEntryPhoto_(p); break;
       case 'exportregistrations': out=exportRegistrations_(p); break;
       case 'verifypayment': out=verifyPayment_(p); break;
       case 'reviewregistration': out=review_(p); break;
@@ -223,7 +224,10 @@ function register_(p) {
     const now=new Date();
     sh.appendRow([ref,'',now,name,parish,diocese,country,state,district,phone,'Individual / Single Entry',500,utr,
       photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
-    const row=sh.getLastRow();sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');
+    const row=sh.getLastRow();
+    // Preserve the complete international number as text (including leading + and country code).
+    sh.getRange(row,10).setNumberFormat('@').setValue(phone);
+    sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');
     audit_('PUBLIC','REGISTRATION_SUBMITTED',ref,'Photo and payment proof stored in private Drive folders.');
     const result={success:true,trackingRef:ref,message:'Registration request received. Payment and documents are pending organiser verification.'};
     if(clientToken)CacheService.getScriptCache().put('SS26_SUBMIT_'+clientToken,JSON.stringify(result),21600);
@@ -379,6 +383,29 @@ function rowObject_(r) {
     participantName:String(r[3]||''),parishName:String(r[4]||''),diocese:String(r[5]||''),country:String(r[6]||''),state:String(r[7]||''),district:String(r[8]||''),phone:String(r[9]||''),entryType:String(r[10]||''),fee:r[11],utr:String(r[12]||''),
     photoUrl:String(r[14]||''),originalPhotoUrl:String(r[16]||''),paymentProofUrl:String(r[18]||''),paymentStatus:String(r[19]||''),status:String(r[20]||''),adminNote:String(r[21]||'')};
 }
+function getEntryPhoto_(p) {
+  const admin=requireAdmin_(p.sessionToken);
+  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  if(last<2)throw new Error('No registrations found.');
+  const trackingRef=clean_(p.trackingRef,40);
+  const participantId=clean_(p.participantId,60);
+  let cell=null;
+  if(trackingRef)cell=sh.getRange(2,1,last-1,1).createTextFinder(trackingRef).matchEntireCell(true).findNext();
+  else if(participantId)cell=sh.getRange(2,2,last-1,1).createTextFinder(participantId).matchEntireCell(true).findNext();
+  else throw new Error('Tracking Reference or Participant ID is required.');
+  if(!cell)throw new Error('Registration record not found.');
+  const row=sh.getRange(cell.getRow(),1,1,REG_HEADERS.length).getValues()[0];
+  const photoId=String(row[13]||'');
+  if(!photoId)throw new Error('Participant photo is not available for this registration.');
+  const file=DriveApp.getFileById(photoId),blob=file.getBlob();
+  const bytes=blob.getBytes();
+  if(!bytes.length||bytes.length>CFG.MAX_FILE_BYTES)throw new Error('Participant photo is missing or exceeds the permitted size.');
+  const mimeType=blob.getContentType()||file.getMimeType();
+  if(!/^image\/(jpeg|png|webp|heic)$/i.test(mimeType))throw new Error('Stored participant file is not a supported image.');
+  audit_(admin.user,'PARTICIPANT_PHOTO_VIEWED',String(row[0]||''),'Authorised admin viewed the private participant photo.');
+  return {success:true,photoBase64:Utilities.base64Encode(bytes),mimeType:mimeType};
+}
+
 function manageNotices_(p) {
   const admin=requireAdmin_(p.sessionToken),action=String(p.noticeAction||'list').toLowerCase(),sh=sheet_(CFG.NOTICE_SHEET,NOTICE_HEADERS);
   if(action==='list')return {success:true,notices:adminNotices_()};
