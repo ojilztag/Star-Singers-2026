@@ -580,3 +580,49 @@ function logout_(p){const t=String(p.sessionToken||'');if(t)CacheService.getScri
 function hash_(pass,salt){let v=String(salt)+'|'+String(pass);for(let i=0;i<CFG.HASH_ROUNDS;i++)v=Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,v,Utilities.Charset.UTF_8));return v;}
 function equal_(a,b){a=String(a||'');b=String(b||'');if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0;}
 function safe_(e){return String(e&&e.message||'Unexpected server error.').slice(0,300);}
+
+/**
+ * ONE-TIME ADMIN PASSWORD RECOVERY — EXISTING INSTALLATION ONLY.
+ *
+ * Before running:
+ * 1. Add Script Property SS26_ADMIN_RESET_PASSWORD with a new password (12+ chars).
+ * 2. Run this function manually from the Apps Script editor.
+ * 3. The temporary password property is deleted after a successful reset.
+ *
+ * This function does NOT create or modify the spreadsheet or Drive folders.
+ * Do NOT run installStarSingers2026() again on an existing installation.
+ */
+function resetStarSingersAdminPasswordOnce() {
+  const props = PropertiesService.getScriptProperties();
+  const newPassword = String(props.getProperty('SS26_ADMIN_RESET_PASSWORD') || '');
+
+  if (newPassword.length < CFG.MIN_PASSWORD) {
+    throw new Error('Set SS26_ADMIN_RESET_PASSWORD to a password of at least 12 characters in Script Properties.');
+  }
+
+  if (!props.getProperty('SS26_SPREADSHEET_ID') ||
+      !props.getProperty('SS26_ROOT_FOLDER_ID')) {
+    throw new Error('Existing database/storage was not found. Password reset stopped; no changes were made.');
+  }
+
+  const username = String(props.getProperty('ADMIN_USER') || 'admin').trim();
+  if (!username) {
+    throw new Error('ADMIN_USER is empty. Password reset stopped; no changes were made.');
+  }
+
+  const salt = Utilities.getUuid() + Utilities.getUuid();
+  const currentVersion = Number(props.getProperty('SESSION_VERSION') || '1');
+
+  props.setProperties({
+    ADMIN_USER: username,
+    ADMIN_SALT: salt,
+    ADMIN_HASH: hash_(newPassword, salt),
+    SESSION_VERSION: String(currentVersion + 1)
+  });
+
+  props.deleteProperty('SS26_ADMIN_RESET_PASSWORD');
+
+  Logger.log('Admin password reset successfully.');
+  Logger.log('Admin username: ' + username);
+  Logger.log('All previous Admin sessions have been invalidated.');
+}
