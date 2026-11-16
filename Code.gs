@@ -401,7 +401,7 @@ function getEntryPhoto_(p) {
   const bytes=blob.getBytes();
   if(!bytes.length||bytes.length>CFG.MAX_FILE_BYTES)throw new Error('Participant photo is missing or exceeds the permitted size.');
   const mimeType=blob.getContentType()||file.getMimeType();
-  if(!/^image\\/(jpeg|png|webp|heic)$/i.test(mimeType))throw new Error('Stored participant file is not a supported image.');
+  if(!/^image\/(jpeg|png|webp|heic)$/i.test(mimeType))throw new Error('Stored participant file is not a supported image.');
   audit_(admin.user,'PARTICIPANT_PHOTO_VIEWED',String(row[0]||''),'Authorised admin viewed the private participant photo.');
   return {success:true,photoBase64:Utilities.base64Encode(bytes),mimeType:mimeType};
 }
