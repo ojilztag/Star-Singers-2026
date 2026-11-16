@@ -187,7 +187,8 @@ async function openEntryCard(r){
   ]);
   const photo=await loadCardImage(photoData,false);
   drawEntryCard(r,photo,logo);$('entryCardStatus').textContent='';
- }catch(err){$('entryCardStatus').textContent=err.message;}
+ }catch(err){$('entryCardStatus').textContent=err.message;return false;}
+ return true;
 }
 function downloadEntryPng(){
  const c=$('entryCanvas');
@@ -216,7 +217,7 @@ $('recentRecords').addEventListener('click',e=>{const b=e.target.closest('button
 $('records').addEventListener('click',e=>{
  const photoButton=e.target.closest('button[data-photo-ref]');if(photoButton){openParticipantPhoto({trackingRef:photoButton.dataset.photoRef});return;}
  const b=e.target.closest('button[data-action]');if(!b)return;const r=records[Number(b.dataset.index)],action=b.dataset.action;
- if(action==='entry-preview'||action==='entry-download'||action==='entry-whatsapp'){openEntryCard(r).then(()=>{if(action==='entry-download')setTimeout(downloadEntryPng,250);if(action==='entry-whatsapp')setTimeout(openEntryWhatsApp,250);});return;}
+ if(action==='entry-preview'||action==='entry-download'||action==='entry-whatsapp'){openEntryCard(r).then(ready=>{if(!ready)return;if(action==='entry-download')downloadEntryPng();if(action==='entry-whatsapp')openEntryWhatsApp();});return;}
  if(action==='share'){const text='⭐ NAKSHATHRA GAYAKAR — STAR SINGERS 2026\nREGISTRATION CONFIRMED\n━━━━━━━━━━━━━━\n🆔 Participant ID: '+r.registrationId+'\n👤 Name: '+r.participantName+'\n⛪ Parish: '+r.parishName+'\n✝️ Diocese: '+r.diocese+'\n🌍 Residence: '+[r.country,r.state,r.district].filter(Boolean).join(', ')+'\n\nYour registration has been approved. Please keep this Participant ID safe.\n\nOfficial Website: https://www.jkjcreations.org';const digits=String(r.phone||'').replace(/\D/g,'');if(!digits){msg('dashStatus','No valid WhatsApp number is saved for this registration.',true);return;}window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(text),'_blank','noopener');return;}
  const note=$('note-'+b.dataset.index).value;
  b.disabled=true;request(action==='verify'?{action:'verifypayment',sessionToken:token,trackingRef:r.trackingRef,adminNote:note}:{action:'reviewregistration',sessionToken:token,trackingRef:r.trackingRef,decision:action,adminNote:note},d=>{if(!d.success){msg('dashStatus',d.error||'Review failed.',true);return;}msg('dashStatus',action==='verify'?'Payment verified. Approval is now enabled.':action==='approve'?'Approved. Participant ID: '+d.registration.registrationId:'Registration rejected.',false);loadDashboard();});
@@ -230,6 +231,6 @@ function renderNotices(list){$('notices').innerHTML=list.map(n=>'<div class="not
 $('notices').addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit){noticeRequest({noticeAction:'list'},d=>{const n=(d.notices||[]).find(x=>x.id===edit.dataset.edit);if(!n)return;$('noticeId').value=n.id;$('noticeTitle').value=n.title;$('noticeBody').value=n.body;$('noticeDate').value=n.publishDate;$('noticeStatus').value=n.status;window.scrollTo({top:$('noticeForm').offsetTop,behavior:'smooth'});});}if(del&&confirm('Delete this notice?'))noticeRequest({noticeAction:'delete',noticeId:del.dataset.delete},d=>{if(!d.success){msg('noticeStatusMsg',d.error,true);return;}renderNotices(d.notices||[]);msg('noticeStatusMsg','Notice deleted successfully.',false);loadDashboard();});});
 $('noticeForm').addEventListener('submit',e=>{e.preventDefault();const submittedStatus=$('noticeStatus').value;noticeRequest({noticeAction:'save',noticeId:$('noticeId').value,title:$('noticeTitle').value,body:$('noticeBody').value,publishDate:$('noticeDate').value,status:submittedStatus},d=>{if(!d.success){msg('noticeStatusMsg',d.error,true);return;}renderNotices(d.notices||[]);$('noticeForm').reset();$('noticeId').value='';msg('noticeStatusMsg',submittedStatus==='Published'?'Notice published. The public website loads this notice when its page is opened or refreshed.':'Notice saved as '+submittedStatus+'.',false);loadDashboard();});});
 $('newNotice').onclick=()=>{$('noticeForm').reset();$('noticeId').value='';};
-$('passwordForm').addEventListener('submit',e=>{e.preventDefault();if($('newPass').value!==$('confirmPass').value){msg('passwordMsg','New passwords do not match.',true);return;}request({action:'changepassword',sessionToken:token,currentPassword:$('currentPass').value,newPassword:$('newPass').value},d=>{if(!d.success){msg('passwordMsg',d.error,true);return;}msg('passwordMsg',d.message,false);setTimeout(loginView,1000);});});
+$('passwordForm').addEventListener('submit',e=>{e.preventDefault();if($('newPass').value!==$('confirmPass').value){msg('passwordMsg','New passwords do not match.',true);return;}request({action:'changepassword',sessionToken:token,currentPassword:$('currentPass').value,newPassword:$('newPass').value},d=>{if(!d.success){msg('passwordMsg',d.error,true);return;}msg('passwordMsg',d.message,false);loginView();});});
 if(token&&!API_URL.includes('PASTE_')){$('login').classList.add('hidden');$('app').classList.remove('hidden');loadDashboard();}
 </script></body></html>
