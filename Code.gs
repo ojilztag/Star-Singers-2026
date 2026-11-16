@@ -431,6 +431,49 @@ function adminNotices_() {
   return last<2?[]:sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues().reverse().map(r=>({id:String(r[0]),title:String(r[3]),body:String(r[4]),publishDate:String(r[5]||''),status:String(r[6])}));
 }
 function publicNotices_(){return adminNotices_().filter(n=>n.status==='Published').map(n=>({date:n.publishDate,title:n.title,summary:n.body.slice(0,220),content:n.body,category:'Official Notice'}));}
+/**
+ * ONE-TIME DEMO DATA RESET.
+ * Run manually from the Apps Script editor only after confirming every
+ * Registrations row is demo/test data. Keeps headers, Notices, Settings,
+ * Admin credentials, AuditLog, Dashboard and formulas intact.
+ * Trashes only Drive files referenced by the demo registration rows.
+ */
+function resetDemoTestDataNow() {
+  const lock=LockService.getScriptLock();lock.waitLock(30000);
+  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  if(last<2) {
+    PropertiesService.getScriptProperties().setProperty('SS26_LAST_PARTICIPANT_SEQUENCE','0');
+    return {success:true,removedRegistrations:0,trashedFiles:0};
+  }
+  const rows=sh.getRange(2,1,last-1,REG_HEADERS.length).getValues();
+  const folderKeys=['SS26_PHOTOS_FOLDER_ID','SS26_ORIGINALS_FOLDER_ID','SS26_PROOFS_FOLDER_ID'];
+  const folderIds=folderKeys.map(k=>PropertiesService.getScriptProperties().getProperty(k));
+  if(folderIds.some(x=>!x))throw new Error('Private Drive folders are not fully configured. No reset was performed.');
+  const files=[],seen={};
+  rows.forEach(r=>{
+    [[r[13],folderIds[0]],[r[15],folderIds[1]],[r[17],folderIds[2]]].forEach(pair=>{
+      const id=String(pair[0]||'').trim();if(!id||seen[id])return;seen[id]=true;
+      const file=DriveApp.getFileById(id);
+      let inExpectedFolder=false,parents=file.getParents();
+      while(parents.hasNext())if(parents.next().getId()===pair[1])inExpectedFolder=true;
+      if(!inExpectedFolder)throw new Error('A linked file is outside its expected private folder. No registration rows were cleared.');
+      files.push(file);
+    });
+  });
+  const trashed=[];
+  try {
+    files.forEach(file=>{if(!file.isTrashed()){file.setTrashed(true);trashed.push(file);}});
+    sh.getRange(2,1,last-1,REG_HEADERS.length).clearContent();
+    PropertiesService.getScriptProperties().setProperty('SS26_LAST_PARTICIPANT_SEQUENCE','0');
+    audit_('SYSTEM','DEMO_TEST_DATA_RESET','ALL','Cleared '+rows.length+' demo/test registrations and trashed '+trashed.length+' linked private files. Audit history retained.');
+    SpreadsheetApp.flush();
+    return {success:true,removedRegistrations:rows.length,trashedFiles:trashed.length};
+  } catch(err) {
+    trashed.forEach(file=>{try{file.setTrashed(false);}catch(ignore){}});
+    throw err;
+  } finally {lock.releaseLock();}
+}
+
 function audit_(user,action,id,details){try{db_().getSheetByName(CFG.AUDIT_SHEET).appendRow([new Date(),user,action,id,details]);}catch(ignore){}}
 function changePassword_(p) {
   const admin=requireAdmin_(p.sessionToken),props=PropertiesService.getScriptProperties(),cur=String(p.currentPassword||''),next=String(p.newPassword||'');
