@@ -524,7 +524,7 @@ function demoResetSnapshot_() {
   });
   const snapshot={rows:rows,files:files.map(f=>[f.id,f.folderId,f.category]),folders:folderIds};
   const digest=Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,JSON.stringify(snapshot),Utilities.Charset.UTF_8);
-  const snapshotToken=Utilities.base64EncodeWebSafe(digest);
+  const snapshotToken=Utilities.base64EncodeWebSafe(digest).replace(/=+$/,'');
   return {registrationCount:rows.length,fileCount:files.length,files:counts,snapshotToken:snapshotToken};
 }
 function demoResetPreview_(p) {
