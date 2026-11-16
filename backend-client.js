@@ -60,7 +60,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
    }
   });
  }
- function fileData(file,maxBytes,label,compress){
+ async function fileData(file,maxBytes,label,compress){
   if(!file)throw new Error(label+' is required.');
   let uploadFile=file;
   if(compress&&file.type.startsWith('image/')&&file.size>maxBytes){
