@@ -307,3 +307,42 @@ body:has(.board) .tag{
   .section .title{margin-bottom:18px}
   .section .title h2{font-size:clamp(22px,6vw,29px)}
 }
+
+
+/* ── Slow Christmas red ↔ evergreen background colour drift ──
+   Backgrounds only: no text, images, layout, controls or content are animated. */
+@keyframes ssChristmasBackgroundDrift{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+body,
+.top,.hero,.section,.section.alt,.registration-form,
+.feature,.info-card,.concept-card,.vision-card,.prizes,.prize,.contact-panel,
+body:has(#login) header,
+body:has(#login) #login,
+body:has(#login) .panel,
+body:has(.board) header,
+body:has(.board) .board,
+footer{
+  background-size:220% 220%;
+  animation:ssChristmasBackgroundDrift 34s ease-in-out infinite;
+}
+/* Keep the colour transition gentle and uninterrupted on smaller screens too. */
+@media(max-width:650px){
+  body,.top,.hero,.section,.section.alt,.registration-form,
+  .feature,.info-card,.concept-card,.vision-card,.prizes,.prize,
+  body:has(#login) header,body:has(#login) #login,body:has(#login) .panel,
+  body:has(.board) header,body:has(.board) .board,footer{
+    animation-duration:38s;
+  }
+}
+/* Respect device accessibility settings and avoid motion when requested. */
+@media(prefers-reduced-motion:reduce){
+  body,.top,.hero,.section,.section.alt,.registration-form,
+  .feature,.info-card,.concept-card,.vision-card,.prizes,.prize,.contact-panel,
+  body:has(#login) header,body:has(#login) #login,body:has(#login) .panel,
+  body:has(.board) header,body:has(.board) .board,footer{
+    animation:none!important;
+    background-position:50% 50%;
+  }
+}
