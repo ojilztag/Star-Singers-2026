@@ -16,11 +16,11 @@
 </div></main>
 <div id="entryModal" class="entry-modal" role="dialog" aria-modal="true" aria-labelledby="entryModalTitle">
  <div class="entry-modal-box">
-  <div class="entry-modal-head"><h2 id="entryModalTitle">Official Entry Card</h2><button type="button" class="red" id="entryClose">Close</button></div>
+  <div class="entry-modal-head"><h2 id="entryModalTitle">Official Entry Card & WhatsApp</h2><button type="button" class="red" id="entryClose">Close</button></div>
   <div class="entry-canvas-wrap"><canvas id="entryCanvas" width="1000" height="1400" aria-label="Participant entry card preview"></canvas></div>
   <div id="entryCardStatus" class="entry-error"></div>
-  <div class="entry-modal-actions"><button type="button" id="entryDownload" class="gold">Download Entry Card PNG</button><button type="button" id="entryWhatsApp">WhatsApp Share · Message Ready</button></div>
-  <p class="entry-help">WhatsApp opens the participant chat with a personalised congratulatory message ready. Attach the downloaded Entry Card PNG before sending.</p>
+  <div class="entry-modal-actions"><button type="button" id="entryDownload" class="gold">Download Entry Card PNG</button><button type="button" id="entryWhatsApp">Open WhatsApp Message</button></div>
+  <p class="entry-help">One personalised WhatsApp message includes approval and participant details. Download the Entry Card PNG, open WhatsApp, attach the card and send the message.</p>
  </div>
 </div>
 <div id="photoModal" class="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle"><div class="photo-modal-box"><div class="photo-modal-head"><h2 id="photoModalTitle">Participant Photo</h2><button type="button" class="red" id="photoClose">Close</button></div><img id="photoPreview" class="photo-preview hidden" alt="Private participant photo"><div id="photoModalStatus" class="photo-modal-status">Loading secure photo…</div></div></div>
@@ -103,7 +103,7 @@ function statusBadge(value,label){
  return '<span class="tag '+statusTone(value)+'">'+esc(label||value||'Not set')+'</span>';
 }
 function renderRecords(list){
- records=list;$('records').innerHTML=list.length?list.map((r,i)=>'<article class="card"><div class="cardtop"><div><div class="id">'+esc(r.registrationId||r.trackingRef)+'</div><b>'+esc(r.participantName)+'</b><div class="muted">'+esc(r.submittedAt)+' · '+esc(r.status)+'</div></div><div class="status-badges">'+statusBadge(r.status,'Registration: '+(r.status||'Pending'))+statusBadge(r.paymentStatus,'Payment: '+(r.paymentStatus||'Pending'))+'</div></div><details class="expand"><summary>Expand full registration details</summary><div class="expand-body"><div class="details"><div><b>Tracking:</b> '+esc(r.trackingRef)+'</div><div><b>UTR:</b> '+esc(r.utr||'Not provided')+'</div><div><b>Parish:</b> '+esc(r.parishName)+'</div><div><b>Diocese:</b> '+esc(r.diocese)+'</div><div><b>Residence:</b> '+esc([r.country,r.state,r.district].filter(Boolean).join(', '))+'</div><div><b>WhatsApp:</b> '+esc(r.phone)+'</div><div><b>Fee:</b> ₹'+esc(r.fee)+'</div><div><b>Entry:</b> '+esc(r.entryType)+'</div></div><div class="filelinks"><button type="button" class="gold" data-photo-ref="'+esc(r.trackingRef)+'">View Participant Photo</button><a class="file-button" target="_blank" rel="noopener" href="'+esc(r.paymentProofUrl)+'">View Payment Proof ↗</a></div><label>Admin note</label><input id="note-'+i+'" value="'+esc(r.adminNote)+'" placeholder="Optional verification note"><div class="actions">'+(r.status==='Pending Review'&&r.paymentStatus==='Pending Verification'?'<button class="gold" data-action="verify" data-index="'+i+'">Verify Payment</button>':'')+(r.status==='Pending Review'&&r.paymentStatus==='Verified'?'<button data-action="approve" data-index="'+i+'">Approve & Generate ID</button><button class="red" data-action="reject" data-index="'+i+'">Reject</button>':'')+(r.registrationId?'<button class="gold" data-action="share" data-index="'+i+'">Share ID on WhatsApp</button>':'')+(String(r.status||'').toLowerCase()==='approved'&&r.registrationId&&r.photoUrl?'<div class="entry-actions"><div class="entry-label">JKJ CREATIONS · OFFICIAL ENTRY CARD</div><button data-action="entry-preview" data-index="'+i+'">Open Official Entry Card</button></div>':'')+'</div></div></details></article>').join(''):'<p class="muted">No registrations found.</p>';
+ records=list;$('records').innerHTML=list.length?list.map((r,i)=>'<article class="card"><div class="cardtop"><div><div class="id">'+esc(r.registrationId||r.trackingRef)+'</div><b>'+esc(r.participantName)+'</b><div class="muted">'+esc(r.submittedAt)+' · '+esc(r.status)+'</div></div><div class="status-badges">'+statusBadge(r.status,'Registration: '+(r.status||'Pending'))+statusBadge(r.paymentStatus,'Payment: '+(r.paymentStatus||'Pending'))+'</div></div><details class="expand"><summary>Expand full registration details</summary><div class="expand-body"><div class="details"><div><b>Tracking:</b> '+esc(r.trackingRef)+'</div><div><b>UTR:</b> '+esc(r.utr||'Not provided')+'</div><div><b>Parish:</b> '+esc(r.parishName)+'</div><div><b>Diocese:</b> '+esc(r.diocese)+'</div><div><b>Residence:</b> '+esc([r.country,r.state,r.district].filter(Boolean).join(', '))+'</div><div><b>WhatsApp:</b> '+esc(r.phone)+'</div><div><b>Fee:</b> ₹'+esc(r.fee)+'</div><div><b>Entry:</b> '+esc(r.entryType)+'</div></div><div class="filelinks"><button type="button" class="gold" data-photo-ref="'+esc(r.trackingRef)+'">View Participant Photo</button><a class="file-button" target="_blank" rel="noopener" href="'+esc(r.paymentProofUrl)+'">View Payment Proof ↗</a></div><label>Admin note</label><input id="note-'+i+'" value="'+esc(r.adminNote)+'" placeholder="Optional verification note"><div class="actions">'+(r.status==='Pending Review'&&r.paymentStatus==='Pending Verification'?'<button class="gold" data-action="verify" data-index="'+i+'">Verify Payment</button>':'')+(r.status==='Pending Review'&&r.paymentStatus==='Verified'?'<button data-action="approve" data-index="'+i+'">Approve & Generate ID</button><button class="red" data-action="reject" data-index="'+i+'">Reject</button>':'')++(String(r.status||'').toLowerCase()==='approved'&&r.registrationId&&r.photoUrl?'<div class="entry-actions"><div class="entry-label">JKJ CREATIONS · OFFICIAL ENTRY CARD</div><button data-action="entry-preview" data-index="'+i+'">Entry Card & WhatsApp</button></div>':'')+'</div></div></details></article>').join(''):'<p class="muted">No registrations found.</p>';
 }
 
 let activeEntryRecord=null,entryCaption='';
@@ -188,11 +188,19 @@ function drawEntryCard(r,photo,logo){
  ctx.fillStyle='rgba(255,239,196,.75)';ctx.font='17px Arial';ctx.fillText('Keep this Entry Card safe',W/2,1312);
 }
 function whatsappHeader(){
- return '🌟 JKJCREATIONS.ORG INTERNATIONAL | USA EDITION PRESENTS 🇺🇸\n🎤 NAKSHATHRA GAYAKAR – STAR SINGERS 2026 🎶';
+ return '🌟 JKJ Creations International – USA Edition Presents 🇺🇸\\n🎤 Nakshathra Gayakar – Star Singers 2026';
 }
 function entryMessage(r){
  const name=String(r.participantName||'Participant').trim();
- return whatsappHeader()+'\n\n🎉 OFFICIAL APPROVAL · CONGRATULATIONS!\n\nDear '+name+',\n\n💐 Your participation has been officially approved by JKJ CREATIONS. We are delighted to welcome you to STAR SINGERS 2026.\n\n🆔 Participant ID: '+String(r.registrationId||'')+'\n\n🎫 Your Official Entry Card is attached. Please keep it safe!\n\n✨ May your voice shine and your talent inspire.\n\nWith love & best wishes,\n❤️ JKJ CREATIONS\nFaith • Creativity • Service ✨';
+ const residence=[r.country,r.state,r.district].filter(Boolean).join(', ');
+ const detail=(label,value)=>value?label+': '+value+'\\n':'';
+ return whatsappHeader()+'\\n\\n🎉 Congratulations & welcome!\\n\\nDear '+name+',\\n\\nYour participation in Star Singers 2026 has been officially approved. We are delighted to welcome you to this musical journey. ❤️\\n\\n🆔 Participant details\\n'+
+ detail('Participant ID',r.registrationId)+
+ detail('Name',r.participantName)+
+ detail('Parish',r.parishName)+
+ detail('Diocese',r.diocese)+
+ detail('Residence',residence)+
+ '\\n🎫 Your Official Participant Entry Card is attached. Please save it safely for future reference.\\n\\n📢 Share the joy and spread the talent! Invite your friends and family to join this musical journey.\\n\\n🌐 https://www.jkjcreations.org\\n\\n✨ May your voice shine and your talent inspire!\\n\\nWith love & best wishes,\\n❤️ JKJ Creations\\nFaith • Creativity • Service';
 }
 async function openEntryCard(r){
  activeEntryRecord=r;entryCaption=entryMessage(r);$('entryCardStatus').textContent='Preparing your card…';$('entryModal').classList.add('open');
