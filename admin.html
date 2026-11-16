@@ -309,7 +309,7 @@ $('demoResetPreview').onclick=()=>{
  request({action:'getdemoresetpreview',sessionToken:token},d=>{
   if(!d.success){msg('demoResetStatus',d.error||'Could not prepare reset preview.',true);return;}
   demoResetExpectedCount=Number(d.registrationCount||0);demoResetSnapshotToken=String(d.snapshotToken||'');
-  const files=d.files||{};$('demoResetPreviewResult').textContent='Preview: '+demoResetExpectedCount+' registration(s); '+Number(files.croppedPhotos||0)+' cropped photos; '+Number(files.originalPhotos||0)+' original photos; '+Number(files.paymentProofs||0)+' payment proofs ('+Number(d.fileCount||0)+' linked file(s) total) will be moved to Drive Trash.';
+  const files=d.files||{},skipped=Number(d.skippedFileCount||0);$('demoResetPreviewResult').textContent='Preview: '+demoResetExpectedCount+' registration(s); '+Number(files.croppedPhotos||0)+' cropped photos; '+Number(files.originalPhotos||0)+' original photos; '+Number(files.paymentProofs||0)+' payment proofs ('+Number(d.fileCount||0)+' accessible linked file(s)) will be moved to Drive Trash. '+skipped+' missing/inaccessible file reference(s) will be skipped; registration rows can still be cleared. '+(skipped?'Review the skipped-file note before confirming.':'All linked file references passed checks.');
   $('demoResetPreviewResult').classList.remove('hidden');
   $('demoResetConfirmArea').classList.remove('hidden');
   $('demoResetExecute').disabled=true;
@@ -324,7 +324,7 @@ $('demoResetExecute').onclick=()=>{
  $('demoResetExecute').disabled=true;
  request({action:'resetdemodata',sessionToken:token,confirmation:$('demoResetPhrase').value,currentPassword:$('demoResetPassword').value,expectedRegistrationCount:demoResetExpectedCount,snapshotToken:demoResetSnapshotToken},d=>{
   if(!d.success){msg('demoResetStatus',d.error||'Reset failed. No success was reported.',true);$('demoResetExecute').disabled=false;return;}
-  msg('demoResetStatus','Reset completed: '+Number(d.removedRegistrations||0)+' registration(s) removed; '+Number(d.trashedFiles||0)+' linked file(s) moved to Drive Trash. Existing audit history was retained.',false);
+  msg('demoResetStatus','Reset completed: '+Number(d.removedRegistrations||0)+' registration(s) removed; '+Number(d.trashedFiles||0)+' accessible linked file(s) moved to Drive Trash; '+Number(d.skippedFileCount||0)+' missing/inaccessible file reference(s) skipped. Existing audit history was retained.',false);
   $('demoResetConfirmArea').classList.add('hidden');$('demoResetPreviewResult').classList.add('hidden');$('demoResetPassword').value='';demoResetExpectedCount=null;demoResetSnapshotToken='';loadDashboard();
  });
 };
