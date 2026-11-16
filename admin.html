@@ -201,16 +201,25 @@ function whatsappHeader(){
  return '🌟 JKJ Creations International – USA Edition Presents 🇺🇸\n🎤 Nakshathra Gayakar – Star Singers 2026';
 }
 function entryMessage(r){
- const name=String(r.participantName||'Participant').trim();
+ const name=String(r.participantName||'').trim();
  const residence=[r.country,r.state,r.district].filter(Boolean).join(', ');
- const detail=(label,value)=>value?label+': '+value+'\n':'';
- return whatsappHeader()+'\n\n🎉 Congratulations & welcome!\n\nDear '+name+',\n\nYour participation in Star Singers 2026 has been officially approved. We are delighted to welcome you to this musical journey. ❤️\n\n🆔 Participant details\n'+
- detail('Participant ID',r.registrationId)+
- detail('Name',r.participantName)+
- detail('Parish',r.parishName)+
- detail('Diocese',r.diocese)+
- detail('Residence',residence)+
- '\n🎫 Your Official Participant Entry Card is attached. Please save it safely for future reference.\n\n📢 Share the joy and spread the talent! Invite your friends and family to join this musical journey.\n\n🌐 https://www.jkjcreations.org\n\n✨ May your voice shine and your talent inspire!\n\nWith love & best wishes,\n❤️ JKJ Creations\nFaith • Creativity • Service';
+ return '🇺🇸 JKJ CREATIONS International Organization – USA Edition Presents 🎤 Nakshathra Gayakar 2026'+
+ '\n\nDear '+name+', 👏'+
+ '\n\n🎉 Congratulations & Welcome!'+
+ '\n\nYour Participation In Nakshathra Gayakar 2026 Has Been Officially Approved. We Are Delighted To Welcome You To This Musical Journey. ❤️'+
+ '\n\n🆔 Participant Details'+
+ '\n\nParticipant ID: '+String(r.registrationId||'')+
+ '\nName: '+String(r.participantName||'')+
+ '\nParish: '+String(r.parishName||'')+
+ '\nDiocese: '+String(r.diocese||'')+
+ '\nResidence: '+residence+
+ '\n\n🎫 Your Official Participant Entry Card'+
+ '\n\nYour Official Participant Entry Card Is Attached. Please Save It Safely For Future Reference.'+
+ '\n\n📢 Share The Joy And Spread The Talent! Invite Your Friends And Family To Join This Musical Journey.'+
+ '\n\n🎼 To Contact The Organizers: https://jkjcreations.org'+
+ '\n\n✨ May Your Voice Shine And Your Talent Inspire! With Love And Best Wishes. 👏'+
+ '\n\n❤️ JKJ CREATIONS'+
+ '\nFaith • Creativity • Service';
 }
 async function openEntryCard(r){
  activeEntryRecord=r;entryCaption=entryMessage(r);$('entryCardStatus').textContent='Preparing your card…';$('entryModal').classList.add('open');
