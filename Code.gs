@@ -296,7 +296,8 @@ function search_(p) {
   if(!q&&!filter)throw new Error('Enter Registration ID, tracking reference, name or WhatsApp number.');
   const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow(),rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
   let found=rows;
-  if(filter==='pending-payment')found=found.filter(r=>r[19]==='Pending Verification');
+  if(filter==='submitted')found=found.filter(r=>String(r[0]||'').trim()!=='');
+  else if(filter==='pending-payment')found=found.filter(r=>r[19]==='Pending Verification');
   else if(filter==='pending-review')found=found.filter(r=>r[20]==='Pending Review'&&r[19]==='Verified');
   else if(filter==='approved')found=found.filter(r=>r[20]==='Approved');
   else if(filter==='rejected')found=found.filter(r=>r[20]==='Rejected');
@@ -511,6 +512,9 @@ function demoResetPreview_(p) {
   rows.forEach(r=>{
     [[r[13],folderIds[0]],[r[15],folderIds[1]],[r[17],folderIds[2]]].forEach(pair=>{
       const id=String(pair[0]||'').trim();if(!id||seen[id])return;seen[id]=true;
+      if(pair[1]===folderIds[0])counts.croppedPhotos++;
+      else if(pair[1]===folderIds[1])counts.originalPhotos++;
+      else if(pair[1]===folderIds[2])counts.paymentProofs++;
       const file=DriveApp.getFileById(id),parents=file.getParents();let valid=false;
       while(parents.hasNext())if(parents.next().getId()===pair[1])valid=true;
       if(!valid)throw new Error('A linked file is outside its expected private folder. Reset is blocked.');
