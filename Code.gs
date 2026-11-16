@@ -208,7 +208,7 @@ function register_(p) {
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
   if(String(p.feeConsent)!=='true')throw new Error('Registration fee consent is required.');
   const siteSettings=readSiteSettings_();
-  const registrationStatus=String(siteSettings['Registration Status']||'Open');
+  const registrationStatus=String(siteSettings['Registration Status']||'Coming Soon');
   if(registrationStatus!=='Open')throw new Error(registrationStatus==='Closed'?'Registration is currently closed.':'Registration has not opened yet. Please check the official notices.');
   const configuredFee=Number(siteSettings['Registration Fee']||500);
   if(!Number.isFinite(configuredFee)||configuredFee<=0)throw new Error('Registration fee is not configured correctly.');
@@ -441,6 +441,7 @@ function readSiteSettings_() {
 function publicSiteSettings_() {
   const raw=readSiteSettings_(),out={};
   Object.keys(SITE_SETTING_FIELDS).forEach(k=>{const key=SITE_SETTING_FIELDS[k].key;if(raw[key]!==undefined)out[k]=raw[key];});
+  if(!out.registrationStatus)out.registrationStatus='Coming Soon';
   return out;
 }
 function manageSiteSettings_(p) {
