@@ -548,15 +548,15 @@ body{padding-top:80px}
 </div>
 <label>Entry Type<input type="text" value="Individual / Single Entry" readonly></label>
 </div>
-<div class="fee-summary"><b>Registration Fee</b><strong>₹500</strong><p>One participant · One entry. Payment proof must be submitted to complete the registration request.</p></div>
-<label class="fee-consent"><input type="checkbox" name="feeConsent" required><span>I understand and agree that the registration fee is ₹500 for one individual entry. I will upload the payment receipt/screenshot after payment. *</span></label>
+<div class="fee-summary"><b>Registration Fee</b><strong id="siteRegistrationFeeText">₹500</strong><p>One participant · One entry. Payment proof must be submitted to complete the registration request.</p></div>
+<label class="fee-consent"><input type="checkbox" name="feeConsent" required><span id="siteFeeConsentText">I understand and agree that the registration fee is ₹500 for one individual entry. I will upload the payment receipt/screenshot after payment. *</span></label>
 <button class="btn red form-submit" id="openPayment" type="button">Continue to Payment · പെയ്മെന്റിലേക്ക് തുടരുക</button>
 <p id="registrationMessage" class="form-message" role="status" aria-live="polite">After payment proof is submitted, the organisers must verify the transaction. Registration ID and Entry Card will be issued only after confirmation.</p>
 <div class="payment-modal" id="paymentModal" hidden role="dialog" aria-modal="true" aria-labelledby="paymentModalTitle">
 <div class="payment-modal-card"><button class="payment-modal-close" id="closePayment" type="button" aria-label="Close payment window">×</button>
-<p class="eyebrow">REGISTRATION PAYMENT</p><h3 id="paymentModalTitle">Complete Your Payment</h3><p class="payment-amount">₹500 <small>Registration Fee</small></p>
+<p class="eyebrow">REGISTRATION PAYMENT</p><h3 id="paymentModalTitle">Complete Your Payment</h3><p class="payment-amount"><span id="sitePaymentFeeText">₹500</span> <small>Registration Fee</small></p>
 <div class="payment-qr-placeholder"><span>▦</span><b>DEMO PAYMENT QR CODE</b><small>Replace this demo with the official QR image</small></div>
-<p class="payment-help">Scan the QR code using any UPI app and pay ₹500. Then upload the payment screenshot or receipt below. The preview only confirms that you selected a file; the actual upload starts when you press Submit Registration & Payment Proof.</p>
+<p class="payment-help">Scan the QR code using any UPI app and pay the displayed registration fee. Then upload the payment screenshot or receipt below. The preview only confirms that you selected a file; the actual upload starts when you press Submit Registration & Payment Proof.</p>
 
 <div class="form-grid payment-fields">
 <label>Payment Screenshot / Receipt *<input name="paymentProof" id="paymentProof" type="file" accept="image/*,application/pdf" required><small>Required. Upload the successful payment screenshot or receipt.</small><div id="paymentProofPreview" class="payment-proof-preview" hidden aria-live="polite"></div></label>
