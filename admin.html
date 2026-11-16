@@ -187,9 +187,12 @@ function drawEntryCard(r,photo,logo){
  ctx.fillStyle='rgba(255,239,196,.9)';ctx.font='bold 19px Arial';ctx.fillText('JKJ CREATIONS  •  OFFICIAL PARTICIPANT',W/2,1282);
  ctx.fillStyle='rgba(255,239,196,.75)';ctx.font='17px Arial';ctx.fillText('Keep this Entry Card safe',W/2,1312);
 }
+function whatsappHeader(){
+ return '🌟 JKJCREATIONS.ORG INTERNATIONAL | USA EDITION PRESENTS 🇺🇸\n🎤 NAKSHATHRA GAYAKAR – STAR SINGERS 2026 🎶';
+}
 function entryMessage(r){
  const name=String(r.participantName||'Participant').trim();
- return '🌟 NAKSHATHRA GAYAKAR · STAR SINGERS 2026\\n\\nDear '+name+',\\n\\nCongratulations! 🎉 Your participation has been officially approved by JKJ CREATIONS.\\n\\nYour voice is a gift—keep singing with faith, confidence and joy. May every song you share bring hope and happiness to others.\\n\\n🆔 OFFICIAL PARTICIPANT ID\\n'+(r.registrationId||'')+'\\n\\nYour Official Entry Card is attached. Please keep it safe and share your talent with confidence.\\n\\nWith warm wishes,\\nJKJ CREATIONS\\nFaith • Creativity • Service';
+ return whatsappHeader()+'\n\n🎉 OFFICIAL APPROVAL · CONGRATULATIONS!\n\nDear '+name+',\n\n💐 Your participation has been officially approved by JKJ CREATIONS. We are delighted to welcome you to STAR SINGERS 2026.\n\n🆔 Participant ID: '+String(r.registrationId||'')+'\n\n🎫 Your Official Entry Card is attached. Please keep it safe!\n\n✨ May your voice shine and your talent inspire.\n\nWith love & best wishes,\n❤️ JKJ CREATIONS\nFaith • Creativity • Service ✨';
 }
 async function openEntryCard(r){
  activeEntryRecord=r;entryCaption=entryMessage(r);$('entryCardStatus').textContent='Preparing your card…';$('entryModal').classList.add('open');
@@ -230,7 +233,21 @@ $('records').addEventListener('click',e=>{
  const photoButton=e.target.closest('button[data-photo-ref]');if(photoButton){openParticipantPhoto({trackingRef:photoButton.dataset.photoRef});return;}
  const b=e.target.closest('button[data-action]');if(!b)return;const r=records[Number(b.dataset.index)],action=b.dataset.action;
  if(action==='entry-preview'||action==='entry-download'||action==='entry-whatsapp'){openEntryCard(r).then(ready=>{if(!ready)return;if(action==='entry-download')downloadEntryPng();if(action==='entry-whatsapp')openEntryWhatsApp();});return;}
-  if(action==='share'){const text='⭐ NAKSHATHRA GAYAKAR — STAR SINGERS 2026\nDear '+r.participantName+',\n\nCongratulations! Your registration has been approved.\n━━━━━━━━━━━━━━\n🆔 Participant ID: '+r.registrationId+'\n👤 Name: '+r.participantName+'\n⛪ Parish: '+r.parishName+'\n✝️ Diocese: '+r.diocese+'\n🌍 Residence: '+[r.country,r.state,r.district].filter(Boolean).join(', ')+'\n\nPlease keep this Participant ID safe.\n\nOfficial Website: https://www.jkjcreations.org';const digits=String(r.phone||'').replace(/\D/g,'');if(!digits){msg('dashStatus','No valid WhatsApp number is saved for this registration.',true);return;}window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(text),'_blank','noopener');return;}
+  if(action==='share'){
+   const residence=[r.country,r.state,r.district].filter(Boolean).join(', ');
+   const detail=(label,value)=>value?label+': '+value+'\n':'';
+   const text=whatsappHeader()+'\n\n🎉 WELCOME TO THE STAR SINGERS FAMILY!\n\nDear '+String(r.participantName||'Participant')+',\n\n💐 Your registration has been officially approved. We are delighted to have you with us!\n\n━━━━━━━━━━━━━━━━\n🆔 OFFICIAL PARTICIPANT DETAILS\n━━━━━━━━━━━━━━━━\n'+
+    detail('🆔 Participant ID',r.registrationId)+
+    detail('👤 Name',r.participantName)+
+    detail('⛪ Parish',r.parishName)+
+    detail('✝️ Diocese',r.diocese)+
+    detail('🌍 Residence',residence)+
+    '\n🔒 Please save your Participant ID for future reference. Your Official Entry Card has been shared separately.\n\n📢 SHARE THE JOY · SPREAD THE TALENT!\nShare our official website with your friends and family, promote this musical initiative and invite others to join this wonderful musical journey.\n\n🌐 https://www.jkjcreations.org\n\n✨ May your voice shine and your talent inspire!\n\nWith love & best wishes,\n❤️ JKJ CREATIONS\nFaith • Creativity • Service ✨';
+   const digits=String(r.phone||'').replace(/\\D/g,'');
+   if(!digits){msg('dashStatus','No valid WhatsApp number is saved for this registration.',true);return;}
+   window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(text),'_blank','noopener');
+   return;
+  }
  const note=$('note-'+b.dataset.index).value;
  b.disabled=true;request(action==='verify'?{action:'verifypayment',sessionToken:token,trackingRef:r.trackingRef,adminNote:note}:{action:'reviewregistration',sessionToken:token,trackingRef:r.trackingRef,decision:action,adminNote:note},d=>{if(!d.success){msg('dashStatus',d.error||'Review failed.',true);return;}msg('dashStatus',action==='verify'?'Payment verified. Approval is now enabled.':action==='approve'?'Approved. Participant ID: '+d.registration.registrationId:'Registration rejected.',false);loadDashboard();});
 });
