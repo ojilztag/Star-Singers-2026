@@ -7,7 +7,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
  const modal=document.getElementById('paymentModal');
  const message=document.getElementById('registrationMessage');
  let busy=false,seq=0;
- function status(text,isError){message.textContent=text;message.style.color=isError?'#ffb7b7':'';}
+ function status(text,isError){message.textContent=text;message.classList.toggle('is-uploading',!isError&&/preparing|uploading/i.test(text));message.style.color=isError?'#ffb7b7':'';}
  function compressImage(file,label){
   return new Promise((resolve,reject)=>{
    const makeBlob=(image)=>{
