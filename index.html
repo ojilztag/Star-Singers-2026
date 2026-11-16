@@ -557,7 +557,7 @@ body{padding-top:80px}
 
 <div class="form-grid payment-fields">
 <label>Payment Screenshot / Receipt *<input name="paymentProof" id="paymentProof" type="file" accept="image/*,application/pdf" required><small>Required. Upload the successful payment screenshot or receipt.</small><div id="paymentProofPreview" class="payment-proof-preview" hidden aria-live="polite"></div></label>
-<label>UTR / Transaction ID (Optional)<input name="utr" id="utr" type="text" maxlength="80" placeholder="Enter UTR / Transaction ID (if available)"><small>Optional. You may leave this blank. Payment screenshot / receipt is mandatory.</small></label>
+<label>UTR / Transaction ID <span aria-hidden="true">*</span><input name="utr" id="utr" type="text" maxlength="80" required autocomplete="off" placeholder="Enter UTR / Transaction ID"><small>Required. Enter the UTR / transaction ID from your successful payment. Registration cannot be submitted without it.</small></label>
 </div>
 <div id="uploadStatusPanel" class="upload-status-panel" hidden role="status" aria-live="polite">
  <div class="upload-status-heading"><span class="upload-status-spinner" aria-hidden="true"></span><strong id="uploadStatusTitle">Preparing your registration…</strong></div>
@@ -670,7 +670,7 @@ if(registrationForm){
  });
  openPayment.addEventListener('click',()=>{
   validateInternationalPhone();
-  const requiredBeforePayment=[...registrationForm.querySelectorAll('[required]')].filter(el=>!['paymentProof','utr'].includes(el.name));
+  const requiredBeforePayment=[...registrationForm.querySelectorAll('[required]')].filter(el=>el.name!=='paymentProof');
   const missingField=requiredBeforePayment.find(field=>!field.checkValidity());
   if(missingField){focusMissingField(missingField);return;}
   clearRequiredFocus();
