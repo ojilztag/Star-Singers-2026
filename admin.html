@@ -188,19 +188,19 @@ function drawEntryCard(r,photo,logo){
  ctx.fillStyle='rgba(255,239,196,.75)';ctx.font='17px Arial';ctx.fillText('Keep this Entry Card safe',W/2,1312);
 }
 function whatsappHeader(){
- return '🌟 JKJ Creations International – USA Edition Presents 🇺🇸\\n🎤 Nakshathra Gayakar – Star Singers 2026';
+ return '🌟 JKJ Creations International – USA Edition Presents 🇺🇸\n🎤 Nakshathra Gayakar – Star Singers 2026';
 }
 function entryMessage(r){
  const name=String(r.participantName||'Participant').trim();
  const residence=[r.country,r.state,r.district].filter(Boolean).join(', ');
- const detail=(label,value)=>value?label+': '+value+'\\n':'';
- return whatsappHeader()+'\\n\\n🎉 Congratulations & welcome!\\n\\nDear '+name+',\\n\\nYour participation in Star Singers 2026 has been officially approved. We are delighted to welcome you to this musical journey. ❤️\\n\\n🆔 Participant details\\n'+
+ const detail=(label,value)=>value?label+': '+value+'\n':'';
+ return whatsappHeader()+'\n\n🎉 Congratulations & welcome!\n\nDear '+name+',\n\nYour participation in Star Singers 2026 has been officially approved. We are delighted to welcome you to this musical journey. ❤️\n\n🆔 Participant details\n'+
  detail('Participant ID',r.registrationId)+
  detail('Name',r.participantName)+
  detail('Parish',r.parishName)+
  detail('Diocese',r.diocese)+
  detail('Residence',residence)+
- '\\n🎫 Your Official Participant Entry Card is attached. Please save it safely for future reference.\\n\\n📢 Share the joy and spread the talent! Invite your friends and family to join this musical journey.\\n\\n🌐 https://www.jkjcreations.org\\n\\n✨ May your voice shine and your talent inspire!\\n\\nWith love & best wishes,\\n❤️ JKJ Creations\\nFaith • Creativity • Service';
+ '\n🎫 Your Official Participant Entry Card is attached. Please save it safely for future reference.\n\n📢 Share the joy and spread the talent! Invite your friends and family to join this musical journey.\n\n🌐 https://www.jkjcreations.org\n\n✨ May your voice shine and your talent inspire!\n\nWith love & best wishes,\n❤️ JKJ Creations\nFaith • Creativity • Service';
 }
 async function openEntryCard(r){
  activeEntryRecord=r;entryCaption=entryMessage(r);$('entryCardStatus').textContent='Preparing your card…';$('entryModal').classList.add('open');
