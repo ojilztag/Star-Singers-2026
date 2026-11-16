@@ -132,6 +132,10 @@ function initializeStarSingersAdmin() {
 
 function doGet(e) {
   const action=String(e&&e.parameter&&e.parameter.action||'health');
+  if(action==='siteconfig') {
+    const payload=JSON.stringify({type:'SS26_PUBLIC_SITE_CONFIG',settings:publicSiteSettings_()}).replace(/</g,'\\u003c');
+    return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',\"*\");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
   if(action==='notices') {
     const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\u003c');
     return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
@@ -155,6 +159,7 @@ function doPost(e) {
       case 'verifypayment': out=verifyPayment_(p); break;
       case 'reviewregistration': out=review_(p); break;
       case 'adminnotices': out=manageNotices_(p); break;
+      case 'adminsettings': out=manageSiteSettings_(p); break;
       case 'changepassword': out=changePassword_(p); break;
       case 'getdemoresetpreview': out=demoResetPreview_(p); break;
       case 'resetdemodata': out=resetDemoDataFromAdmin_(p); break;
@@ -406,6 +411,52 @@ function getEntryPhoto_(p) {
   if(!/^image\/(jpeg|png|webp|heic)$/i.test(mimeType))throw new Error('Stored participant file is not a supported image.');
   audit_(admin.user,'PARTICIPANT_PHOTO_VIEWED',String(row[0]||''),'Authorised admin viewed the private participant photo.');
   return {success:true,photoBase64:Utilities.base64Encode(bytes),mimeType:mimeType};
+}
+
+
+const SITE_SETTING_FIELDS = {
+  registrationStatus: {key:'Registration Status',label:'Registration Status',max:40},
+  registrationFee: {key:'Registration Fee',label:'Registration Fee',max:20},
+  registrationOpens: {key:'Registration Opens',label:'Registration Opens',max:80},
+  registrationCloses: {key:'Registration Closes',label:'Registration Closes',max:80},
+  videoDeadline: {key:'Video Submission Deadline',label:'Video Submission Deadline',max:80},
+  resultsDate: {key:'Results Announcement',label:'Results Announcement',max:80},
+  participation: {key:'Participation',label:'Participation',max:300},
+  rulesSummary: {key:'Rules Summary',label:'Rules Summary',max:2000},
+  prizeDetails: {key:'Prize Details',label:'Prize Details',max:1200},
+  submissionInstructions: {key:'Submission Instructions',label:'Submission Instructions',max:1200},
+  contactEmail: {key:'Contact Email',label:'Contact Email',max:160},
+  contactWhatsApp: {key:'Contact WhatsApp',label:'Contact WhatsApp',max:40}
+};
+function readSiteSettings_() {
+  const sh=sheet_('Settings',SETTINGS_HEADERS),last=sh.getLastRow(),out={};
+  if(last>1)sh.getRange(2,1,last-1,2).getDisplayValues().forEach(r=>{out[String(r[0]||'')]=String(r[1]||'');});
+  return out;
+}
+function publicSiteSettings_() {
+  const raw=readSiteSettings_(),out={};
+  Object.keys(SITE_SETTING_FIELDS).forEach(k=>{const key=SITE_SETTING_FIELDS[k].key;if(raw[key]!==undefined)out[k]=raw[key];});
+  return out;
+}
+function manageSiteSettings_(p) {
+  const admin=requireAdmin_(p.sessionToken),action=String(p.settingsAction||'get').toLowerCase();
+  if(action==='get')return {success:true,settings:publicSiteSettings_()};
+  if(action!=='save')throw new Error('Unknown settings action.');
+  const sh=sheet_('Settings',SETTINGS_HEADERS),last=sh.getLastRow(),rows=last>1?sh.getRange(2,1,last-1,3).getValues():[];
+  const incoming=p.settings||{},changed=[];
+  Object.keys(SITE_SETTING_FIELDS).forEach(k=>{
+    if(!Object.prototype.hasOwnProperty.call(incoming,k))return;
+    const meta=SITE_SETTING_FIELDS[k],value=clean_(incoming[k],meta.max);
+    if(k==='registrationFee'&&value&&!/^\\d{1,7}(\\.\\d{1,2})?$/.test(value))throw new Error('Registration fee must be a valid amount.');
+    if(k==='contactEmail'&&value&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value))throw new Error('Enter a valid contact email.');
+    if(k==='registrationStatus'&&!['Coming Soon','Open','Closed'].includes(value))throw new Error('Choose Coming Soon, Open or Closed.');
+    const idx=rows.findIndex(r=>String(r[0])===meta.key);
+    if(idx>=0){sh.getRange(idx+2,2).setValue(value);if(!String(rows[idx][2]||''))sh.getRange(idx+2,3).setValue('Managed from Admin Panel');}
+    else sh.appendRow([meta.key,value,'Managed from Admin Panel']);
+    changed.push(meta.key);
+  });
+  audit_(admin.user,'SITE_SETTINGS_UPDATED','PUBLIC_SITE',changed.join(', '));
+  return {success:true,settings:publicSiteSettings_(),updated:changed};
 }
 
 function manageNotices_(p) {
