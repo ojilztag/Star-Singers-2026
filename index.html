@@ -540,7 +540,7 @@ body{padding-top:80px}
  <small id="phoneHelp">Select your country code and enter your mobile number. The code is added automatically.</small>
  <p id="phoneError" class="field-error" role="alert" hidden></p>
 </div>
-<input type="file" id="participantPhotoOriginal" accept="image/*" hidden><label id="photoUploadLabel">Participant Photo *<input name="participantPhoto" id="participantPhoto" type="file" accept="image/jpeg,image/png,image/webp,image/*" required><small>Your photo will be used to generate your Entry Card / Photo ID. Choose a clear, front-facing photo with your face fully visible.</small><span id="photoCropStatus" class="crop-status" aria-live="polite">No photo selected yet.</span></label>
+<input type="file" id="participantPhotoOriginal" accept="image/*" hidden><label id="photoUploadLabel">Participant Photo *<input name="participantPhoto" id="participantPhoto" type="file" accept="image/jpeg,image/png,image/webp,image/*" required><small>Your photo will be used to generate your Entry Card / Photo ID. Choose a clear, front-facing photo with your face fully visible. Large images are automatically compressed only when needed to meet the upload limit, while preserving the best possible clarity.</small><span id="photoCropStatus" class="crop-status" aria-live="polite">No photo selected yet.</span></label>
 <div class="photo-tools full" id="photoTools" hidden>
  <div class="photo-selected" id="photoSelected" hidden><img id="photoThumbnail" alt="Selected cropped participant photo"><span>✓ Photo ready</span><button type="button" id="changeParticipantPhoto" class="crop-control">Change Photo</button></div>
  <div class="photo-crop-inline" id="photoCropModal" hidden><div class="photo-crop-card"><h3 id="photoCropTitle">Adjust Photo</h3><p class="crop-help">Move and zoom to fit your face inside the square.</p><div class="crop-stage"><img id="photoCropImage" alt="Selected participant photo for square cropping"></div><div class="crop-controls"><button type="button" id="cropZoomOut" class="crop-control" aria-label="Zoom out">−</button><button type="button" id="cropZoomIn" class="crop-control" aria-label="Zoom in">+</button><button type="button" id="cropReset" class="crop-control">Reset</button></div><p id="cropError" class="crop-error" role="alert"></p><div class="crop-actions"><button type="button" id="cancelPhotoCrop" class="btn outline">Change Photo</button><button type="button" id="confirmPhotoCrop" class="btn red">Submit Photo</button></div></div></div>
@@ -555,7 +555,7 @@ body{padding-top:80px}
 <div class="payment-modal-card"><button class="payment-modal-close" id="closePayment" type="button" aria-label="Close payment window">×</button>
 <p class="eyebrow">REGISTRATION PAYMENT</p><h3 id="paymentModalTitle">Complete Your Payment</h3><p class="payment-amount">₹500 <small>Registration Fee</small></p>
 <div class="payment-qr-placeholder"><span>▦</span><b>DEMO PAYMENT QR CODE</b><small>Replace this demo with the official QR image</small></div>
-<p class="payment-help">Scan the QR code using any UPI app and pay ₹500. Then upload the payment screenshot or receipt below.</p>
+<p class="payment-help">Scan the QR code using any UPI app and pay ₹500. Then upload the payment screenshot or receipt below. The preview only confirms that you selected a file; the actual upload starts when you press Submit Registration & Payment Proof.</p>
 
 <div class="form-grid payment-fields">
 <label>Payment Screenshot / Receipt *<input name="paymentProof" id="paymentProof" type="file" accept="image/*,application/pdf" required><small>Required. Upload the successful payment screenshot or receipt.</small><div id="paymentProofPreview" class="payment-proof-preview" hidden aria-live="polite"></div></label>
@@ -654,7 +654,7 @@ if(registrationForm){
   if(!file){proofPreview.hidden=true;return;}
   if(file.type.startsWith('image/')){proofPreviewUrl=URL.createObjectURL(file);const img=document.createElement('img');img.src=proofPreviewUrl;img.alt='Payment screenshot preview';proofPreview.appendChild(img);}
   else{const icon=document.createElement('div');icon.className='proof-file-icon';icon.textContent='PDF';proofPreview.appendChild(icon);}
-  const name=document.createElement('span');name.textContent='✓ '+file.name+' · Ready to upload';proofPreview.appendChild(name);
+  const name=document.createElement('span');name.textContent='✓ '+file.name+' · Selected · upload starts after Submit';proofPreview.appendChild(name);
   proofPreview.hidden=false;
  });
 
@@ -749,7 +749,7 @@ if(registrationForm){
  confirmButton.addEventListener('click',function(){
   if(!cropper)return;
   error.textContent='';confirmButton.disabled=true;confirmButton.textContent='Preparing…';
-  const canvas=cropper.getCroppedCanvas({width:800,height:800,fillColor:'#ffffff',imageSmoothingEnabled:true,imageSmoothingQuality:'high'});
+  const canvas=cropper.getCroppedCanvas({width:1200,height:1200,fillColor:'#ffffff',imageSmoothingEnabled:true,imageSmoothingQuality:'high'});
   if(!canvas){error.textContent='Could not crop this image. Please try another photo.';confirmButton.disabled=false;confirmButton.textContent='Submit Photo';return;}
   canvas.toBlob(function(blob){
    if(!blob){error.textContent='Could not prepare the cropped photo. Please try again.';confirmButton.disabled=false;confirmButton.textContent='Submit Photo';return;}
@@ -764,7 +764,7 @@ if(registrationForm){
    status.textContent='';status.hidden=true;uploadLabel.classList.add('photo-confirmed');
    destroyCropper();
    confirmButton.disabled=false;confirmButton.textContent='Submit Photo';
-  },'image/jpeg',.92);
+  },'image/jpeg',.94);
  });
  input.form.addEventListener('submit',function(e){
   if(!confirmedFile||!input.files||!input.files[0]){
