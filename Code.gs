@@ -132,6 +132,10 @@ function initializeStarSingersAdmin() {
 
 function doGet(e) {
   const action=String(e&&e.parameter&&e.parameter.action||'health');
+  if(action==='siteconfig') {
+    const payload=JSON.stringify({type:'SS26_PUBLIC_SITE_CONFIG',settings:publicSiteSettings_()}).replace(/</g,'\\u003c');
+    return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
   if(action==='notices') {
     const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\u003c');
     return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
