@@ -163,8 +163,6 @@ function doPost(e) {
       case 'adminnotices': out=manageNotices_(p); break;
       case 'changepassword': out=changePassword_(p); break;
       case 'adminlogout': out=logout_(p); break;
-      case 'getnotificationsettings': out=getNotificationSettings_(p); break;
-      case 'savenotificationsettings': out=saveNotificationSettings_(p); break;
       case 'getviewersettings': out=getViewerSettings_(p); break;
       case 'saveviewersettings': out=saveViewerSettings_(p); break;
       case 'viewerlogin': out=viewerLogin_(p); break;
