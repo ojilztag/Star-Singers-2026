@@ -11,10 +11,14 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
  const statusTitle=document.getElementById('uploadStatusTitle');
  const statusDetail=document.getElementById('uploadStatusDetail');
  const elapsedLabel=document.getElementById('uploadElapsed');
+ const statusBar=document.getElementById('uploadStatusBar');
+ const submitButton=form.querySelector('[type="submit"]');
+ const submitButtonDefault='Submit Registration & Payment Proof';
+ function setSubmitState(state){if(!submitButton)return;submitButton.classList.toggle('is-submitting',!!state);submitButton.disabled=!!state;submitButton.setAttribute('aria-busy',state?'true':'false');submitButton.textContent=state==='preparing'?'Preparing your files…':state==='uploading'?'Uploading securely…':submitButtonDefault;}
  function elapsedText(){const seconds=Math.max(0,Math.floor((Date.now()-uploadStartedAt)/1000));return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');}
  function status(text,isError){
   message.textContent=text;message.classList.toggle('is-uploading',!isError&&/preparing|uploading/i.test(text));message.style.color=isError?'#ffb7b7':'';
-  if(statusPanel){statusPanel.hidden=false;statusPanel.classList.toggle('is-error',!!isError);if(statusTitle)statusTitle.textContent=isError?'Upload needs attention':/step 2|sending|uploading/i.test(text)?'Uploading securely…':/files are ready|prepared/i.test(text)?'Files prepared':/step 1|preparing/i.test(text)?'Preparing your files…':'Registration status';if(statusDetail)statusDetail.textContent=text;if(elapsedLabel)elapsedLabel.textContent=uploadStartedAt?elapsedText():'00:00';}
+  if(statusPanel){statusPanel.hidden=false;statusPanel.classList.toggle('is-error',!!isError);if(statusTitle)statusTitle.textContent=isError?'Upload needs attention':/step 2|sending|uploading/i.test(text)?'Uploading securely…':/files are ready|prepared/i.test(text)?'Files prepared':/step 1|preparing/i.test(text)?'Preparing your files…':'Registration status';if(statusDetail)statusDetail.textContent=text;if(statusBar){statusBar.style.width=isError?'100%':/step 2|sending|uploading/i.test(text)?'72%':/step 1|preparing/i.test(text)?'22%':/files are ready|prepared/i.test(text)?'65%':'8%';statusBar.classList.toggle('is-error',!!isError);}if(elapsedLabel)elapsedLabel.textContent=uploadStartedAt?elapsedText():'00:00';}
   if(isError&&uploadClock){clearInterval(uploadClock);uploadClock=null;}
  }
  function startUploadClock(){uploadStartedAt=Date.now();if(uploadClock)clearInterval(uploadClock);if(statusPanel)statusPanel.hidden=false;uploadClock=setInterval(()=>{if(elapsedLabel)elapsedLabel.textContent=elapsedText();},1000);}
@@ -100,12 +104,12 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   const originalPhoto=form.querySelector('#participantPhotoOriginal')?.files[0]||photo;
   const proof=form.querySelector('[name="paymentProof"]').files[0];
   const utr=form.querySelector('[name="utr"]').value.trim();
-  busy=true;const submit=form.querySelector('[type="submit"]');if(submit){submit.disabled=true;submit.textContent='Submitting securely…';}
+  busy=true;const submit=submitButton;setSubmitState('preparing');
   startUploadClock();
   status('Step 1 of 2 · Preparing your photos and payment receipt. Small images keep their original quality; only oversized images are compressed.',false);
   try{
    const [photoData,originalPhotoData,proofData]=await Promise.all([fileData(photo,3*1024*1024,'Cropped participant photo',true),fileData(originalPhoto,3*1024*1024,'Original participant photo',true),fileData(proof,3*1024*1024,'Payment proof',true)]);
-   status('Step 2 of 2 · Files are ready. Sending your registration and documents securely. Please keep this page open until confirmation.',false);
+   status('Step 2 of 2 · Files are ready. Sending your registration and documents securely. Please keep this page open until confirmation.',false);setSubmitState('uploading');
    const payload={
     action:'register',clientToken:'SS26-'+Date.now()+'-'+Math.random().toString(16).slice(2),
     participantName:form.elements.participantName.value,parishName:form.elements.parishName.value,
@@ -114,7 +118,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     photo:photoData,originalPhoto:originalPhotoData,paymentProof:proofData
    };
    post(payload,result=>{
-    busy=false;stopUploadClock();if(submit){submit.disabled=false;submit.textContent='Submit Registration & Payment Proof';}
+    busy=false;stopUploadClock();setSubmitState(false);
     if(!result.success){status(result.error||'Registration could not be submitted.',true);return;}
     if(statusPanel)statusPanel.hidden=true;
     const submittedName=String(form.elements.participantName.value||'Participant').trim();
@@ -132,6 +136,6 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     };
     document.getElementById('registrationSuccessHome').focus();
    });
-  }catch(err){busy=false;stopUploadClock();if(submit){submit.disabled=false;submit.textContent='Submit Registration & Payment Proof';}status(err.message||'Upload failed. Please try again.',true);}
+  }catch(err){busy=false;stopUploadClock();setSubmitState(false);status(err.message||'Upload failed. Please try again.',true);}
  },true);
 })();
