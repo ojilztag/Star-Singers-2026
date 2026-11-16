@@ -346,3 +346,86 @@ footer{
     background-position:50% 50%;
   }
 }
+
+
+/* ── Registration form: mobile legibility and unified phone field ──
+   Scoped to the registration form only. Country-code selector styling is preserved. */
+.registration-form .form-grid label,
+.registration-form .phone-entry .phone-label{
+  color:#fff7e8;
+}
+.registration-form .form-grid small,
+.registration-form .phone-entry>small{
+  color:#f0eee7;
+  font-size:12px;
+  line-height:1.6;
+}
+.registration-form .form-grid input::placeholder,
+.registration-form .form-grid textarea::placeholder{
+  color:#66766f;
+  opacity:1;
+}
+.registration-form .phone-combo{
+  min-height:48px;
+  border:1px solid #d9bd78;
+  border-radius:10px;
+  background:#fffaf1;
+  box-shadow:0 2px 7px #0002;
+}
+.registration-form .phone-combo:focus-within{
+  border-color:#f0d48e;
+  box-shadow:0 0 0 3px #dfc27b35;
+}
+/* Keep the existing dark country-code block and its colours exactly as designed. */
+.registration-form .phone-combo .country-select-wrap{
+  background:#061b2b;
+}
+.registration-form .phone-combo .phone-divider{
+  background:#d9bd78;
+  margin-top:8px;
+  margin-bottom:8px;
+}
+.registration-form .phone-combo input{
+  min-height:46px;
+  padding:0 13px;
+  border:0!important;
+  border-radius:0 9px 9px 0!important;
+  background:#fffaf1!important;
+  color:#172820!important;
+  font-size:15px;
+  line-height:1.35;
+}
+.registration-form .phone-combo input::placeholder{
+  color:#718078;
+  opacity:1;
+}
+.registration-form .phone-combo input:focus{
+  outline:none;
+  box-shadow:none!important;
+}
+.registration-form .phone-entry>small{
+  color:#e6eee8;
+}
+.registration-form .phone-entry .field-error{
+  color:#ffb8b8;
+}
+@media(max-width:620px){
+  .registration-form .form-grid label,
+  .registration-form .phone-entry .phone-label{
+    font-size:14px;
+    line-height:1.45;
+  }
+  .registration-form .form-grid small,
+  .registration-form .phone-entry>small{
+    font-size:12px;
+    line-height:1.6;
+  }
+  .registration-form .phone-combo{
+    min-height:48px;
+    border-radius:10px;
+  }
+  .registration-form .phone-combo input{
+    min-height:46px;
+    padding-inline:11px;
+  }
+}
