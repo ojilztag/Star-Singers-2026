@@ -131,12 +131,19 @@ function initializeStarSingersAdmin() {
 }
 
 function doGet(e) {
-  const action=String(e&&e.parameter&&e.parameter.action||'health');
+  const params=(e&&e.parameter)||{};
+  const page=String(params.page||'').toLowerCase();
+  if(page==='admin'||page==='viewer') {
+    return HtmlService.createHtmlOutputFromFile(page)
+      .setTitle(page==='admin'?'STAR SINGERS 2026 · Admin':'STAR SINGERS 2026 · Participant Viewer')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
+  const action=String(params.action||'health');
   if(action==='notices') {
     const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\u003c');
     return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.top.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
-  return ContentService.createTextOutput('STAR SINGERS 2026 API is active.').setMimeType(ContentService.MimeType.TEXT);
+  return ContentService.createTextOutput('STAR SINGERS 2026 API is active. Use ?page=admin or ?page=viewer.').setMimeType(ContentService.MimeType.TEXT);
 }
 function doPost(e) {
   let p={};
@@ -156,6 +163,13 @@ function doPost(e) {
       case 'adminnotices': out=manageNotices_(p); break;
       case 'changepassword': out=changePassword_(p); break;
       case 'adminlogout': out=logout_(p); break;
+      case 'getviewersettings': out=getViewerSettings_(p); break;
+      case 'saveviewersettings': out=saveViewerSettings_(p); break;
+      case 'viewerlogin': out=viewerLogin_(p); break;
+      case 'viewerdashboard': out=viewerDashboard_(p); break;
+      case 'viewerproof': out=viewerProof_(p); break;
+      case 'viewerlogout': out=viewerLogout_(p); break;
+      case 'getentryphoto': out=getEntryPhoto_(p); break;
       default: throw new Error('Unsupported action.');
     }
     return reply_('SS26_ADMIN_RESULT',out,p.clientToken);
@@ -182,7 +196,7 @@ function decodeFile_(obj,label) {
   if(!bytes.length||bytes.length>CFG.MAX_FILE_BYTES)throw new Error(label+' must be smaller than 3 MB.');
   const mime=String(obj.mimeType);
   if(label==='Participant Photo'&&!/^image\/(jpeg|png|webp|heic)$/.test(mime))throw new Error('Participant photo must be JPG, PNG, WebP or HEIC.');
-  if(label==='Payment Proof'&&!(/^image\/(jpeg|png|webp|heic)$/.test(mime)||mime==='application/pdf'))throw new Error('Payment proof must be an image or PDF.');
+  if(label==='Payment Proof'&&!(/^image\/(jpeg|png|webp)$/.test(mime)||mime==='application/pdf'))throw new Error('Payment proof must be JPG, PNG, WebP or PDF.');
   const safeName=String(obj.name).replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,90);
   return Utilities.newBlob(bytes,mime,safeName);
 }
@@ -204,7 +218,7 @@ function register_(p) {
   const originalPhoto=decodeFile_(p.originalPhoto||p.photo,'Original Participant Photo');
   const proof=decodeFile_(p.paymentProof,'Payment Proof');
   const lock=LockService.getScriptLock();lock.waitLock(20000);
-  let photoSaved=null,originalSaved=null,proofSaved=null;
+  let photoSaved=null,originalSaved=null,proofSaved=null,rowCommitted=false;
   try {
     const sh=sheet_(CFG.REG_SHEET,REG_HEADERS);
     // Block only an exact participant-name + WhatsApp-number duplicate.
@@ -223,20 +237,22 @@ function register_(p) {
     const now=new Date();
     sh.appendRow([ref,'',now,name,parish,diocese,country,state,district,phone,'Individual / Single Entry',500,utr,
       photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
-    const row=sh.getLastRow();sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');
+    const row=sh.getLastRow();rowCommitted=true;try{sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');}catch(formatError){audit_('SYSTEM','REGISTRATION_DATE_FORMAT_WARNING',ref,String(formatError&&formatError.message||formatError).slice(0,200));}
     audit_('PUBLIC','REGISTRATION_SUBMITTED',ref,'Photo and payment proof stored in private Drive folders.');
     const result={success:true,trackingRef:ref,message:'Registration request received. Payment and documents are pending organiser verification.'};
     if(clientToken)CacheService.getScriptCache().put('SS26_SUBMIT_'+clientToken,JSON.stringify(result),21600);
     return result;
   } catch(err) {
-    if(photoSaved)try{DriveApp.getFileById(photoSaved.id).setTrashed(true);}catch(ignore){}
-    if(originalSaved)try{DriveApp.getFileById(originalSaved.id).setTrashed(true);}catch(ignore){}
-    if(proofSaved)try{DriveApp.getFileById(proofSaved.id).setTrashed(true);}catch(ignore){}
+    if(!rowCommitted){
+      if(photoSaved)try{DriveApp.getFileById(photoSaved.id).setTrashed(true);}catch(ignore){}
+      if(originalSaved)try{DriveApp.getFileById(originalSaved.id).setTrashed(true);}catch(ignore){}
+      if(proofSaved)try{DriveApp.getFileById(proofSaved.id).setTrashed(true);}catch(ignore){}
+    }
     throw err;
   } finally {lock.releaseLock();}
 }
-function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\\s+/g,' ').trim();}
-function duplicatePhoneKey_(v){return String(v||'').replace(/\\D/g,'');}
+function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();}
+function duplicatePhoneKey_(v){return String(v||'').replace(/\D/g,'');}
 function initAdmin_(){const p=PropertiesService.getScriptProperties();if(!p.getProperty('ADMIN_HASH'))throw new Error('Admin not initialized.');}
 function login_(p) {
   initAdmin_();const props=PropertiesService.getScriptProperties();
@@ -302,6 +318,101 @@ function exportRegistrations_(p) {
   }));
   audit_(admin.user,'REGISTRATION_EXPORT',filter,'Exported '+data.length+' participant records; photo and payment-proof files excluded.');
   return {success:true,count:data.length,filter:filter,records:data};
+}
+
+
+function getViewerSettings_(p) {
+  requireAdmin_(p.sessionToken);
+  const raw=PropertiesService.getScriptProperties().getProperty('SS26_VIEWER_ALLOWED_EMAILS')||'';
+  return {success:true,emails:raw.split(/[;,\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean)};
+}
+function saveViewerSettings_(p) {
+  const admin=requireAdmin_(p.sessionToken);
+  const emails=[...new Set(String(p.emails||'').split(/[;,\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean))];
+  if(emails.length>100)throw new Error('A maximum of 100 viewer email addresses is allowed.');
+  const invalid=emails.filter(x=>!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x));
+  if(invalid.length)throw new Error('Invalid email address: '+invalid[0]);
+  PropertiesService.getScriptProperties().setProperty('SS26_VIEWER_ALLOWED_EMAILS',emails.join(','));
+  audit_(admin.user,'VIEWER_ACCESS_LIST_UPDATED','VIEWER',emails.length+' allowed email(s).');
+  return {success:true,emails:emails};
+}
+function viewerLogin_(p) {
+  const idToken=String(p.idToken||'');
+  if(!idToken||idToken.length>10000)throw new Error('Google sign-in token is missing or invalid.');
+  const clientId=PropertiesService.getScriptProperties().getProperty('GOOGLE_OAUTH_CLIENT_ID');
+  if(!clientId)throw new Error('Google OAuth Client ID is not configured by the system administrator.');
+  const response=UrlFetchApp.fetch('https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(idToken),{muteHttpExceptions:true});
+  if(response.getResponseCode()!==200)throw new Error('Google sign-in could not be verified. Please sign in again.');
+  const claims=JSON.parse(response.getContentText());
+  const now=Math.floor(Date.now()/1000);
+  if(claims.aud!==clientId||String(claims.email_verified)!=='true'||!['accounts.google.com','https://accounts.google.com'].includes(String(claims.iss||''))||!claims.sub||!/^\d+$/.test(String(claims.exp||''))||Number(claims.exp)<=now)throw new Error('Google account verification failed or the sign-in token has expired.');
+  const email=String(claims.email||'').trim().toLowerCase();
+  const allowed=(PropertiesService.getScriptProperties().getProperty('SS26_VIEWER_ALLOWED_EMAILS')||'').split(',').map(x=>x.trim().toLowerCase());
+  if(!email||!allowed.includes(email))throw new Error('This Google account has not been authorised by the Admin.');
+  const token=Utilities.getUuid().replace(/-/g,'')+Utilities.getUuid().replace(/-/g,'');
+  CacheService.getScriptCache().put('SS26_VIEWER_'+token,JSON.stringify({email:email}),CFG.SESSION_TTL);
+  audit_(email,'VIEWER_LOGIN','VIEWER','Authorised viewer signed in.');
+  return {success:true,sessionToken:token,email:email};
+}
+function requireViewer_(token) {
+  if(!/^[a-f0-9]{64}$/i.test(String(token||'')))throw new Error('Viewer session invalid. Sign in again.');
+  const cache=CacheService.getScriptCache(),key='SS26_VIEWER_'+token,raw=cache.get(key);
+  if(!raw)throw new Error('Viewer session expired. Sign in again.');
+  const s=JSON.parse(raw),allowed=(PropertiesService.getScriptProperties().getProperty('SS26_VIEWER_ALLOWED_EMAILS')||'').split(',').map(x=>x.trim().toLowerCase());
+  if(!allowed.includes(String(s.email||'').toLowerCase())){cache.remove(key);throw new Error('Viewer access has been revoked.');}
+  cache.put(key,raw,CFG.SESSION_TTL);return s;
+}
+function viewerDashboard_(p) {
+  const viewer=requireViewer_(p.sessionToken),sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
+  const records=rows.map(r=>{
+    const d=r[2] instanceof Date?r[2]:new Date(r[2]);
+    return {participantId:String(r[1]||''),participantName:String(r[3]||''),parish:String(r[4]||''),diocese:String(r[5]||''),country:String(r[6]||''),state:String(r[7]||''),district:String(r[8]||''),whatsapp:String(r[9]||''),entryType:String(r[10]||''),registrationStatus:String(r[20]||''),paymentProofAvailable:!!r[17],trackingRef:String(r[0]||''),submittedAt:isNaN(d.getTime())?'':Utilities.formatDate(d,Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a')};
+  }).reverse();
+  return {success:true,email:viewer.email,records:records};
+}
+function viewerProof_(p) {
+  requireViewer_(p.sessionToken);
+  const ref=clean_(p.trackingRef,40);
+  if(!ref)throw new Error('Tracking Reference is required.');
+  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  if(last<2)throw new Error('No registration found.');
+  const cell=sh.getRange(2,1,last-1,1).createTextFinder(ref).matchEntireCell(true).findNext();
+  if(!cell)throw new Error('Registration not found.');
+  const row=sh.getRange(cell.getRow(),1,1,REG_HEADERS.length).getValues()[0],fileId=String(row[17]||'');
+  if(!fileId)throw new Error('Payment proof is not available.');
+  const file=DriveApp.getFileById(fileId);
+  const maxPreviewBytes=1024*1024,size=file.getSize();
+  if(size>maxPreviewBytes)throw new Error('This payment proof is larger than 1 MB. Please contact the event Admin to verify it.');
+  const blob=file.getBlob(),mime=String(blob.getContentType()||'').toLowerCase();
+  if(['application/pdf','image/jpeg','image/png','image/webp'].indexOf(mime)===-1)throw new Error('Only PDF, JPG, PNG and WEBP payment proofs can be previewed.');
+  const bytes=blob.getBytes();
+  if(bytes.length>maxPreviewBytes)throw new Error('Payment proof exceeds the secure preview limit.');
+  return {success:true,mimeType:mime,fileName:file.getName(),base64:Utilities.base64Encode(bytes)};
+}
+function viewerLogout_(p) {
+  const token=String(p.sessionToken||'');if(token)CacheService.getScriptCache().remove('SS26_VIEWER_'+token);
+  return {success:true};
+}
+
+function getEntryPhoto_(p) {
+  requireAdmin_(p.sessionToken);
+  const ref=clean_(p.trackingRef,40),participantId=clean_(p.participantId,60);
+  if(!ref&&!participantId)throw new Error('Tracking Reference or Participant ID is required.');
+  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  if(last<2)throw new Error('No registration found.');
+  let cell=null;
+  if(ref)cell=sh.getRange(2,1,last-1,1).createTextFinder(ref).matchEntireCell(true).findNext();
+  else cell=sh.getRange(2,2,last-1,1).createTextFinder(participantId).matchEntireCell(true).findNext();
+  if(!cell)throw new Error('Registration not found.');
+  const row=sh.getRange(cell.getRow(),1,1,REG_HEADERS.length).getValues()[0];
+  const fileId=String(row[13]||'');
+  if(!fileId)throw new Error('Participant photo is not available.');
+  const blob=DriveApp.getFileById(fileId).getBlob(),bytes=blob.getBytes();
+  if(bytes.length>CFG.MAX_FILE_BYTES)throw new Error('Participant photo exceeds the secure preview limit.');
+  const mime=blob.getContentType()||'application/octet-stream';
+  if(!/^image\/(jpeg|png|webp|heic)$/.test(mime))throw new Error('Unsupported participant photo type.');
+  return {success:true,mimeType:mime,photoBase64:Utilities.base64Encode(bytes)};
 }
 
 function verifyPayment_(p) {
@@ -394,7 +505,14 @@ function adminNotices_() {
   const sh=sheet_(CFG.NOTICE_SHEET,NOTICE_HEADERS),last=sh.getLastRow();
   return last<2?[]:sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues().reverse().map(r=>({id:String(r[0]),title:String(r[3]),body:String(r[4]),publishDate:String(r[5]||''),status:String(r[6])}));
 }
-function publicNotices_(){return adminNotices_().filter(n=>n.status==='Published').map(n=>({date:n.publishDate,title:n.title,summary:n.body.slice(0,220),content:n.body,category:'Official Notice'}));}
+function publicNotices_(){
+  const today=Utilities.formatDate(new Date(),Session.getScriptTimeZone(),'yyyy-MM-dd');
+  return adminNotices_().filter(n=>{
+    if(n.status!=='Published')return false;
+    const date=String(n.publishDate||'').trim();
+    return !date || (/^\d{4}-\d{2}-\d{2}$/.test(date) && date<=today);
+  }).map(n=>({date:n.publishDate,title:n.title,summary:n.body.slice(0,220),content:n.body,category:'Official Notice'}));
+}
 function audit_(user,action,id,details){try{db_().getSheetByName(CFG.AUDIT_SHEET).appendRow([new Date(),user,action,id,details]);}catch(ignore){}}
 function changePassword_(p) {
   const admin=requireAdmin_(p.sessionToken),props=PropertiesService.getScriptProperties(),cur=String(p.currentPassword||''),next=String(p.newPassword||'');
