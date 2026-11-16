@@ -652,10 +652,18 @@ if(registrationForm){
  });
 
  openPayment.addEventListener('click',()=>{
-  if(!validateInternationalPhone()){phoneInput.reportValidity();phoneInput.focus();return;}
+  validateInternationalPhone();
   const requiredBeforePayment=[...registrationForm.querySelectorAll('[required]')].filter(el=>!['paymentProof','utr'].includes(el.name));
-  for(const field of requiredBeforePayment){if(!field.checkValidity()){field.reportValidity();field.focus();return;}}
-    paymentModal.hidden=false;document.body.style.overflow='hidden';
+  for(const field of requiredBeforePayment){
+   if(!field.checkValidity()){
+    field.reportValidity();
+    const target=field.closest('label')||field.closest('.phone-entry')||field;
+    target.scrollIntoView({behavior:'smooth',block:'center'});
+    try{field.focus({preventScroll:true});}catch(_){field.focus();}
+    return;
+   }
+  }
+  paymentModal.hidden=false;document.body.style.overflow='hidden';
  });
  const closePayment=()=>{paymentModal.hidden=true;document.body.style.overflow='';};
  document.getElementById('closePayment').addEventListener('click',closePayment);
