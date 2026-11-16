@@ -275,10 +275,19 @@ function dashboard_(p) {
     registrations:newest.slice(0,100).map(rowObject_),auditLogs:auditLogs,notices:adminNotices_()};
 }
 function search_(p) {
-  requireAdmin_(p.sessionToken);const q=String(p.query||'').trim().toLowerCase();if(!q)throw new Error('Enter Registration ID, tracking reference, name or WhatsApp number.');
+  requireAdmin_(p.sessionToken);
+  const q=String(p.query||'').trim().toLowerCase(),filter=String(p.filter||'').trim().toLowerCase();
+  if(!q&&!filter)throw new Error('Enter Registration ID, tracking reference, name or WhatsApp number.');
   const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow(),rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
-  const found=rows.filter(r=>r.join(' ').toLowerCase().includes(q)).reverse().slice(0,100);
-  return {success:true,count:found.length,registrations:found.map(rowObject_)};
+  let found=rows;
+  if(filter==='pending-payment')found=found.filter(r=>r[19]==='Pending Verification');
+  else if(filter==='pending-review')found=found.filter(r=>r[20]==='Pending Review'&&r[19]==='Verified');
+  else if(filter==='approved')found=found.filter(r=>r[20]==='Approved');
+  else if(filter==='rejected')found=found.filter(r=>r[20]==='Rejected');
+  else if(filter&&filter!=='all')throw new Error('Unsupported registration filter.');
+  if(q)found=found.filter(r=>r.join(' ').toLowerCase().includes(q));
+  found=found.reverse().slice(0,100);
+  return {success:true,registrations:found.map(rowObject_),count:found.length,filter:filter||'search'};
 }
 
 
