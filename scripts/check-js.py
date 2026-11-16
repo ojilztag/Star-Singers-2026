@@ -6,12 +6,12 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-FILES = ["index.html", "admin.html", "notices.html"]
+FILES = ["index.html", "admin.html"]
 SCRIPT = re.compile(r"<script\b([^>]*)>(.*?)</script\s*>", re.I | re.S)
 checked = 0
 with tempfile.TemporaryDirectory() as tmp:
     tmp = Path(tmp)
-    for name in ["Code.gs", "backend-client.js", "notices-data.js", "site-config.js"]:
+    for name in ["Code.gs", "backend-client.js", "site-config.js"]:
         path = ROOT / name
         js = tmp / name.replace(".gs", ".js")
         js.write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
