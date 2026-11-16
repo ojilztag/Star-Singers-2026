@@ -8,14 +8,49 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
  const message=document.getElementById('registrationMessage');
  let busy=false,seq=0;
  function status(text,isError){message.textContent=text;message.style.color=isError?'#ffb7b7':'';}
- function fileData(file,maxBytes,label){
+ function compressImage(file,label){
   return new Promise((resolve,reject)=>{
-   if(!file)return reject(new Error(label+' is required.'));
-   if(file.size>maxBytes)return reject(new Error(label+' is too large. Please keep it below 3 MB.'));
+   const makeBlob=(image)=>{
+    try{
+     const width=image.width||image.naturalWidth,height=image.height||image.naturalHeight;
+     if(!width||!height)throw new Error('Could not read '+label+'. Please choose another image.');
+     const scale=Math.min(1,1600/Math.max(width,height));
+     const canvas=document.createElement('canvas');
+     canvas.width=Math.max(1,Math.round(width*scale));canvas.height=Math.max(1,Math.round(height*scale));
+     const ctx=canvas.getContext('2d',{alpha:false});
+     if(!ctx)throw new Error('Image compression is not supported in this browser.');
+     ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+     ctx.drawImage(image,0,0,canvas.width,canvas.height);
+     canvas.toBlob(blob=>{
+      if(!blob){reject(new Error('Could not compress '+label+'. Please try another image.'));return;}
+      resolve(new File([blob],file.name.replace(/\\.[^.]+$/,'')+'.jpg',{type:'image/jpeg',lastModified:Date.now()}));
+     },'image/jpeg',.78);
+    }catch(err){reject(err);}
+   };
+   if(window.createImageBitmap){
+    createImageBitmap(file).then(bitmap=>{makeBlob(bitmap);bitmap.close();}).catch(()=>loadFallback());
+   }else loadFallback();
+   function loadFallback(){
+    const url=URL.createObjectURL(file),img=new Image();
+    img.onload=()=>{makeBlob(img);URL.revokeObjectURL(url);};
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Could not open '+label+'. Use JPG, PNG or WebP.'));};
+    img.src=url;
+   }
+  });
+ }
+ async function fileData(file,maxBytes,label,compress){
+  if(!file)throw new Error(label+' is required.');
+  let uploadFile=file;
+  if(compress&&file.type.startsWith('image/')){
+   status('Preparing '+label+' and reducing its file size…',false);
+   uploadFile=await compressImage(file,label);
+  }
+  if(uploadFile.size>maxBytes)throw new Error(label+' is too large ('+(uploadFile.size/1024/1024).toFixed(2)+' MB). Maximum allowed size is 3 MB. Please choose a smaller file.');
+  return await new Promise((resolve,reject)=>{
    const reader=new FileReader();
-   reader.onerror=()=>reject(new Error('Could not read '+label+'.'));
-   reader.onload=()=>resolve({name:file.name,mimeType:file.type||'application/octet-stream',data:String(reader.result).split(',')[1]||''});
-   reader.readAsDataURL(file);
+   reader.onerror=()=>reject(new Error('Could not read '+label+'. Please choose the file again.'));
+   reader.onload=()=>resolve({name:uploadFile.name,mimeType:uploadFile.type||'application/octet-stream',data:String(reader.result).split(',')[1]||''});
+   reader.readAsDataURL(uploadFile);
   });
  }
  function post(payload,done){
@@ -25,7 +60,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   const input=document.createElement('input');input.type='hidden';input.name='payload';input.value=JSON.stringify(payload);f.appendChild(input);document.body.appendChild(f);
   let finished=false;
   const cleanup=()=>{if(finished)return;finished=true;clearTimeout(timer);window.removeEventListener('message',onMessage);f.remove();frame.remove();};
-  const timer=setTimeout(()=>{cleanup();done({success:false,error:'No reply was received from the Apps Script Web App after 90 seconds. Check the Admin Panel before retrying to avoid duplicate registrations.'});},90000);
+  const timer=setTimeout(()=>{cleanup();done({success:false,error:'The server did not confirm the registration within 120 seconds. Please check the Admin Panel using the participant name and WhatsApp number before trying again, to avoid a duplicate.'});},120000);
   function onMessage(event){
    const d=event.data;if(!d||d.type!=='SS26_REGISTRATION_RESULT'||d.token!==payload.clientToken)return;
    cleanup();done(d);
@@ -44,10 +79,10 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   const proof=form.querySelector('[name="paymentProof"]').files[0];
   const utr=form.querySelector('[name="utr"]').value.trim();
   busy=true;const submit=form.querySelector('[type="submit"]');if(submit){submit.disabled=true;submit.textContent='Submitting securely…';}
-  status('Uploading participant photo and payment receipt to private Google Drive folders…',false);
+  status('Preparing your files. Please keep this page open…',false);
   try{
-   const [photoData,originalPhotoData,proofData]=await Promise.all([fileData(photo,3*1024*1024,'Cropped participant photo'),fileData(originalPhoto,3*1024*1024,'Original participant photo'),fileData(proof,3*1024*1024,'Payment proof')]);
-   const payload={
+   const [photoData,originalPhotoData,proofData]=await Promise.all([fileData(photo,3*1024*1024,'Cropped participant photo',true),fileData(originalPhoto,3*1024*1024,'Original participant photo',true),fileData(proof,3*1024*1024,'Payment proof',true)]);
+   status('Files prepared. Uploading securely to the registration server… Please do not close or refresh this page.',false);\n   const payload={
     action:'register',clientToken:'SS26-'+Date.now()+'-'+Math.random().toString(16).slice(2),
     participantName:form.elements.participantName.value,parishName:form.elements.parishName.value,
     diocese:form.elements.diocese.value,country:form.elements.country.value,state:form.elements.state.value,
