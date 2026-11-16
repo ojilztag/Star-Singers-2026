@@ -57,3 +57,149 @@ table{display:block;max-width:100%;overflow-x:auto}
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* ── STAR SINGERS 2026 · Premium ruby / midnight / champagne finish ──
+   Visual-only layer. Keep application logic, authentication and data flows untouched. */
+:root{
+  --ss-ruby:#9f1239;
+  --ss-red:#c21e4b;
+  --ss-red-bright:#e23b61;
+  --ss-burgundy:#4b1025;
+  --ss-midnight:#071b31;
+  --ss-champagne:#e6c77d;
+  --ss-paper:#fffaf1;
+  --ss-ink:#24313a;
+}
+::selection{background:#c21e4b;color:#fff}
+:focus-visible{outline:3px solid var(--ss-red-bright);outline-offset:3px}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button:disabled{cursor:wait}
+
+/* Public event experience */
+.top{
+  background:linear-gradient(105deg,#250b1b 0%,#071b31 54%,#351024 100%);
+  border-bottom:2px solid var(--ss-champagne);
+  box-shadow:0 5px 22px #02081255;
+}
+.hero{
+  background:
+    radial-gradient(ellipse at 50% 0%,#e23b6133,transparent 45%),
+    radial-gradient(ellipse at 8% 65%,#9f123933,transparent 40%),
+    linear-gradient(145deg,#071b31 0%,#142034 52%,#3b1025 100%);
+}
+.hero:before,.hero:after{opacity:.7}
+.hero-kicker,.eyebrow{color:#f0d48e}
+.section{
+  border-color:#d7b86d;
+  background:linear-gradient(145deg,#081d33 0%,#182238 58%,#3b1428 100%);
+  box-shadow:0 16px 38px #02091455;
+}
+.section.alt{
+  background:linear-gradient(145deg,#fffaf1 0%,#f7f0e4 58%,#f4e4e8 100%);
+  color:#24313a;
+  border-color:#d9bd78;
+}
+.section.alt .title h2,.section.alt h3{color:#741b35}
+.feature,.info-card{
+  border-color:#d9bd78;
+  background:linear-gradient(145deg,#102b43 0%,#19283c 58%,#3b172a 100%);
+}
+.feature:nth-child(3n+2),.info-card:nth-child(3n+2){
+  background:linear-gradient(145deg,#172a40,#35162a);
+}
+.hero .btn,.hero .btn-primary,.registration-form button[type=submit],
+.registration-success-card button{
+  border:1px solid #f0d48e;
+  background:linear-gradient(110deg,#8f1036 0%,#c21e4b 52%,#e23b61 100%);
+  color:#fff;
+  box-shadow:0 7px 18px #8f103644;
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
+}
+.hero .btn:hover,.hero .btn-primary:hover,.registration-form button[type=submit]:hover,
+.registration-success-card button:hover{
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px #8f103655;
+}
+.prizes{
+  background:linear-gradient(112deg,#6e102e 0%,#a91640 34%,#24172d 72%,#071b31 100%);
+  border-top:1px solid #e6c77d;
+  border-bottom:1px solid #e6c77d;
+}
+.prize{border-color:#e6c77d}
+.prize:nth-child(2){background:linear-gradient(150deg,#5b142c,#8f1d3b)}
+.prize:nth-child(3){background:linear-gradient(150deg,#35172b,#18243a)}
+.contact-panel{border-color:#e6c77d}
+.registration-form{
+  border-color:#d9bd78;
+  background:linear-gradient(145deg,#081d33 0%,#17253b 62%,#3b1428 100%);
+}
+.registration-form input,.registration-form select,.registration-form textarea{
+  background:#fffdf8;color:#1c2932;border-color:#c8bda9;
+}
+.registration-form input:focus,.registration-form select:focus,.registration-form textarea:focus{
+  border-color:#c21e4b;outline:3px solid #c21e4b22;
+}
+.fee-summary{border-color:#d9bd78}
+@media(max-width:760px){
+  .hero{padding-top:26px;padding-bottom:24px}
+  .section{box-shadow:0 8px 22px #02091433}
+  .hero .btn,.hero .btn-primary{width:100%;max-width:360px;min-height:48px}
+}
+
+/* Admin dashboard: clearer light workspace with ruby identity.
+   Login fields, form IDs, authentication JS and session storage are unchanged. */
+body:has(#login) header{
+  background:linear-gradient(112deg,#4b1025 0%,#94183b 42%,#071b31 100%);
+  border-bottom:3px solid var(--ss-champagne);
+}
+body:has(#login) h1{color:#ffe7ad}
+body:has(#login) h2,#login h2,#app .panel>h2{color:#741b35}
+body:has(#login) #login{
+  background:linear-gradient(145deg,#fffdf8 0%,#fff8f0 100%);
+  border:1px solid #d9bd78;
+  box-shadow:0 18px 42px #4b10251a;
+}
+body:has(#login) #loginBtn{
+  background:linear-gradient(110deg,#8f1036 0%,#c21e4b 58%,#e23b61 100%);
+  border:1px solid #d9bd78;
+  box-shadow:0 5px 14px #8f103633;
+}
+body:has(#login) #loginBtn:hover{filter:brightness(1.07)}
+body:has(#login) .panel{border-color:#e5d8c4;box-shadow:0 8px 24px #24152a0a}
+body:has(#login) .section-toggle summary{color:#741b35}
+body:has(#login) .expand summary{color:#174b3b}
+body:has(#login) .entry-actions .entry-label{color:#8f1036}
+body:has(#login) input:focus,body:has(#login) select:focus,body:has(#login) textarea:focus{
+  border-color:#c21e4b;outline:3px solid #c21e4b22;
+}
+body:has(#login) .status.error{background:#fff0f1;border-color:#d98b9b;color:#8e1737}
+@media(max-width:650px){
+  body:has(#login) .panel{padding:15px}
+  body:has(#login) .dashboard-controls button{min-height:50px}
+  body:has(#login) #loginBtn{min-height:52px}
+}
+
+/* Public notices: same event identity, high-contrast reading surface */
+body:has(.board) header{
+  background:
+    radial-gradient(ellipse at 50% 0%,#e23b6133,transparent 55%),
+    linear-gradient(112deg,#4b1025 0%,#94183b 42%,#071b31 100%);
+  border-bottom:3px solid var(--ss-champagne);
+}
+body:has(.board) h2{color:#741b35}
+body:has(.board) .notice h3{color:#8f1738}
+body:has(.board) .date{background:#f8edf0;color:#8f1738;border:1px solid #e7c7d1}
+body:has(.board) input:focus,body:has(.board) select:focus{
+  border-color:#c21e4b;outline:3px solid #c21e4b22;
+}
+@media(max-width:620px){
+  body:has(.board) .board{padding:16px 12px}
+  body:has(.board) .notice{padding:14px}
+}
+
+/* Legibility and motion preferences */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
