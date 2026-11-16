@@ -711,3 +711,16 @@ footer{
 .registration-form .phone-combo .country-picker[hidden]{
   display:none!important;
 }
+
+
+/* Finish the shared phone-field frame: round only the number input's outer
+   right corners so it follows the gold parent frame. Keep the country-picker
+   overflow visible and preserve all selector/search/form behaviour. */
+.registration-form .phone-combo input{
+  border-radius:0 10px 10px 0!important;
+}
+@media(max-width:620px){
+  .registration-form .phone-combo input{
+    border-radius:0 9px 9px 0!important;
+  }
+}
