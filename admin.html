@@ -302,13 +302,13 @@ $('records').addEventListener('click',e=>{
  b.disabled=true;request(action==='verify'?{action:'verifypayment',sessionToken:token,trackingRef:r.trackingRef,adminNote:note}:{action:'reviewregistration',sessionToken:token,trackingRef:r.trackingRef,decision:action,adminNote:note},d=>{if(!d.success){msg('dashStatus',d.error||'Review failed.',true);return;}msg('dashStatus',action==='verify'?'Payment verified. Approval is now enabled.':action==='approve'?'Approved. Participant ID: '+d.registration.registrationId:'Registration rejected.',false);loadDashboard();});
 });
 $('loginForm').addEventListener('submit',e=>{e.preventDefault();if(API_URL.includes('PASTE_')){msg('loginStatus','Apps Script URL has not been configured.',true);return;}msg('loginStatus','Connecting securely to the Admin server… Please wait.',false);$('loginBtn').disabled=true;$('loginBtn').classList.add('is-loading');request({action:'adminlogin',username:$('username').value.trim(),password:$('password').value},d=>{$('loginBtn').disabled=false;$('loginBtn').classList.remove('is-loading');if(!d.success){msg('loginStatus',d.error||'Login failed. Check the username and password, then try again.',true);return;}token=d.sessionToken;sessionStorage.setItem('ss26AdminSession',token);$('password').value='';$('login').classList.add('hidden');$('app').classList.remove('hidden');loadDashboard();});});
-let demoResetExpectedCount=null;
+let demoResetExpectedCount=null,demoResetSnapshotToken='';
 $('demoResetPreview').onclick=()=>{
  $('demoResetStatus').classList.add('hidden');$('demoResetPreviewResult').classList.add('hidden');
  $('demoResetConfirmArea').classList.add('hidden');$('demoResetPhrase').value='';$('demoResetPassword').value='';$('demoResetExecute').disabled=true;
  request({action:'getdemoresetpreview',sessionToken:token},d=>{
   if(!d.success){msg('demoResetStatus',d.error||'Could not prepare reset preview.',true);return;}
-  demoResetExpectedCount=Number(d.registrationCount||0);
+  demoResetExpectedCount=Number(d.registrationCount||0);demoResetSnapshotToken=String(d.snapshotToken||'');
   const files=d.files||{};$('demoResetPreviewResult').textContent='Preview: '+demoResetExpectedCount+' registration(s); '+Number(files.croppedPhotos||0)+' cropped photos; '+Number(files.originalPhotos||0)+' original photos; '+Number(files.paymentProofs||0)+' payment proofs ('+Number(d.fileCount||0)+' linked file(s) total) will be moved to Drive Trash.';
   $('demoResetPreviewResult').classList.remove('hidden');
   $('demoResetConfirmArea').classList.remove('hidden');
@@ -322,10 +322,10 @@ $('demoResetExecute').onclick=()=>{
  if(demoResetExpectedCount===null||$('demoResetPhrase').value!=='RESET DEMO DATA')return;
  if(!confirm('Final confirmation: permanently remove all registration rows and their linked private files?'))return;
  $('demoResetExecute').disabled=true;
- request({action:'resetdemodata',sessionToken:token,confirmation:$('demoResetPhrase').value,currentPassword:$('demoResetPassword').value,expectedRegistrationCount:demoResetExpectedCount},d=>{
+ request({action:'resetdemodata',sessionToken:token,confirmation:$('demoResetPhrase').value,currentPassword:$('demoResetPassword').value,expectedRegistrationCount:demoResetExpectedCount,snapshotToken:demoResetSnapshotToken},d=>{
   if(!d.success){msg('demoResetStatus',d.error||'Reset failed. No success was reported.',true);$('demoResetExecute').disabled=false;return;}
   msg('demoResetStatus','Reset completed: '+Number(d.removedRegistrations||0)+' registration(s) removed; '+Number(d.trashedFiles||0)+' linked file(s) moved to Drive Trash. Existing audit history was retained.',false);
-  $('demoResetConfirmArea').classList.add('hidden');$('demoResetPreviewResult').classList.add('hidden');$('demoResetPassword').value='';demoResetExpectedCount=null;loadDashboard();
+  $('demoResetConfirmArea').classList.add('hidden');$('demoResetPreviewResult').classList.add('hidden');$('demoResetPassword').value='';demoResetExpectedCount=null;demoResetSnapshotToken='';loadDashboard();
  });
 };
 $('refresh').onclick=()=>{const b=$('refresh');b.classList.add('is-loading');b.disabled=true;loadDashboardWithRefresh();};function loadDashboardWithRefresh(){request({action:'admindashboard',sessionToken:token},d=>{const b=$('refresh');b.classList.remove('is-loading');b.disabled=false;if(!d.success){msg('dashStatus',d.error||'Dashboard refresh failed.',true);if((d.error||'').toLowerCase().includes('session'))loginView();return;}$('total').textContent=d.total;$('pending').textContent=d.pending;$('pendingPayment').textContent=d.pendingPayment;$('approved').textContent=d.approved;$('rejected').textContent=d.rejected;$('collected').textContent='₹'+Number(d.collectedAmount||0).toLocaleString('en-IN');$('pendingAmount').textContent='₹'+Number(d.pendingAmount||0).toLocaleString('en-IN');$('last7Count').textContent=d.last7DaysCount||0;renderRecords(d.registrations||[]);renderRecent(d.last7Days||[]);renderAudit(d.auditLogs||[]);renderNotices(d.notices||[]);loadSiteSettings();msg('dashStatus','Dashboard refreshed successfully.',false);});};$('logout').onclick=()=>request({action:'adminlogout',sessionToken:token},loginView);
