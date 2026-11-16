@@ -724,3 +724,18 @@ footer{
     border-radius:0 9px 9px 0!important;
   }
 }
+
+
+/* Target the actual mobile-number input only: round its far-right end to
+   match the outer phone frame. The country-code side and dropdown are untouched. */
+.registration-form .phone-combo #phoneLocal{
+  border-radius:0 10px 10px 0!important;
+  background-clip:padding-box!important;
+  clip-path:inset(0 round 0 10px 10px 0);
+}
+@media(max-width:620px){
+  .registration-form .phone-combo #phoneLocal{
+    border-radius:0 10px 10px 0!important;
+    clip-path:inset(0 round 0 10px 10px 0);
+  }
+}
