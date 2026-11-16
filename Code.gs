@@ -506,7 +506,7 @@ function demoResetPreview_(p) {
   const folderKeys=['SS26_PHOTOS_FOLDER_ID','SS26_ORIGINALS_FOLDER_ID','SS26_PROOFS_FOLDER_ID'];
   const folderIds=folderKeys.map(k=>PropertiesService.getScriptProperties().getProperty(k));
   if(folderIds.some(x=>!x))throw new Error('Private Drive folders are not fully configured. Reset is unavailable.');
-  const seen={},fileIds=[];
+  const seen={},fileIds=[],counts={croppedPhotos:0,originalPhotos:0,paymentProofs:0};
   rows.forEach(r=>{
     [[r[13],folderIds[0]],[r[15],folderIds[1]],[r[17],folderIds[2]]].forEach(pair=>{
       const id=String(pair[0]||'').trim();if(!id||seen[id])return;seen[id]=true;
@@ -516,11 +516,13 @@ function demoResetPreview_(p) {
       fileIds.push(id);
     });
   });
-  return {success:true,registrationCount:rows.length,fileCount:fileIds.length};
+  return {success:true,registrationCount:rows.length,fileCount:fileIds.length,files:counts};
 }
 function resetDemoDataFromAdmin_(p) {
   const admin=requireAdmin_(p.sessionToken);
   if(String(p.confirmation||'')!=='RESET DEMO DATA')throw new Error('Type RESET DEMO DATA exactly to confirm.');
+  const props=PropertiesService.getScriptProperties(),current=String(p.currentPassword||'');
+  if(!equal_(hash_(current,props.getProperty('ADMIN_SALT')),props.getProperty('ADMIN_HASH')))throw new Error('Admin password verification failed. No data was changed.');
   const preview=demoResetPreview_({sessionToken:p.sessionToken});
   if(Number(p.expectedRegistrationCount)!==preview.registrationCount)throw new Error('Registration count changed after preview. Refresh the preview and confirm again.');
   const result=resetDemoTestDataNow(admin.user,preview.registrationCount);
