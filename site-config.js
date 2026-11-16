@@ -1,4 +1,4 @@
-/* Public event information loader. Registration remains available; no Coming Soon/Closed switch. */
+/* Public event information loader. */
 (function(){
  const API='https://script.google.com/macros/s/AKfycbxPwRrD35fv7UWOJO6EN6eqIxT5czuaIBjbU8qR9xfdFYuod6bB-RrNj6r0hDuma6Qk6Q/exec';
  let frame=null,timeout=null;
