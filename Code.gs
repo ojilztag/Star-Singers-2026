@@ -10,7 +10,6 @@ const CFG = {
   MIN_PASSWORD: 12,
   MAX_FILE_BYTES: 3 * 1024 * 1024,
   REG_SHEET: 'Registrations',
-  NOTICE_SHEET: 'Notices',
   AUDIT_SHEET: 'AuditLog'
 };
 const REG_HEADERS = [
@@ -21,7 +20,6 @@ const REG_HEADERS = [
   'Payment Proof Drive ID','Payment Proof Drive URL','Payment Status',
   'Registration Status','Admin Note','Reviewed At','Reviewed By'
 ];
-const NOTICE_HEADERS = ['Notice ID','Created At','Updated At','Title','Body','Publish Date','Status','Updated By'];
 const AUDIT_HEADERS = ['Timestamp','Admin','Action','Record ID','Details'];
 const SETTINGS_HEADERS = ['Setting','Value','Description'];
 const FINANCE_HEADERS = ['Submitted At','Tracking Ref','Participant Name','UTR / Transaction ID','Expected Fee','Payment Status'];
@@ -36,9 +34,6 @@ function setupStarSingersBackend() {
   reg.getRange(1,1,1,REG_HEADERS.length).setValues([REG_HEADERS]).setFontWeight('bold');
   reg.setFrozenRows(1);
   reg.setColumnWidths(1,REG_HEADERS.length,150);
-  const notices = ss.insertSheet(CFG.NOTICE_SHEET);
-  notices.getRange(1,1,1,NOTICE_HEADERS.length).setValues([NOTICE_HEADERS]).setFontWeight('bold');
-  notices.setFrozenRows(1);
   const audit = ss.insertSheet(CFG.AUDIT_SHEET);
   audit.getRange(1,1,1,AUDIT_HEADERS.length).setValues([AUDIT_HEADERS]).setFontWeight('bold');
   audit.setFrozenRows(1);
@@ -136,10 +131,6 @@ function doGet(e) {
     const payload=JSON.stringify({type:'SS26_PUBLIC_SITE_CONFIG',settings:publicSiteSettings_()}).replace(/</g,'\\u003c');
     return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
-  if(action==='notices') {
-    const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\u003c');
-    return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-  }
   return ContentService.createTextOutput('STAR SINGERS 2026 API is active.').setMimeType(ContentService.MimeType.TEXT);
 }
 function doPost(e) {
@@ -158,7 +149,6 @@ function doPost(e) {
       case 'exportregistrations': out=exportRegistrations_(p); break;
       case 'verifypayment': out=verifyPayment_(p); break;
       case 'reviewregistration': out=review_(p); break;
-      case 'adminnotices': out=manageNotices_(p); break;
       case 'adminsettings': out=manageSiteSettings_(p); break;
       case 'changepassword': out=changePassword_(p); break;
       case 'adminlogout': out=logout_(p); break;
@@ -284,7 +274,7 @@ function dashboard_(p) {
   const auditLogs=auditRows.map(r=>({timestamp:r[0] instanceof Date?Utilities.formatDate(r[0],Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'):String(r[0]||''),admin:String(r[1]||''),action:String(r[2]||''),recordId:String(r[3]||''),details:String(r[4]||'')}));
   return {success:true,total:rows.length,pending:pendingReview.length,pendingPayment:pendingPayment.length,approved:approved.length,rejected:rejected.length,
     collectedAmount:collected,pendingAmount:pendingAmount,last7DaysCount:last7.length,last7Days:last7.slice().reverse().map(rowObject_),
-    registrations:newest.slice(0,100).map(rowObject_),auditLogs:auditLogs,notices:adminNotices_()};
+    registrations:newest.slice(0,100).map(rowObject_),auditLogs:auditLogs};
 }
 function search_(p) {
   requireAdmin_(p.sessionToken);
@@ -459,26 +449,6 @@ function manageSiteSettings_(p) {
   return {success:true,settings:publicSiteSettings_(),updated:changed};
 }
 
-function manageNotices_(p) {
-  const admin=requireAdmin_(p.sessionToken),action=String(p.noticeAction||'list').toLowerCase(),sh=sheet_(CFG.NOTICE_SHEET,NOTICE_HEADERS);
-  if(action==='list')return {success:true,notices:adminNotices_()};
-  if(action==='save') {
-    const id=clean_(p.noticeId,40),title=clean_(p.title,180),body=clean_(p.body,5000),date=clean_(p.publishDate,40),status=String(p.status||'Draft');
-    if(!title||!body||!['Draft','Published'].includes(status))throw new Error('Enter title, body and choose Draft or Published.');
-    const last=sh.getLastRow(),rows=last>1?sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues():[];
-    const idx=rows.findIndex(r=>String(r[0])===id);
-    const now=new Date(),nid=id||('NOTICE-'+Utilities.getUuid().slice(0,8).toUpperCase());
-    const row=[nid,idx>=0?rows[idx][1]:now,now,title,body,date,status,admin.user];
-    if(idx>=0)sh.getRange(idx+2,1,1,row.length).setValues([row]);else sh.appendRow(row);
-    audit_(admin.user,'NOTICE_SAVED',nid,status);return {success:true,notices:adminNotices_()};
-  }
-  throw new Error('Unknown notice action.');
-}
-function adminNotices_() {
-  const sh=sheet_(CFG.NOTICE_SHEET,NOTICE_HEADERS),last=sh.getLastRow();
-  return last<2?[]:sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues().reverse().map(r=>({id:String(r[0]),title:String(r[3]),body:String(r[4]),publishDate:String(r[5]||''),status:String(r[6])}));
-}
-function publicNotices_(){return adminNotices_().filter(n=>n.status==='Published').map(n=>({date:n.publishDate,title:n.title,summary:n.body.slice(0,220),content:n.body,category:'Official Notice'}));}
 function audit_(user,action,id,details){try{db_().getSheetByName(CFG.AUDIT_SHEET).appendRow([new Date(),user,action,id,details]);}catch(ignore){}}
 function changePassword_(p) {
   const admin=requireAdmin_(p.sessionToken),props=PropertiesService.getScriptProperties(),cur=String(p.currentPassword||''),next=String(p.newPassword||'');
