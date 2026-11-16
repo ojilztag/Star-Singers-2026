@@ -156,6 +156,8 @@ function doPost(e) {
       case 'reviewregistration': out=review_(p); break;
       case 'adminnotices': out=manageNotices_(p); break;
       case 'changepassword': out=changePassword_(p); break;
+      case 'getdemoresetpreview': out=demoResetPreview_(p); break;
+      case 'resetdemodata': out=resetDemoDataFromAdmin_(p); break;
       case 'adminlogout': out=logout_(p); break;
       default: throw new Error('Unsupported action.');
     }
@@ -438,7 +440,35 @@ function publicNotices_(){return adminNotices_().filter(n=>n.status==='Published
  * Admin credentials, AuditLog, Dashboard and formulas intact.
  * Trashes only Drive files referenced by the demo registration rows.
  */
-function resetDemoTestDataNow() {
+function demoResetPreview_(p) {
+  requireAdmin_(p.sessionToken);
+  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
+  const folderKeys=['SS26_PHOTOS_FOLDER_ID','SS26_ORIGINALS_FOLDER_ID','SS26_PROOFS_FOLDER_ID'];
+  const folderIds=folderKeys.map(k=>PropertiesService.getScriptProperties().getProperty(k));
+  if(folderIds.some(x=>!x))throw new Error('Private Drive folders are not fully configured. Reset is unavailable.');
+  const seen={},fileIds=[];
+  rows.forEach(r=>{
+    [[r[13],folderIds[0]],[r[15],folderIds[1]],[r[17],folderIds[2]]].forEach(pair=>{
+      const id=String(pair[0]||'').trim();if(!id||seen[id])return;seen[id]=true;
+      const file=DriveApp.getFileById(id),parents=file.getParents();let valid=false;
+      while(parents.hasNext())if(parents.next().getId()===pair[1])valid=true;
+      if(!valid)throw new Error('A linked file is outside its expected private folder. Reset is blocked.');
+      fileIds.push(id);
+    });
+  });
+  return {success:true,registrationCount:rows.length,fileCount:fileIds.length};
+}
+function resetDemoDataFromAdmin_(p) {
+  const admin=requireAdmin_(p.sessionToken);
+  if(String(p.confirmation||'')!=='RESET DEMO DATA')throw new Error('Type RESET DEMO DATA exactly to confirm.');
+  const preview=demoResetPreview_({sessionToken:p.sessionToken});
+  if(Number(p.expectedRegistrationCount)!==preview.registrationCount)throw new Error('Registration count changed after preview. Refresh the preview and confirm again.');
+  const result=resetDemoTestDataNow(admin.user);
+  return Object.assign({success:true},result);
+}
+
+function resetDemoTestDataNow(adminUser) {
   const lock=LockService.getScriptLock();lock.waitLock(30000);
   const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
   if(last<2) {
@@ -467,7 +497,7 @@ function resetDemoTestDataNow() {
     files.forEach(file=>{if(!file.isTrashed()){file.setTrashed(true);trashed.push(file);}});
     sh.getRange(2,1,last-1,REG_HEADERS.length).clearContent();rowsCleared=true;
     props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE','0');
-    audit_('SYSTEM','DEMO_TEST_DATA_RESET','ALL','Cleared '+rows.length+' demo/test registrations and trashed '+trashed.length+' linked private files. Audit history retained.');
+    audit_(adminUser||'SYSTEM','DEMO_TEST_DATA_RESET','ALL','Cleared '+rows.length+' demo/test registrations and trashed '+trashed.length+' linked private files. Audit history retained.');
     SpreadsheetApp.flush();
     return {success:true,removedRegistrations:rows.length,trashedFiles:trashed.length};
   } catch(err) {
