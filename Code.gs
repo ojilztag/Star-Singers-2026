@@ -207,7 +207,9 @@ function register_(p) {
   if(!name||!parish||!diocese||!country||!state||!district||!phone)throw new Error('Complete all required fields.');
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
   if(String(p.feeConsent)!=='true')throw new Error('Registration fee consent is required.');
-  if(Number(p.fee)!==500)throw new Error('Registration fee must be ₹500.');
+  const configuredFee=Number(readSiteSettings_()['Registration Fee']||500);
+  if(!Number.isFinite(configuredFee)||configuredFee<=0)throw new Error('Registration fee is not configured correctly.');
+  if(Number(p.fee)!==configuredFee)throw new Error('Registration fee has changed. Refresh the page and review the current fee.');
   const photo=decodeFile_(p.photo,'Participant Photo');
   const originalPhoto=decodeFile_(p.originalPhoto||p.photo,'Original Participant Photo');
   const proof=decodeFile_(p.paymentProof,'Payment Proof');
@@ -229,7 +231,7 @@ function register_(p) {
     originalSaved=savePrivate_(folder_('SS26_ORIGINALS_FOLDER_ID'),originalPhoto,ref,'ORIGINAL');
     proofSaved=savePrivate_(folder_('SS26_PROOFS_FOLDER_ID'),proof,ref,'PAYMENT');
     const now=new Date();
-    sh.appendRow([ref,'',now,name,parish,diocese,country,state,district,phone,'Individual / Single Entry',500,utr,
+    sh.appendRow([ref,'',now,name,parish,diocese,country,state,district,phone,'Individual / Single Entry',configuredFee,utr,
       photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
     const row=sh.getLastRow();
     // Preserve the complete international number as text (including leading + and country code).
