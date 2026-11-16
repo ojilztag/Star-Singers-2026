@@ -72,8 +72,8 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   if(busy)return;
   if(STAR_SINGERS_API_URL.includes('PASTE_')){status('Backend URL has not been configured. Registration is not submitted.',true);return;}
   if(!form.reportValidity())return;
-  const phone=form.querySelector('[name="phone"]').value.trim();
-  if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,''))){status('Enter mobile number with country code, e.g. +91XXXXXXXXXX.',true);return;}
+  if(!validateInternationalPhone()){status('Please select your country code and enter a valid mobile number.',true);dialCodeInput.focus();return;}
+  const phone=phoneInput.value;
   const photo=form.querySelector('[name="participantPhoto"]').files[0];
   const originalPhoto=form.querySelector('#participantPhotoOriginal')?.files[0]||photo;
   const proof=form.querySelector('[name="paymentProof"]').files[0];
