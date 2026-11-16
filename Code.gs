@@ -460,15 +460,19 @@ function resetDemoTestDataNow() {
       files.push(file);
     });
   });
-  const trashed=[];
+  const trashed=[],props=PropertiesService.getScriptProperties();
+  const oldSequence=props.getProperty('SS26_LAST_PARTICIPANT_SEQUENCE');
+  let rowsCleared=false;
   try {
     files.forEach(file=>{if(!file.isTrashed()){file.setTrashed(true);trashed.push(file);}});
-    sh.getRange(2,1,last-1,REG_HEADERS.length).clearContent();
-    PropertiesService.getScriptProperties().setProperty('SS26_LAST_PARTICIPANT_SEQUENCE','0');
+    sh.getRange(2,1,last-1,REG_HEADERS.length).clearContent();rowsCleared=true;
+    props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE','0');
     audit_('SYSTEM','DEMO_TEST_DATA_RESET','ALL','Cleared '+rows.length+' demo/test registrations and trashed '+trashed.length+' linked private files. Audit history retained.');
     SpreadsheetApp.flush();
     return {success:true,removedRegistrations:rows.length,trashedFiles:trashed.length};
   } catch(err) {
+    if(rowsCleared)try{sh.getRange(2,1,rows.length,REG_HEADERS.length).setValues(rows);}catch(restoreError){}
+    if(oldSequence===null)props.deleteProperty('SS26_LAST_PARTICIPANT_SEQUENCE');else props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE',oldSequence);
     trashed.forEach(file=>{try{file.setTrashed(false);}catch(ignore){}});
     throw err;
   } finally {lock.releaseLock();}
