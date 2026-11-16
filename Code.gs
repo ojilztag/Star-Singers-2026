@@ -132,10 +132,6 @@ function initializeStarSingersAdmin() {
 
 function doGet(e) {
   const action=String(e&&e.parameter&&e.parameter.action||'health');
-  if(action==='siteconfig') {
-    const payload=JSON.stringify({type:'SS26_PUBLIC_SITE_CONFIG',settings:publicSiteSettings_()}).replace(/</g,'\\u003c');
-    return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',\"*\");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-  }
   if(action==='notices') {
     const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\u003c');
     return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
@@ -161,8 +157,6 @@ function doPost(e) {
       case 'adminnotices': out=manageNotices_(p); break;
       case 'adminsettings': out=manageSiteSettings_(p); break;
       case 'changepassword': out=changePassword_(p); break;
-      case 'getdemoresetpreview': out=demoResetPreview_(p); break;
-      case 'resetdemodata': out=resetDemoDataFromAdmin_(p); break;
       case 'adminlogout': out=logout_(p); break;
       default: throw new Error('Unsupported action.');
     }
@@ -208,8 +202,6 @@ function register_(p) {
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
   if(String(p.feeConsent)!=='true')throw new Error('Registration fee consent is required.');
   const siteSettings=readSiteSettings_();
-  const registrationStatus=String(siteSettings['Registration Status']||'Coming Soon');
-  if(registrationStatus!=='Open')throw new Error(registrationStatus==='Closed'?'Registration is currently closed.':'Registration has not opened yet. Please check the official notices.');
   const configuredFee=Number(siteSettings['Registration Fee']||500);
   if(!Number.isFinite(configuredFee)||configuredFee<=0)throw new Error('Registration fee is not configured correctly.');
   if(Number(p.fee)!==configuredFee)throw new Error('Registration fee has changed. Refresh the page and review the current fee.');
@@ -421,7 +413,6 @@ function getEntryPhoto_(p) {
 
 
 const SITE_SETTING_FIELDS = {
-  registrationStatus: {key:'Registration Status',label:'Registration Status',max:40},
   registrationFee: {key:'Registration Fee',label:'Registration Fee',max:20},
   registrationOpens: {key:'Registration Opens',label:'Registration Opens',max:80},
   registrationCloses: {key:'Registration Closes',label:'Registration Closes',max:80},
@@ -442,7 +433,6 @@ function readSiteSettings_() {
 function publicSiteSettings_() {
   const raw=readSiteSettings_(),out={};
   Object.keys(SITE_SETTING_FIELDS).forEach(k=>{const key=SITE_SETTING_FIELDS[k].key;if(raw[key]!==undefined)out[k]=raw[key];});
-  if(!out.registrationStatus)out.registrationStatus='Coming Soon';
   return out;
 }
 function manageSiteSettings_(p) {
@@ -456,7 +446,6 @@ function manageSiteSettings_(p) {
     const meta=SITE_SETTING_FIELDS[k],value=clean_(incoming[k],meta.max);
     if(k==='registrationFee'&&value&&!/^\\d{1,7}(\\.\\d{1,2})?$/.test(value))throw new Error('Registration fee must be a valid amount.');
     if(k==='contactEmail'&&value&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value))throw new Error('Enter a valid contact email.');
-    if(k==='registrationStatus'&&!['Coming Soon','Open','Closed'].includes(value))throw new Error('Choose Coming Soon, Open or Closed.');
     const idx=rows.findIndex(r=>String(r[0])===meta.key);
     if(idx>=0){sh.getRange(idx+2,2).setValue(value);if(!String(rows[idx][2]||''))sh.getRange(idx+2,3).setValue('Managed from Admin Panel');}
     else sh.appendRow([meta.key,value,'Managed from Admin Panel']);
@@ -471,21 +460,13 @@ function manageNotices_(p) {
   if(action==='list')return {success:true,notices:adminNotices_()};
   if(action==='save') {
     const id=clean_(p.noticeId,40),title=clean_(p.title,180),body=clean_(p.body,5000),date=clean_(p.publishDate,40),status=String(p.status||'Draft');
-    if(!title||!body||!['Draft','Published','Archived'].includes(status))throw new Error('Enter title, body and valid status.');
+    if(!title||!body||!['Draft','Published'].includes(status))throw new Error('Enter title, body and choose Draft or Published.');
     const last=sh.getLastRow(),rows=last>1?sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues():[];
     const idx=rows.findIndex(r=>String(r[0])===id);
     const now=new Date(),nid=id||('NOTICE-'+Utilities.getUuid().slice(0,8).toUpperCase());
     const row=[nid,idx>=0?rows[idx][1]:now,now,title,body,date,status,admin.user];
     if(idx>=0)sh.getRange(idx+2,1,1,row.length).setValues([row]);else sh.appendRow(row);
     audit_(admin.user,'NOTICE_SAVED',nid,status);return {success:true,notices:adminNotices_()};
-  }
-  if(action==='delete'||action==='archive') {
-    const id=clean_(p.noticeId,40),last=sh.getLastRow(),rows=last>1?sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues():[];
-    const idx=rows.findIndex(r=>String(r[0])===id);if(idx<0)throw new Error('Notice not found.');
-    const row=rows[idx];row[5]=row[5]||'';row[6]='Archived';row[2]=new Date();row[7]=admin.user;
-    sh.getRange(idx+2,1,1,NOTICE_HEADERS.length).setValues([row]);
-    audit_(admin.user,'NOTICE_ARCHIVED',id,'Notice archived; record retained and can be restored by editing its status.');
-    return {success:true,notices:adminNotices_()};
   }
   throw new Error('Unknown notice action.');
 }
@@ -494,101 +475,6 @@ function adminNotices_() {
   return last<2?[]:sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues().reverse().map(r=>({id:String(r[0]),title:String(r[3]),body:String(r[4]),publishDate:String(r[5]||''),status:String(r[6])}));
 }
 function publicNotices_(){return adminNotices_().filter(n=>n.status==='Published').map(n=>({date:n.publishDate,title:n.title,summary:n.body.slice(0,220),content:n.body,category:'Official Notice'}));}
-/**
- * ONE-TIME DEMO DATA RESET.
- * Run manually from the Apps Script editor only after confirming every
- * Registrations row is demo/test data. Keeps headers, Notices, Settings,
- * Admin credentials, AuditLog, Dashboard and formulas intact.
- * Trashes only Drive files referenced by the demo registration rows.
- */
-function demoResetSnapshot_() {
-  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
-  const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
-  if(!rows.length)throw new Error('There are no registration records to reset. No data or participant sequence was changed.');
-  const folderKeys=['SS26_PHOTOS_FOLDER_ID','SS26_ORIGINALS_FOLDER_ID','SS26_PROOFS_FOLDER_ID'];
-  const folderIds=folderKeys.map(k=>PropertiesService.getScriptProperties().getProperty(k)||'');
-  const categories=['croppedPhotos','originalPhotos','paymentProofs'];
-  const seen={},files=[],skipped=[],counts={croppedPhotos:0,originalPhotos:0,paymentProofs:0};
-  rows.forEach((r,rowIndex)=>{
-    [[r[13],folderIds[0],0],[r[15],folderIds[1],1],[r[17],folderIds[2],2]].forEach(pair=>{
-      const id=String(pair[0]||'').trim();if(!id)return;
-      if(seen[id])return;
-      seen[id]=true;
-      const category=categories[pair[2]],folderId=pair[1];
-      if(!folderId){skipped.push({category:category,row:rowIndex+2,reason:'Private folder ID is not configured'});return;}
-      try {
-        const file=DriveApp.getFileById(id);
-        if(file.isTrashed()){skipped.push({category:category,row:rowIndex+2,reason:'File is already in Trash'});return;}
-        const parents=file.getParents();let valid=false;
-        while(parents.hasNext())if(parents.next().getId()===folderId)valid=true;
-        if(!valid){skipped.push({category:category,row:rowIndex+2,reason:'File is not in its configured private folder'});return;}
-        files.push({id:id,folderId:folderId,category:category});counts[category]++;
-      } catch(err) {
-        skipped.push({category:category,row:rowIndex+2,reason:'File missing or Apps Script has no access'});
-      }
-    });
-  });
-  const snapshot={rows:rows,files:files.map(f=>[f.id,f.folderId,f.category]),skipped:skipped,folders:folderIds};
-  const digest=Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,JSON.stringify(snapshot),Utilities.Charset.UTF_8);
-  const snapshotToken=Utilities.base64EncodeWebSafe(digest).replace(/=+$/,'');
-  return {registrationCount:rows.length,fileCount:files.length,files:counts,skippedFileCount:skipped.length,skippedFiles:skipped,snapshotToken:snapshotToken};
-}
-function demoResetPreview_(p) {
-  requireAdmin_(p.sessionToken);
-  const snapshot=demoResetSnapshot_();
-  return Object.assign({success:true},snapshot);
-}
-function resetDemoDataFromAdmin_(p) {
-  const admin=requireAdmin_(p.sessionToken);
-  if(String(p.confirmation||'')!=='RESET DEMO DATA')throw new Error('Type RESET DEMO DATA exactly to confirm.');
-  const props=PropertiesService.getScriptProperties(),current=String(p.currentPassword||'');
-  if(!equal_(hash_(current,props.getProperty('ADMIN_SALT')),props.getProperty('ADMIN_HASH')))throw new Error('Admin password verification failed. No data was changed.');
-  if(!/^[A-Za-z0-9_-]{43}$/.test(String(p.snapshotToken||'')))throw new Error('Reset preview is missing or expired. Run Preview Reset again.');
-  const result=resetDemoTestDataNow(admin.user,Number(p.expectedRegistrationCount),String(p.snapshotToken));
-  return Object.assign({success:true},result);
-}
-function resetDemoTestDataNow(adminUser,expectedRegistrationCount,expectedSnapshotToken) {
-  const lock=LockService.getScriptLock();lock.waitLock(30000);
-  try {
-    const snapshot=demoResetSnapshot_();
-    if(Number(expectedRegistrationCount)!==snapshot.registrationCount||String(expectedSnapshotToken||'')!==snapshot.snapshotToken)
-      throw new Error('Registration records or linked Drive files changed after preview. No reset was performed. Run Preview Reset again.');
-    const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
-    const rows=sh.getRange(2,1,last-1,REG_HEADERS.length).getValues();
-    const fileObjects=[];
-    snapshot.files.forEach(item=>{
-      try {
-        const file=DriveApp.getFileById(item.id);
-        if(file.isTrashed())return;
-        let valid=false,parents=file.getParents();
-        while(parents.hasNext())if(parents.next().getId()===item.folderId)valid=true;
-        if(valid)fileObjects.push(file);
-      } catch(err) {
-        // Missing/inaccessible files are reported in the preview and are not deleted.
-      }
-    });
-    const props=PropertiesService.getScriptProperties(),oldSequence=props.getProperty('SS26_LAST_PARTICIPANT_SEQUENCE');
-    const trashed=[];let rowsCleared=false,auditWritten=false;
-    try {
-      fileObjects.forEach(file=>{if(!file.isTrashed()){file.setTrashed(true);trashed.push(file);}});
-      sh.getRange(2,1,last-1,REG_HEADERS.length).clearContent();rowsCleared=true;
-      props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE','0');
-      const auditSh=sheet_(CFG.AUDIT_SHEET,AUDIT_HEADERS);
-      auditSh.appendRow([new Date(),adminUser||'SYSTEM','DEMO_TEST_DATA_RESET','ALL',
-        'Cleared '+rows.length+' registration(s); Drive Trash: '+trashed.length+' accessible linked file(s); skipped/unavailable file references: '+snapshot.skippedFileCount+'. Audit history retained.']);
-      SpreadsheetApp.flush();auditWritten=true;
-      const auditLast=auditSh.getLastRow(),auditRow=auditSh.getRange(auditLast,1,1,5).getValues()[0];
-      if(String(auditRow[2])!=='DEMO_TEST_DATA_RESET'||String(auditRow[3])!=='ALL')throw new Error('Audit log confirmation failed.');
-      return {success:true,removedRegistrations:rows.length,trashedFiles:trashed.length,skippedFileCount:snapshot.skippedFileCount,skippedFiles:snapshot.skippedFiles,files:snapshot.files};
-    } catch(err) {
-      if(rowsCleared)try{sh.getRange(2,1,rows.length,REG_HEADERS.length).setValues(rows);}catch(restoreError){}
-      if(oldSequence===null)props.deleteProperty('SS26_LAST_PARTICIPANT_SEQUENCE');else props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE',oldSequence);
-      trashed.forEach(file=>{try{file.setTrashed(false);}catch(ignore){}});
-      if(auditWritten)try{audit_(adminUser||'SYSTEM','DEMO_TEST_DATA_RESET_ROLLED_BACK','ALL','Reset failed and data restoration was attempted: '+safe_(err));}catch(ignore){}
-      throw err;
-    }
-  } finally {lock.releaseLock();}
-}
 function audit_(user,action,id,details){try{db_().getSheetByName(CFG.AUDIT_SHEET).appendRow([new Date(),user,action,id,details]);}catch(ignore){}}
 function changePassword_(p) {
   const admin=requireAdmin_(p.sessionToken),props=PropertiesService.getScriptProperties(),cur=String(p.currentPassword||''),next=String(p.newPassword||'');
