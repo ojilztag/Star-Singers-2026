@@ -182,24 +182,23 @@ body{padding-top:80px}
 @media(max-width:760px){.team-grid{grid-template-columns:1fr}.team-card{display:grid;grid-template-columns:minmax(112px,38%) 1fr;align-items:stretch}.coordinator-photo{height:auto;min-height:175px;margin:10px}.team-info{padding:14px 12px}.team-info h3{font-size:17px}.prize-sponsor{gap:9px}.sponsor-photo{flex-basis:82px;width:82px;height:84px}}
 
 
-/* Compact coordinator profile — consistent desktop and mobile sizing */
-.digital-coordinator-card{display:block;width:min(100%,560px);max-width:560px;margin:20px auto 0;overflow:hidden;border:1px solid #d9bd78;border-radius:14px;background:linear-gradient(160deg,#102f43,#071b2b 78%);box-shadow:0 10px 28px #0004}
-.digital-profile-brand{display:flex;align-items:center;justify-content:center;gap:12px;padding:9px 14px;border-bottom:1px solid #d9bd7855;background:#071a2a}
-.digital-profile-brand img{width:94px;height:38px;object-fit:contain}
-.digital-profile-brand span{color:#f1d38b;font-size:9px;font-weight:800;letter-spacing:1.6px}
-.digital-profile-main{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0}
-.digital-profile-photo{width:100%;aspect-ratio:1/1;height:auto;min-height:0;margin:0;border:0;border-radius:0}
-.digital-profile-image{display:block;width:min(100%,300px);aspect-ratio:1/1;height:auto;object-fit:cover;object-position:center;background:#08192c;margin:14px auto 0;border:1px solid #d9bd7877;border-radius:10px}
-.digital-profile-info{width:100%;box-sizing:border-box;padding:14px 20px 18px;text-align:center}
-.digital-profile-info h3{font-size:clamp(21px,3vw,27px);margin:6px 0 8px;letter-spacing:1px}
-.digital-profile-info p{font-size:12px;line-height:1.6;margin:7px 0}
-.digital-designation{font-size:13px!important;color:#f1d38b;letter-spacing:.8px}
-.digital-profile-link,.digital-whatsapp-link{display:flex;align-items:center;justify-content:center;min-height:38px;width:100%;box-sizing:border-box;margin:9px auto 0;padding:8px 12px;border-radius:8px;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.25px}
+/* Standard coordinator profile card — fixed common size for the full team directory */
+.digital-coordinator-card{display:flex;flex-direction:column;width:320px;height:470px;max-width:calc(100% - 24px);box-sizing:border-box;margin:18px auto 0;overflow:hidden;border:1px solid #d9bd78;border-radius:12px;background:linear-gradient(160deg,#102f43,#071b2b 78%);box-shadow:0 7px 18px #0003}
+.digital-profile-brand{flex:0 0 46px;display:flex;align-items:center;justify-content:center;gap:10px;padding:4px 12px;box-sizing:border-box;border-bottom:1px solid #d9bd7855;background:#071a2a}
+.digital-profile-brand img{width:82px;height:32px;object-fit:contain}
+.digital-profile-brand span{color:#f1d38b;font-size:8px;font-weight:800;letter-spacing:1.3px}
+.digital-profile-main{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:0;padding:10px 12px 8px;box-sizing:border-box}
+.digital-profile-photo{display:block;flex:0 0 auto;width:auto;height:auto;max-width:132px;max-height:164px;aspect-ratio:auto;object-fit:contain;object-position:center;background:transparent;margin:0 auto;border:0;border-radius:0}
+.digital-profile-info{width:100%;box-sizing:border-box;padding:8px 8px 6px;text-align:center}
+.digital-profile-info h3{font-size:20px;margin:4px 0 5px;letter-spacing:.7px}
+.digital-profile-info p{font-size:10px;line-height:1.45;margin:5px 0}
+.digital-designation{font-size:11px!important;color:#f1d38b;letter-spacing:.6px}
+.digital-profile-link,.digital-whatsapp-link{display:flex;align-items:center;justify-content:center;min-height:32px;width:100%;box-sizing:border-box;margin:6px auto 0;padding:6px 9px;border-radius:7px;text-decoration:none;font-size:10px;font-weight:800;letter-spacing:.2px}
 .digital-profile-link{border:1px solid #d9bd78;color:#f5d995;background:#ffffff08}
-.digital-profile-link span{margin-left:8px}
+.digital-profile-link span{margin-left:7px}
 .digital-whatsapp-link{background:#147b50;color:#fff}
-.digital-profile-footer{display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 14px;border-top:1px solid #d9bd7855;color:#d9c58e;font-size:9px;letter-spacing:.25px;text-align:center}
-@media(max-width:760px){.digital-coordinator-card{width:calc(100% - 24px);max-width:420px;margin:16px auto 0}.digital-profile-brand img{width:86px;height:34px}.digital-profile-image{width:min(72vw,280px);margin-top:12px}.digital-profile-info{padding:12px 16px 16px}.digital-profile-info h3{font-size:22px}.digital-profile-footer{padding:8px 10px}}
+.digital-profile-footer{flex:0 0 38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 8px;box-sizing:border-box;border-top:1px solid #d9bd7855;color:#d9c58e;font-size:8px;letter-spacing:.2px;text-align:center}
+@media(max-width:760px){.digital-coordinator-card{width:320px;height:470px;max-width:calc(100% - 24px);margin:16px auto 0}.digital-profile-brand{flex-basis:44px}.digital-profile-brand img{width:76px;height:30px}.digital-profile-photo{max-width:124px;max-height:156px}.digital-profile-info{padding:7px 6px 5px}.digital-profile-info h3{font-size:19px}.digital-profile-footer{flex-basis:36px}}
 
 /* Sponsor directory and additional coordinator profile capacity */
 .sponsor-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
