@@ -223,6 +223,22 @@ body{padding-top:80px}
 .example-preview-close{position:absolute;top:8px;right:8px;width:38px;height:38px;border:1px solid var(--gold,#e8c46a);border-radius:50%;background:#173b32;color:#fff;font-size:28px;line-height:1;cursor:pointer}
 .example-preview-image{display:block;max-width:100%;max-height:78vh;width:auto;height:auto;object-fit:contain;margin:0 auto;border-radius:8px;background:#fff}
 body.example-preview-open{overflow:hidden}
+
+/* Compact subscribe popup */
+.hero-subscribe-trigger{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:14px auto 0;padding:10px 19px;border:1px solid #e8c46a;border-radius:28px;background:linear-gradient(120deg,#b80e2d,#e32635);color:#fff;font-size:12px;font-weight:800;letter-spacing:1px;cursor:pointer;box-shadow:0 6px 18px #0005}
+.hero-subscribe-trigger:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.subscribe-popup{position:fixed;inset:0;z-index:10060;display:flex;align-items:center;justify-content:center;padding:18px;background:#000a}
+.subscribe-popup[hidden]{display:none!important}
+.subscribe-popup-card{position:relative;width:min(92vw,360px);padding:32px 22px 24px;border:1px solid #d9bd78;border-radius:18px;background:linear-gradient(145deg,#071b31,#10372f 68%,#35172b);box-shadow:0 18px 60px #000b;text-align:center;color:#fff}
+.subscribe-popup-close{position:absolute;top:9px;right:10px;width:32px;height:32px;border:1px solid #d9bd78;border-radius:50%;background:#ffffff10;color:#fff;font-size:23px;line-height:1;cursor:pointer}
+.subscribe-popup-icon{font-size:30px;color:#f3d68d;margin-bottom:8px}
+.subscribe-popup-card h2{margin:0 0 8px;color:#ffe6b2;font:700 23px Georgia,serif}
+.subscribe-popup-card p{margin:0 0 19px;color:#d6e1dc;font-size:13px}
+.subscribe-popup-action{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 23px;border-radius:24px;background:#e62117;color:#fff;font-size:12px;font-weight:800;letter-spacing:.7px;text-decoration:none}
+.subscribe-popup-action:hover{background:#c91c14}
+.subscribe-popup-note{display:block;margin-top:13px;color:#aebbc4;font-size:10px}
+body.subscribe-popup-open{overflow:hidden}
+@media(max-width:480px){.subscribe-popup-card{padding:30px 18px 21px}.hero-subscribe-trigger{margin-top:11px}}
 </style><link rel="stylesheet" href="responsive-polish.css?v=20261117-payment-example-align2"><style>@media(max-width:760px){footer{padding:17px 14px 14px!important;margin-top:22px!important}footer img{width:112px!important;height:58px!important}footer .footer-title-desktop{display:none!important}footer .gold{margin:5px 0 3px!important}.footer-title-mobile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;margin:5px auto 7px;padding:0 6px;text-align:center;color:#f3dfaa;line-height:1.12;letter-spacing:1.5px}.footer-title-mobile span{font-size:clamp(11px,3.2vw,13px);font-weight:700}.footer-title-mobile strong{font:700 clamp(19px,5.5vw,25px)/1.1 Georgia,serif;color:#fff;letter-spacing:2px}.footer-title-mobile b{font:700 clamp(17px,4.8vw,22px)/1.1 Georgia,serif;color:#dfc27b;letter-spacing:3px}footer .footer-note{margin:8px auto 0!important;padding:16px 14px!important;gap:5px!important}footer .footer-note small{font-size:10px!important;line-height:1.65}footer .footer-note .digital-support{margin:-3px 0!important;padding:0 12px 2px!important}footer .footer-note .digital-support p{font-size:12px!important;letter-spacing:1.2px!important}}@media(min-width:761px){.footer-title-mobile{display:none}}</style>
 </head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
@@ -232,7 +248,7 @@ body.example-preview-open{overflow:hidden}
 <nav><a href="#home">Home</a><a href="#registration">Registration</a><a href="#benefits">Benefits</a><a href="#categories">Categories</a><a href="#rules">Rules</a><a href="#judging">Judging</a><a href="#prizes">Prizes</a><a href="#sponsors">Sponsors</a><a href="#team">Coordinators</a><a href="#schedule">Dates</a><a href="#faq">FAQs</a><a href="admin.html">Admin</a></nav>
 </div></header>
 <main id="main-content">
-<section class="hero" id="home"><div class="hero-inner"><div class="hero-copy"><p class="hero-kicker">JKJ CREATIONS PRESENTS</p><h1>NAKSHATHRA GAYAKAR <span>– STAR SINGERS 2026</span></h1><p class="hero-tagline">“Let Your Voice Shine Like the Star of Bethlehem”</p><p class="hero-intro">International Online Christmas Carol Singing Competition · USA First Edition</p><div class="actions"><a class="btn red" href="#registration">Register Now</a><a class="btn outline" href="#rules">Competition Rules</a></div></div><div class="hero-video-wrap"><iframe class="hero-video" src="https://www.youtube-nocookie.com/embed/BGAMobE3t2s?autoplay=0&amp;loop=1&amp;playlist=BGAMobE3t2s&amp;controls=1&amp;playsinline=1&amp;rel=0" title="NAKSHATHRA GAYAKAR – STAR SINGERS 2026" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div></section>
+<section class="hero" id="home"><div class="hero-inner"><div class="hero-copy"><p class="hero-kicker">JKJ CREATIONS PRESENTS</p><h1>NAKSHATHRA GAYAKAR <span>– STAR SINGERS 2026</span></h1><p class="hero-tagline">“Let Your Voice Shine Like the Star of Bethlehem”</p><p class="hero-intro">International Online Christmas Carol Singing Competition · USA First Edition</p><div class="actions"><a class="btn red" href="#registration">Register Now</a><a class="btn outline" href="#rules">Competition Rules</a></div></div><div class="hero-video-wrap"><iframe class="hero-video" src="https://www.youtube-nocookie.com/embed/BGAMobE3t2s?autoplay=0&amp;loop=1&amp;playlist=BGAMobE3t2s&amp;controls=1&amp;playsinline=1&amp;rel=0" title="NAKSHATHRA GAYAKAR – STAR SINGERS 2026" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><button type="button" class="hero-subscribe-trigger" id="openSubscribePopup">▶ &nbsp; SUBSCRIBE</button></div></section>
 <section class="section" id="benefits"><div class="title"><p class="eyebrow">BEYOND THE COMPETITION · മത്സരത്തിന് അപ്പുറം</p><h2>Your Voice. Your <span>Future.</span></h2><p>Star Singers 2026-ൽ പങ്കെടുക്കുന്നത് ഒരു singing competition-ൽ മത്സരിക്കുന്നതിൽ മാത്രം ഒതുങ്ങുന്നില്ല. നിങ്ങളുടെ artistic journey-ക്ക് പുതിയ വാതിലുകൾ തുറക്കാനുള്ള ഒരു അവസരവുമാണ്.</p><p>ഇവിടെ പങ്കെടുക്കുന്ന ഓരോരുത്തരുടെയും കഴിവും താൽപര്യവും പങ്കാളിത്തവും ഭാവിയിലെ സൃഷ്ടിപരമായ പ്രവർത്തനങ്ങൾക്ക് പരിഗണിക്കപ്പെടാം.</p></div><div class="card-grid">
 <article class="info-card"><div class="icon">🎙️</div><h3>Future Musical Albums</h3><p>ഭാവിയിൽ പുറത്തിറക്കുന്ന musical albums, song projects, recording opportunities എന്നിവയ്ക്കായി Star Singers 2026-ൽ പങ്കെടുത്തവരെ അവരുടെ talent, performance, suitability എന്നിവയുടെ അടിസ്ഥാനത്തിൽ പരിഗണിക്കാം.</p></article>
 <article class="info-card"><div class="icon">🎼</div><h3>New Concepts & Creative Projects</h3><p>പുതിയ music concepts, special productions, Christmas projects, creative presentations എന്നിവയിൽ പങ്കാളികളാകാനുള്ള അവസരങ്ങൾ ഭാവിയിൽ ലഭിക്കാം. നിങ്ങളുടെ voice-നും creativity-ക്കും കൂടുതൽ വേദികൾ തുറക്കാം.</p></article>
@@ -826,6 +842,31 @@ if(registrationForm){
  close.addEventListener('click',closePreview);
  modal.addEventListener('click',function(event){if(event.target===modal)closePreview();});
  document.addEventListener('keydown',function(event){if(!modal.hidden&&event.key==='Escape')closePreview();});
+})();
+</script>
+<div class="subscribe-popup" id="subscribePopup" hidden role="dialog" aria-modal="true" aria-labelledby="subscribePopupTitle">
+ <div class="subscribe-popup-card">
+  <button type="button" class="subscribe-popup-close" id="closeSubscribePopup" aria-label="Close">×</button>
+  <div class="subscribe-popup-icon" aria-hidden="true">★</div>
+  <h2 id="subscribePopupTitle">SUPPORT OUR JOURNEY</h2>
+  <p>Subscribe and stay connected with our latest music, events and creative updates.</p>
+  <a class="subscribe-popup-action" href="https://www.youtube.com/channel/UCyVT9jo2pZHwJDZStb4FhBQ?sub_confirmation=1" target="_blank" rel="noopener noreferrer">▶ &nbsp; SUBSCRIBE</a>
+  <small class="subscribe-popup-note">YouTube opens only when you tap Subscribe.</small>
+ </div>
+</div>
+<script>
+(function(){
+ const popup=document.getElementById('subscribePopup');
+ const open=document.getElementById('openSubscribePopup');
+ const close=document.getElementById('closeSubscribePopup');
+ if(!popup||!open||!close)return;
+ let previousFocus=null;
+ function show(){previousFocus=document.activeElement;popup.hidden=false;document.body.classList.add('subscribe-popup-open');close.focus();}
+ function hide(){popup.hidden=true;document.body.classList.remove('subscribe-popup-open');if(previousFocus&&previousFocus.focus)previousFocus.focus();}
+ open.addEventListener('click',show);
+ close.addEventListener('click',hide);
+ popup.addEventListener('click',function(e){if(e.target===popup)hide();});
+ document.addEventListener('keydown',function(e){if(!popup.hidden&&e.key==='Escape')hide();});
 })();
 </script>
 </body></html>
