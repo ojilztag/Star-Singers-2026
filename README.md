@@ -15,13 +15,15 @@ NAKSHATHRA GAYAKAR – STAR SINGERS 2026 is an online Christmas Carol Singing Co
 - `assets/` — event artwork and JKJ CREATIONS branding.
 
 ## Registration workflow
-1. Participant submits one individual entry and the configured ₹500 fee consent.
+1. Participant submits one individual entry and the configured ₹300 fee consent.
 2. Participant selects and crops a square photo.
-3. Browser submits cropped and original photos, UTR and payment proof to Apps Script.
+3. Browser submits cropped and original photos, an exactly 12-digit UTR and payment proof to Apps Script.
 4. Apps Script stores the registration and files in private Google Drive folders.
 5. Admin checks actual bank/UPI credit and verifies payment.
 6. Admin approves or rejects the application.
 7. Only an approved participant receives a sequential Participant ID.
+
+The UTR / Transaction ID must be exactly 12 numeric digits. If payment is made from another person’s phone or UPI account, the payer’s exact transaction UTR must be entered so organisers can identify the paying account and avoid mixing up payment records.
 
 **Payment screenshots and UTR numbers are not automatic payment verification.** Organisers must confirm the actual credit independently.
 
