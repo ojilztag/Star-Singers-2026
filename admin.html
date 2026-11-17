@@ -21,7 +21,7 @@ header a{display:inline-flex;align-items:center;justify-content:center;min-heigh
 <section class="panel"><div class="dashboard-top"><h2>Dashboard</h2><div class="dashboard-controls"><button id="refresh" class="gold">Refresh</button><button id="logout" class="red">Logout</button></div></div><div class="grid"><button type="button" class="stat stat-total" data-status-filter="all"><span>Total Registrations</span><b id="total">0</b><small>View all records</small></button><button type="button" class="stat stat-payment" data-status-filter="pending-payment"><span>Payment Verification Pending</span><b id="pendingPayment">0</b><small>Open pending payments</small></button><button type="button" class="stat stat-review" data-status-filter="pending-review"><span>Registration Review Pending</span><b id="pending">0</b><small>Open verified applications</small></button><button type="button" class="stat stat-approved" data-status-filter="approved"><span>Approved</span><b id="approved">0</b><small>View approved participants</small></button><button type="button" class="stat stat-rejected" data-status-filter="rejected"><span>Rejected</span><b id="rejected">0</b><small>View rejected records</small></button><div class="stat stat-money"><span>Collected Amount</span><b id="collected">₹0</b></div><div class="stat stat-money"><span>Pending Amount</span><b id="pendingAmount">₹0</b></div><div class="stat stat-money"><span>Last 7 Days</span><b id="last7Count">0</b></div></div><p class="muted">Collected Amount includes only payments manually verified and approved by an organiser. Pending Amount is the value awaiting payment verification.</p><div id="dashStatus" class="status hidden"></div></section>
 <section class="panel"><h2>Participant Records Export</h2><p class="muted">Export participant details and payment status only. No participant photos or payment receipt files are included.</p><div class="row" style="gap:10px;flex-wrap:wrap;align-items:end"><div class="field"><label for="exportFilter">Records to export</label><select id="exportFilter"><option value="all">All registrations</option><option value="approved">Approved participants</option><option value="pending-payment">Payment verification pending</option><option value="pending-review">Payment verified · Approval pending</option><option value="rejected">Rejected registrations</option></select></div><button type="button" id="exportExcel" class="gold">Download Excel (CSV)</button><button type="button" id="exportPdf">Print / Save PDF</button></div><div id="exportStatus" class="status hidden" aria-live="polite"></div></section>
 <section class="panel"><h2>Registration Review & Status Filters</h2><form id="searchForm" class="row"><div class="field"><input id="query" placeholder="Search Participant ID, tracking reference, name, WhatsApp, UTR / Transaction ID"></div><div class="field"><select id="recordStatusFilter" aria-label="Filter registration records"><option value="all">All registrations</option><option value="submitted">Submission successful · All received</option><option value="pending-payment">Payment verification pending</option><option value="pending-review">Payment verified · Approval pending</option><option value="approved">Approved participants</option><option value="rejected">Rejected registrations</option></select></div><button id="recordSearchButton">Apply Filter / Search</button><button type="button" id="clearSearch" class="gold">Show Latest</button></form><div id="recordFilterSummary" class="muted" aria-live="polite">Showing latest registrations.</div><div id="records" class="cards" style="margin-top:14px"></div></section>
-<section class="panel"><details class="section-toggle"><summary>Last 7 Days · Recent Submissions</summary><p class="muted">Participant photos and payment receipts are stored in private Google Drive folders. Open them using the links below.</p><div id="recentRecords" class="cards"></div></details></section><section class="panel"><details class="section-toggle"><summary>Admin Activity Log</summary><p class="muted">Recent admin actions, approvals, rejections and password updates.</p><div id="auditLogs"></div></details></section><section class="panel"><details class="section-toggle"><summary>Security · Change Admin Password</summary><form id="passwordForm" class="two"><div><label>Current Password</label><input id="currentPass" type="password" required></div><div><label>New Password (minimum 12 characters)</label><input id="newPass" type="password" minlength="12" required></div><div><label>Confirm New Password</label><input id="confirmPass" type="password" minlength="12" required></div><div style="align-self:end"><button>Update Password</button></div></form><div id="passwordMsg" class="status hidden"></div></details></section>
+<section class="panel" id="noticeManagement"><h2>Notice Management</h2><p class="muted">Create notices, publish them to the public website, return them to Draft, or permanently delete them. Only Published notices are public.</p><form id="noticeForm"><label for="noticeTitle">Notice Title</label><input id="noticeTitle" maxlength="160" required placeholder="Enter notice title"><label for="noticeMessage">Notice Message</label><textarea id="noticeMessage" rows="4" maxlength="10000" required placeholder="Write the full notice"></textarea><p class="row"><button id="noticeSaveButton">Create Notice</button><button type="button" id="noticeCancelEdit" class="gold hidden">Cancel Edit</button><button type="button" id="noticeReload" class="gold">Refresh Notices</button></p><div id="noticeStatus" class="status hidden" aria-live="polite"></div></form><div id="noticeList" class="cards" style="margin-top:14px"><p class="muted">Loading notices…</p></div></section>\n<section class="panel"><details class="section-toggle"><summary>Last 7 Days · Recent Submissions</summary><p class="muted">Participant photos and payment receipts are stored in private Google Drive folders. Open them using the links below.</p><div id="recentRecords" class="cards"></div></details></section><section class="panel"><details class="section-toggle"><summary>Admin Activity Log</summary><p class="muted">Recent admin actions, approvals, rejections and password updates.</p><div id="auditLogs"></div></details></section><section class="panel"><details class="section-toggle"><summary>Security · Change Admin Password</summary><form id="passwordForm" class="two"><div><label>Current Password</label><input id="currentPass" type="password" required></div><div><label>New Password (minimum 12 characters)</label><input id="newPass" type="password" minlength="12" required></div><div><label>Confirm New Password</label><input id="confirmPass" type="password" minlength="12" required></div><div style="align-self:end"><button>Update Password</button></div></form><div id="passwordMsg" class="status hidden"></div></details></section>
 </div></main>
 <div id="entryModal" class="entry-modal" role="dialog" aria-modal="true" aria-labelledby="entryModalTitle">
  <div class="entry-modal-box">
@@ -260,7 +260,54 @@ $('entryDownload').onclick=downloadEntryPng;
 $('entryWhatsApp').onclick=openEntryWhatsApp;
 
 
-$('exportExcel').addEventListener('click',()=>getExportRecords((rows,filter)=>downloadExcelCsv(rows,filter)));
+let editingNoticeId='';
+function noticeMessage(text,error){msg('noticeStatus',text,error);}
+function renderNotices(items){
+ const host=$('noticeList');
+ host.innerHTML=items.length?items.map(n=>'<article class="card"><div class="cardtop"><div><b>'+esc(n.title)+'</b><div class="muted">'+esc(n.noticeId)+' · '+esc(n.createdAt)+'</div></div><span class="tag">'+esc(n.status)+'</span></div><p style="white-space:pre-wrap;overflow-wrap:anywhere">'+esc(n.message)+'</p><div class="actions"><button type="button" data-notice-action="edit" data-id="'+esc(n.noticeId)+'" class="gold">Edit</button>'+(n.status==='Published'?'<button type="button" data-notice-action="draft" data-id="'+esc(n.noticeId)+'">Unpublish</button>':'<button type="button" data-notice-action="publish" data-id="'+esc(n.noticeId)+'">Publish</button>')+'<button type="button" class="red" data-notice-action="delete" data-id="'+esc(n.noticeId)+'">Permanent Delete</button></div></article>').join(''):'<p class="muted">No notices yet. Create the first notice above.</p>';
+ host.dataset.notices=JSON.stringify(items);
+}
+function loadNotices(){
+ $('noticeList').innerHTML='<p class="muted">Loading notices…</p>';
+ request({action:'adminnotices',settingsAction:'get',sessionToken:token},d=>{
+  if(!d.success){noticeMessage(d.error||'Could not load notices.',true);$('noticeList').innerHTML='';return;}
+  renderNotices(d.notices||[]);noticeMessage('Notices loaded.',false);
+ });
+}
+function resetNoticeForm(){
+ editingNoticeId='';$('noticeForm').reset();$('noticeSaveButton').textContent='Create Notice';$('noticeCancelEdit').classList.add('hidden');
+}
+$('noticeForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const title=$('noticeTitle').value.trim(),message=$('noticeMessage').value.trim();
+ if(!title||!message){noticeMessage('Enter both a title and message.',true);return;}
+ const payload={action:'adminnotices',settingsAction:editingNoticeId?'update':'create',sessionToken:token,title,message};
+ if(editingNoticeId)payload.noticeId=editingNoticeId;
+ $('noticeSaveButton').disabled=true;
+ request(payload,d=>{
+  $('noticeSaveButton').disabled=false;
+  if(!d.success){noticeMessage(d.error||'Could not save notice.',true);return;}
+  resetNoticeForm();noticeMessage(editingNoticeId?'Notice updated.':'Notice created as Draft. Publish it when ready.',false);loadNotices();
+ });
+});
+$('noticeCancelEdit').onclick=resetNoticeForm;
+$('noticeReload').onclick=loadNotices;
+$('noticeList').addEventListener('click',e=>{
+ const b=e.target.closest('button[data-notice-action]');if(!b)return;
+ const id=b.dataset.id,action=b.dataset.noticeAction;
+ const items=JSON.parse($('noticeList').dataset.notices||'[]'),item=items.find(n=>n.noticeId===id);if(!item)return;
+ if(action==='edit'){
+  editingNoticeId=id;$('noticeTitle').value=item.title;$('noticeMessage').value=item.message;$('noticeSaveButton').textContent='Save Changes';$('noticeCancelEdit').classList.remove('hidden');$('noticeTitle').focus();return;
+ }
+ if(action==='delete'&&!confirm('Permanently delete this notice? This cannot be undone.'))return;
+ const settingsAction=action==='draft'?'unpublish':action;
+ b.disabled=true;
+ request({action:'adminnotices',settingsAction,sessionToken:token,noticeId:id},d=>{
+  if(!d.success){b.disabled=false;noticeMessage(d.error||'Notice action failed.',true);return;}
+  noticeMessage(action==='delete'?'Notice permanently deleted.':action==='publish'?'Notice published on the public website.':'Notice moved to Draft.',false);loadNotices();
+ });
+});
+\n$('exportExcel').addEventListener('click',()=>getExportRecords((rows,filter)=>downloadExcelCsv(rows,filter)));
 $('exportPdf').addEventListener('click',()=>getExportRecords((rows,filter)=>printExportPdf(rows,filter)));
 $('recentRecords').addEventListener('click',e=>{const b=e.target.closest('button[data-photo-ref]');if(b)openParticipantPhoto({trackingRef:b.dataset.photoRef});});
 $('records').addEventListener('click',e=>{
@@ -292,5 +339,5 @@ $('app').addEventListener('click',e=>{const card=e.target.closest('[data-status-
 $('searchForm').addEventListener('submit',e=>{e.preventDefault();applyRecordFilter($('recordStatusFilter').value,$('query').value.trim());});
 $('clearSearch').onclick=()=>{$('query').value='';$('recordStatusFilter').value='all';loadDashboard();$('recordFilterSummary').textContent='Showing latest registrations.';};
 $('passwordForm').addEventListener('submit',e=>{e.preventDefault();if($('newPass').value!==$('confirmPass').value){msg('passwordMsg','New passwords do not match.',true);return;}request({action:'changepassword',sessionToken:token,currentPassword:$('currentPass').value,newPassword:$('newPass').value},d=>{if(!d.success){msg('passwordMsg',d.error,true);return;}msg('passwordMsg',d.message,false);loginView();});});
-if(token&&!API_URL.includes('PASTE_')){$('login').classList.add('hidden');$('app').classList.remove('hidden');loadDashboard();}
+if(token&&!API_URL.includes('PASTE_')){$('login').classList.add('hidden');$('app').classList.remove('hidden');loadDashboard();loadNotices();}
 </script></body></html>
