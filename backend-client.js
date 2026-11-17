@@ -13,6 +13,8 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
  const elapsedLabel=document.getElementById('uploadElapsed');
  const statusBar=document.getElementById('uploadStatusBar');
  const submitButton=form.querySelector('[type="submit"]');
+ const utrInput=form.querySelector('[name="utr"]');
+ if(utrInput)utrInput.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,12);this.setCustomValidity(this.value.length===12?'':'UTR / Transaction ID must contain exactly 12 digits.');});
  const submitButtonDefault='Submit Registration & Payment Proof';
  function setSubmitState(state){if(!submitButton)return;submitButton.classList.toggle('is-submitting',!!state);submitButton.disabled=!!state;submitButton.setAttribute('aria-busy',state?'true':'false');submitButton.textContent=state==='preparing'?'Preparing your files…':state==='uploading'?'Uploading securely…':submitButtonDefault;}
  function elapsedText(){const seconds=Math.max(0,Math.floor((Date.now()-uploadStartedAt)/1000));return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');}
@@ -105,6 +107,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
   const originalPhoto=form.querySelector('#participantPhotoOriginal')?.files[0]||photo;
   const proof=form.querySelector('[name="paymentProof"]').files[0];
   const utr=form.querySelector('[name="utr"]').value.trim();
+  if(!/^\d{12}$/.test(utr)){status('UTR / Transaction ID must contain exactly 12 digits.',true);form.querySelector('[name="utr"]').focus();return;}
   busy=true;const submit=submitButton;setSubmitState('preparing');
   startUploadClock();
   status('Step 1 of 2 · Preparing your photos and payment receipt. Small images keep their original quality; only oversized images are compressed.',false);
@@ -115,7 +118,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     action:'register',clientToken:'SS26-'+Date.now()+'-'+Math.random().toString(16).slice(2),
     participantName:form.elements.participantName.value,parishName:form.elements.parishName.value,
     diocese:form.elements.diocese.value,country:form.elements.country.value,state:form.elements.state.value,
-    district:form.elements.district.value,phone:phone,utr:utr,fee:Number(window.SS26_REGISTRATION_FEE||500),feeConsent:String(form.elements.feeConsent.checked),
+    district:form.elements.district.value,phone:phone,utr:utr,fee:Number(window.SS26_REGISTRATION_FEE||300),feeConsent:String(form.elements.feeConsent.checked),
     photo:photoData,originalPhoto:originalPhotoData,paymentProof:proofData
    };
    post(payload,result=>{
