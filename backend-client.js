@@ -14,8 +14,23 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
  const statusBar=document.getElementById('uploadStatusBar');
  const submitButton=form.querySelector('[type="submit"]');
  const utrInput=form.querySelector('[name="utr"]');
- if(utrInput)utrInput.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,12);this.setCustomValidity(this.value.length===12?'':'UTR / Transaction ID must contain exactly 12 digits.');});
+ if(utrInput)utrInput.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,12);this.setCustomValidity(this.value.length===12?'':'UTR / Transaction ID കൃത്യമായി 12 അക്കങ്ങൾ നൽകുക. / Enter exactly 12 digits.');});
  const submitButtonDefault='Submit Registration & Payment Proof';
+  function bilingualError(message){
+   const raw=String(message||'').trim();
+   const rules=[
+    [/same participant name and WhatsApp number has already been submitted/i,'ഈ Participant Name-ഉം WhatsApp Number-ഉം ഉപയോഗിച്ച് Registration മുമ്പ് Submit ചെയ്തിട്ടുണ്ട്. Organiser verification പൂർത്തിയാകുന്നത് വരെ വീണ്ടും Submit ചെയ്യരുത്. / A registration with the same participant name and WhatsApp number has already been submitted. Please wait for organiser verification; do not submit again.'],
+    [/exactly 12 digits/i,'UTR / Transaction ID കൃത്യമായി 12 അക്കങ്ങൾ ആയിരിക്കണം. Payment receipt-ൽ നിന്നുള്ള 12 digits നൽകുക. / UTR must contain exactly 12 digits.'],
+    [/valid mobile number|country code/i,'ശരിയായ Country Code സഹിതമുള്ള Mobile / WhatsApp Number നൽകുക. / Please enter a valid mobile number with country code.'],
+    [/required/i,'ആവശ്യമായ എല്ലാ വിവരങ്ങളും പൂരിപ്പിക്കുക. / Please complete all required fields.'],
+    [/too large|maximum allowed size/i,'തിരഞ്ഞെടുത്ത File size അനുവദനീയമായ പരിധി കവിയുന്നു. 3 MB-ൽ താഴെയുള്ള file തിരഞ്ഞെടുക്കുക. / File exceeds the 3 MB limit. Please choose a smaller file.'],
+    [/not initialized|admin not initialized/i,'Admin setup പൂർത്തിയായിട്ടില്ല. Organiser-നെ ബന്ധപ്പെടുക. / Admin is not initialized. Contact the organiser.'],
+    [/permission|access denied|not authorised|unauthorized/i,'പ്രവേശനാനുമതി ലഭിച്ചില്ല. വീണ്ടും ശ്രമിക്കുക അല്ലെങ്കിൽ Organiser-നെ ബന്ധപ്പെടുക. / Permission denied. Please try again or contact the organiser.'],
+    [/timed out|within 120 seconds|server did not confirm/i,'Server-ൽ നിന്ന് confirmation ലഭിച്ചില്ല. വീണ്ടും Submit ചെയ്യുന്നതിന് മുമ്പ് Admin Panel-ൽ നിങ്ങളുടെ പേര്, WhatsApp Number പരിശോധിക്കുക. / Server confirmation was not received. Check the Admin Panel before submitting again.']
+   ];
+   const match=rules.find(([pattern])=>pattern.test(raw));
+   return match?match[1]:(raw?('ഒരു പ്രശ്നം സംഭവിച്ചു: '+raw+' / An error occurred: '+raw):'ഒരു പിശക് സംഭവിച്ചു. വീണ്ടും ശ്രമിക്കുക. / Something went wrong. Please try again.');
+  }
  function setSubmitState(state){if(!submitButton)return;submitButton.classList.toggle('is-submitting',!!state);submitButton.disabled=!!state;submitButton.setAttribute('aria-busy',state?'true':'false');submitButton.textContent=state==='preparing'?'Preparing your files…':state==='uploading'?'Uploading securely…':submitButtonDefault;}
  function elapsedText(){const seconds=Math.max(0,Math.floor((Date.now()-uploadStartedAt)/1000));return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');}
  function status(text,isError){
@@ -98,22 +113,22 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
  form.addEventListener('submit',async function(e){
   e.preventDefault();e.stopImmediatePropagation();
   if(busy)return;
-  if(STAR_SINGERS_API_URL.includes('PASTE_')){status('Backend URL has not been configured. Registration is not submitted.',true);return;}
+  if(STAR_SINGERS_API_URL.includes('PASTE_')){status('Backend URL configure ചെയ്തിട്ടില്ല. Registration submit ചെയ്തിട്ടില്ല. / Backend URL is not configured.',true);return;}
   if(!form.reportValidity())return;
   const phoneBridge=window.ss26PhoneBridge;
-  if(!phoneBridge||!phoneBridge.validate()){status('Please select your country code and enter a valid mobile number.',true);if(phoneBridge)phoneBridge.focusCountryCode();return;}
+  if(!phoneBridge||!phoneBridge.validate()){status('Country Code select ചെയ്ത് ശരിയായ Mobile Number നൽകുക. / Please select your country code and enter a valid mobile number.',true);if(phoneBridge)phoneBridge.focusCountryCode();return;}
   const phone=phoneBridge.getPhone();
   const photo=form.querySelector('[name="participantPhoto"]').files[0];
   const originalPhoto=form.querySelector('#participantPhotoOriginal')?.files[0]||photo;
   const proof=form.querySelector('[name="paymentProof"]').files[0];
   const utr=form.querySelector('[name="utr"]').value.trim();
-  if(!/^\d{12}$/.test(utr)){status('UTR / Transaction ID must contain exactly 12 digits.',true);form.querySelector('[name="utr"]').focus();return;}
+  if(!/^\d{12}$/.test(utr)){status('UTR / Transaction ID കൃത്യമായി 12 അക്കങ്ങൾ ആയിരിക്കണം. / Enter exactly 12 digits.',true);form.querySelector('[name="utr"]').focus();return;}
   busy=true;const submit=submitButton;setSubmitState('preparing');
   startUploadClock();
-  status('Step 1 of 2 · Preparing your photos and payment receipt. Small images keep their original quality; only oversized images are compressed.',false);
+  status('Step 1 of 2 · നിങ്ങളുടെ Photo-കളും Payment Receipt-ഉം തയ്യാറാക്കുന്നു. വലിയ images മാത്രം compress ചെയ്യും. / Preparing your photos and payment receipt.',false);
   try{
    const [photoData,originalPhotoData,proofData]=await Promise.all([fileData(photo,3*1024*1024,'Cropped participant photo',true),fileData(originalPhoto,3*1024*1024,'Original participant photo',true),fileData(proof,3*1024*1024,'Payment proof',true)]);
-   status('Step 2 of 2 · Files are ready. Sending your registration and documents securely. Please keep this page open until confirmation.',false);setSubmitState('uploading');
+   status('Step 2 of 2 · Files തയ്യാറായി. Registration സുരക്ഷിതമായി അയയ്ക്കുന്നു. Confirmation ലഭിക്കുന്നതുവരെ ഈ page തുറന്നുവെക്കുക. / Sending securely; keep this page open.',false);setSubmitState('uploading');
    const payload={
     action:'register',clientToken:'SS26-'+Date.now()+'-'+Math.random().toString(16).slice(2),
     participantName:form.elements.participantName.value,parishName:form.elements.parishName.value,
@@ -123,7 +138,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
    };
    post(payload,result=>{
     busy=false;stopUploadClock();setSubmitState(false);
-    if(!result.success){status(result.error||'Registration could not be submitted.',true);return;}
+    if(!result.success){status(bilingualError(result.error||'Registration could not be submitted.'),true);return;}
     if(statusPanel)statusPanel.hidden=true;
     const submittedName=String(form.elements.participantName.value||'Participant').trim();
     form.reset();if(modal){modal.hidden=true;document.body.style.overflow='';}
@@ -140,6 +155,6 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     };
     document.getElementById('registrationSuccessHome').focus();
    });
-  }catch(err){busy=false;stopUploadClock();setSubmitState(false);status(err.message||'Upload failed. Please try again.',true);}
+  }catch(err){busy=false;stopUploadClock();setSubmitState(false);status(bilingualError(err.message||'Upload failed. Please try again.'),true);}
  },true);
 })();
