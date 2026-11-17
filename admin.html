@@ -307,7 +307,8 @@ $('noticeList').addEventListener('click',e=>{
   noticeMessage(action==='delete'?'Notice permanently deleted.':action==='publish'?'Notice published on the public website.':'Notice moved to Draft.',false);loadNotices();
  });
 });
-\n$('exportExcel').addEventListener('click',()=>getExportRecords((rows,filter)=>downloadExcelCsv(rows,filter)));
+
+$('exportExcel').addEventListener('click',()=>getExportRecords((rows,filter)=>downloadExcelCsv(rows,filter)));
 $('exportPdf').addEventListener('click',()=>getExportRecords((rows,filter)=>printExportPdf(rows,filter)));
 $('recentRecords').addEventListener('click',e=>{const b=e.target.closest('button[data-photo-ref]');if(b)openParticipantPhoto({trackingRef:b.dataset.photoRef});});
 $('records').addEventListener('click',e=>{
