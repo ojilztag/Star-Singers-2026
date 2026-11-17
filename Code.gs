@@ -465,8 +465,8 @@ function manageSiteSettings_(p) {
   Object.keys(SITE_SETTING_FIELDS).forEach(k=>{
     if(!Object.prototype.hasOwnProperty.call(incoming,k))return;
     const meta=SITE_SETTING_FIELDS[k],value=clean_(incoming[k],meta.max);
-    if(k==='registrationFee'&&value&&!/^\\d{1,7}(\\.\\d{1,2})?$/.test(value))throw new Error('Registration fee must be a valid amount.');
-    if(k==='contactEmail'&&value&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value))throw new Error('Enter a valid contact email.');
+    if(k==='registrationFee'&&value&&!/^\d{1,7}(\.\d{1,2})?$/.test(value))throw new Error('Registration fee must be a valid amount.');
+    if(k==='contactEmail'&&value&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))throw new Error('Enter a valid contact email.');
     const idx=rows.findIndex(r=>String(r[0])===meta.key);
     if(idx>=0){sh.getRange(idx+2,2).setValue(value);if(!String(rows[idx][2]||''))sh.getRange(idx+2,3).setValue('Managed from Admin Panel');}
     else sh.appendRow([meta.key,value,'Managed from Admin Panel']);
