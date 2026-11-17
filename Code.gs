@@ -38,6 +38,12 @@ function setupStarSingersBackend() {
   const audit = ss.insertSheet(CFG.AUDIT_SHEET);
   audit.getRange(1,1,1,AUDIT_HEADERS.length).setValues([AUDIT_HEADERS]).setFontWeight('bold');
   audit.setFrozenRows(1);
+  const notices=ss.insertSheet('Notices');
+  notices.getRange(1,1,1,NOTICE_HEADERS.length).setValues([NOTICE_HEADERS]).setFontWeight('bold');
+  notices.setFrozenRows(1);
+  notices.setColumnWidths(1,NOTICE_HEADERS.length,180);
+  notices.setColumnWidth(3,520);
+  notices.getRange('C:C').setWrap(true);
   const settings=ss.insertSheet('Settings');
   settings.getRange(1,1,1,SETTINGS_HEADERS.length).setValues([SETTINGS_HEADERS]).setFontWeight('bold');
   settings.getRange(2,1,6,3).setValues([
@@ -454,7 +460,7 @@ function publicNotices_() {
   if(last<2)return [];
   return sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues()
     .filter(r=>String(r[3]||'').toLowerCase()==='published')
-    .reverse().slice(0,30).map(noticeObject_);
+    .reverse().slice(0,30).map(r=>({noticeId:String(r[0]||''),title:String(r[1]||''),message:String(r[2]||''),status:'Published',createdAt:r[4] instanceof Date?Utilities.formatDate(r[4],Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'):String(r[4]||''),updatedAt:r[6] instanceof Date?Utilities.formatDate(r[6],Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'):String(r[6]||'')}));
 }
 function manageSiteSettings_(p) {
   const admin=requireAdmin_(p.sessionToken),action=String(p.settingsAction||'get').toLowerCase();
