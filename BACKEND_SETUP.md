@@ -10,7 +10,7 @@ The public website is hosted from GitHub Pages. Registration, private file stora
 Frontend files currently point to the deployed Web App URL in:
 - `backend-client.js` — registration form submissions
 - `admin.html` — admin dashboard actions
-- `notices-data.js` — public Published notices
+- `index.html` — public Published notices display
 - `site-config.js` — public event settings controlled by the Admin Panel
 
 Do not change the URL unless a new Apps Script deployment has been created and tested.
@@ -65,7 +65,7 @@ The Admin Panel includes an **Important Event Information · Website Content** e
 1. Sign in to `https://jkjcreations.org/admin.html`.
 2. Create or edit the notice and choose **Published** to make it public. Draft notices remain private.
 3. Save the notice and confirm the admin list shows the updated status.
-4. Open `https://jkjcreations.org/notices.html` and the homepage in a fresh tab. Confirm the notice title, date, summary and full content appear.
+4. Open `https://jkjcreations.org/` in a fresh tab. Confirm the notice title, date and full message appear in the Notices & Announcements section.
 5. If the notice does not appear, verify the deployed Apps Script version contains the current `doGet(e)`, `publicNotices_()` and `manageNotices_()` functions and that the Web App is deployed with public access.
 
 ## Privacy and security
