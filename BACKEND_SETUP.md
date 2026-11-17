@@ -44,8 +44,8 @@ A GitHub commit or GitHub Pages deployment does **not** publish a new Apps Scrip
 
 ## Registration and payment workflow
 
-1. Participant completes the individual registration form, provides a WhatsApp number with country code, participant photo, UTR and payment proof.
-2. The current website/backend configuration specifies a ₹500 registration fee. Confirm that this remains the approved event fee before opening registration.
+1. Participant completes the individual registration form, provides a WhatsApp number with country code, participant photo, an exactly 12-digit numeric UTR and payment proof.
+2. The current website/backend configuration specifies a ₹300 registration fee. The UTR / Transaction ID must be exactly 12 numeric digits. If payment is made from another person’s phone or UPI account, enter the UTR from that exact transaction so the payer can be identified and payment records are not mixed up.
 3. The backend stores the registration in the private spreadsheet and uploads cropped photo, original photo and payment proof to private Drive folders.
 4. New registrations remain **Pending Verification / Pending Review**. No Participant ID is issued at this stage.
 5. Admin independently checks the actual bank/UPI credit. A screenshot or UTR alone is not proof of credited funds.
