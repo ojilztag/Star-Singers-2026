@@ -41,7 +41,7 @@ function setupStarSingersBackend() {
   settings.getRange(1,1,1,SETTINGS_HEADERS.length).setValues([SETTINGS_HEADERS]).setFontWeight('bold');
   settings.getRange(2,1,6,3).setValues([
     ['Event Name','NAKSHATHRA GAYAKAR – STAR SINGERS 2026','Official competition title'],
-    ['Registration Fee',500,'INR per individual entry'],
+    ['Registration Fee',300,'INR per individual entry'],
     ['Entry Type','Individual / Single Entry','Group entries are not accepted'],
     ['Participant ID Prefix',CFG.PREFIX,'Sequence starts at 001 after approval'],
     ['Payment Verification','Manual','Admin must verify bank/UPI credit'],
@@ -191,12 +191,13 @@ function register_(p) {
   if(clientToken){const cached=CacheService.getScriptCache().get('SS26_SUBMIT_'+clientToken);if(cached)return JSON.parse(cached);}
   const name=clean_(p.participantName,120),parish=clean_(p.parishName,160),diocese=clean_(p.diocese,160);
   const country=clean_(p.country,100),state=clean_(p.state,100),district=clean_(p.district,100);
-  const phone=String(p.phone||'').trim(),utr=clean_(p.utr,100);
+  const phone=String(p.phone||'').trim(),utr=String(p.utr||'').trim();
   if(!name||!parish||!diocese||!country||!state||!district||!phone||!utr)throw new Error('Complete all required fields, including UTR / Transaction ID.');
+  if(!/^\\d{12}$/.test(utr))throw new Error('UTR / Transaction ID must contain exactly 12 digits.');
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
   if(String(p.feeConsent)!=='true')throw new Error('Registration fee consent is required.');
   const siteSettings=readSiteSettings_();
-  const configuredFee=Number(siteSettings['Registration Fee']||500);
+  const configuredFee=Number(siteSettings['Registration Fee']||300);
   if(!Number.isFinite(configuredFee)||configuredFee<=0)throw new Error('Registration fee is not configured correctly.');
   if(Number(p.fee)!==configuredFee)throw new Error('Registration fee has changed. Refresh the page and review the current fee.');
   const photo=decodeFile_(p.photo,'Participant Photo');
@@ -421,7 +422,15 @@ const SITE_SETTING_FIELDS = {
 };
 function readSiteSettings_() {
   const sh=sheet_('Settings',SETTINGS_HEADERS),last=sh.getLastRow(),out={};
-  if(last>1)sh.getRange(2,1,last-1,2).getDisplayValues().forEach(r=>{out[String(r[0]||'')]=String(r[1]||'');});
+  if(last>1){
+    const rows=sh.getRange(2,1,last-1,2).getDisplayValues();
+    rows.forEach((r,i)=>{
+      const key=String(r[0]||''),value=String(r[1]||'');
+      // One-time migration: replace the previous default fee with the newly approved ₹300 fee.
+      if(key==='Registration Fee'&&Number(value)===500){sh.getRange(i+2,2).setValue(300);out[key]='300';}
+      else out[key]=value;
+    });
+  }
   return out;
 }
 function publicSiteSettings_() {
