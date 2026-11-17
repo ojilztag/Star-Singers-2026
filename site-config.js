@@ -2,7 +2,7 @@
 (function(){
  const API='https://script.google.com/macros/s/AKfycbxPwRrD35fv7UWOJO6EN6eqIxT5czuaIBjbU8qR9xfdFYuod6bB-RrNj6r0hDuma6Qk6Q/exec';
  let frame=null,timeout=null;
- window.SS26_REGISTRATION_FEE=500;
+ window.SS26_REGISTRATION_FEE=300;
  function apply(s){
   if(!s||typeof s!=='object')return;
   const set=(id,value)=>{const el=document.getElementById(id);if(el&&String(value||'').trim())el.textContent=String(value).trim();};
