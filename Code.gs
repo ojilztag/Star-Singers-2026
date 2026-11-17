@@ -132,6 +132,10 @@ function doGet(e) {
     const payload=JSON.stringify({type:'SS26_PUBLIC_SITE_CONFIG',settings:publicSiteSettings_()}).replace(/</g,'\\u003c');
     return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
+  if(action==='notices') {
+    const payload=JSON.stringify({type:'SS26_PUBLIC_NOTICES',notices:publicNotices_()}).replace(/</g,'\\u003c');
+    return HtmlService.createHtmlOutput('<!doctype html><html><body><script>window.parent.postMessage('+payload+',"*");</script></body></html>').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  }
   return ContentService.createTextOutput('STAR SINGERS 2026 API is active.').setMimeType(ContentService.MimeType.TEXT);
 }
 function doPost(e) {
@@ -444,6 +448,13 @@ function publicSiteSettings_() {
   const raw=readSiteSettings_(),out={};
   Object.keys(SITE_SETTING_FIELDS).forEach(k=>{const key=SITE_SETTING_FIELDS[k].key;if(raw[key]!==undefined)out[k]=raw[key];});
   return out;
+}
+function publicNotices_() {
+  const sh=noticesSheet_(),last=sh.getLastRow();
+  if(last<2)return [];
+  return sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues()
+    .filter(r=>String(r[3]||'').toLowerCase()==='published')
+    .reverse().slice(0,30).map(noticeObject_);
 }
 function manageSiteSettings_(p) {
   const admin=requireAdmin_(p.sessionToken),action=String(p.settingsAction||'get').toLowerCase();
