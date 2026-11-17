@@ -547,19 +547,19 @@ body{padding-top:80px}
 </div>
 <label>Entry Type<input type="text" value="Individual / Single Entry" readonly></label>
 </div>
-<div class="fee-summary"><b>Registration Fee</b><strong id="siteRegistrationFeeText">₹500</strong><p>One participant · One entry. Payment proof must be submitted to complete the registration request.</p></div>
-<label class="fee-consent"><input type="checkbox" name="feeConsent" required><span id="siteFeeConsentText">I understand and agree that the registration fee is ₹500 for one individual entry. I will upload the payment receipt/screenshot after payment. *</span></label>
+<div class="fee-summary"><b>Registration Fee</b><strong id="siteRegistrationFeeText">₹300</strong><p>One participant · One entry. Payment proof must be submitted to complete the registration request.</p></div>
+<label class="fee-consent"><input type="checkbox" name="feeConsent" required><span id="siteFeeConsentText">I understand and agree that the registration fee is ₹300 for one individual entry. I will upload the payment receipt/screenshot after payment. *</span></label>
 <button class="btn red form-submit" id="openPayment" type="button">Continue to Payment · പെയ്മെന്റിലേക്ക് തുടരുക</button>
 <p id="registrationMessage" class="form-message" role="status" aria-live="polite">After payment proof is submitted, the organisers must verify the transaction. Registration ID and Entry Card will be issued only after confirmation.</p>
 <div class="payment-modal" id="paymentModal" hidden role="dialog" aria-modal="true" aria-labelledby="paymentModalTitle">
 <div class="payment-modal-card"><button class="payment-modal-close" id="closePayment" type="button" aria-label="Close payment window">×</button>
-<p class="eyebrow">REGISTRATION PAYMENT</p><h3 id="paymentModalTitle">Complete Your Payment</h3><p class="payment-amount"><span id="sitePaymentFeeText">₹500</span> <small>Registration Fee</small></p>
+<p class="eyebrow">REGISTRATION PAYMENT</p><h3 id="paymentModalTitle">Complete Your Payment</h3><p class="payment-amount"><span id="sitePaymentFeeText">₹300</span> <small>Registration Fee</small></p>
 <div class="payment-qr-image-wrap"><img class="payment-qr-image" src="assets/payment-qr.png" alt="UPI payment QR code for LIJO JOSEPH"><small>Scan with any UPI app</small></div>
 <p class="payment-help">Scan the QR code using any UPI app and pay the displayed registration fee. Then upload the payment screenshot or receipt below. The preview only confirms that you selected a file; the actual upload starts when you press Submit Registration & Payment Proof.</p>
 
 <div class="form-grid payment-fields">
 <label><span class="payment-proof-label-row"><span>Payment Screenshot With UTR *</span><a href="assets/payment-screenshot-example.png" target="_blank" rel="noopener noreferrer" class="payment-example-link">Example</a></span><input name="paymentProof" id="paymentProof" type="file" accept="image/*,application/pdf" required><small>Required. Upload the successful payment screenshot or receipt with the UTR / Transaction ID clearly visible.</small><div id="paymentProofPreview" class="payment-proof-preview" hidden aria-live="polite"></div></label>
-<label><span class="payment-proof-label-row"><span>UTR / Transaction ID *</span><a href="assets/payment-screenshot-example.png" target="_blank" rel="noopener noreferrer" class="payment-example-link">Example</a></span><input name="utr" id="utr" type="text" maxlength="80" autocomplete="off" placeholder="Enter UTR / Transaction ID" required><small>Required. Enter the UTR / Transaction ID shown on your payment receipt.</small></label>
+<label><span class="payment-proof-label-row"><span>UTR / Transaction ID *</span><a href="assets/payment-screenshot-example.png" target="_blank" rel="noopener noreferrer" class="payment-example-link">Example</a></span><input name="utr" id="utr" type="text" inputmode="numeric" pattern="[0-9]{12}" minlength="12" maxlength="12" autocomplete="off" placeholder="Enter 12-digit UTR" aria-describedby="utrHelp" required><small id="utrHelp">Enter exactly 12 digits from the payment receipt. If you pay using another person’s phone or UPI account, enter the UTR from that exact transaction. This helps us identify whose account made the payment and prevents payment records from being mixed up.</small></label>
 </div>
 <div id="uploadStatusPanel" class="upload-status-panel" hidden role="status" aria-live="polite">
  <div class="upload-status-heading"><span class="upload-status-spinner" aria-hidden="true"></span><strong id="uploadStatusTitle">Preparing your registration…</strong></div>
@@ -574,7 +574,7 @@ body{padding-top:80px}
 <section class="section" id="contact"><div class="title"><p class="eyebrow">STAY CONNECTED</p><h2>Contact & <span>Organiser</span></h2></div><div class="contact-panel"><h3>JKJ CREATIONS</h3><p>Faith · Creativity · Service</p><p class="lead" id="siteContactText">Event സംബന്ധമായ അന്വേഷണങ്ങൾക്ക് സംഘാടകർ പ്രസിദ്ധീകരിക്കുന്ന ഔദ്യോഗിക Contact Details ഉപയോഗിക്കുക. ലഭ്യമായ ഫയലുകളിൽ Phone Number, Email, Social Links എന്നിവ നൽകിയിട്ടില്ലാത്തതിനാൽ ഇവിടെ ചേർത്തിട്ടില്ല.</p><p class="gold">Creating with Faith, Inspiring through Love.</p></div></section>
 </main>
 <footer><picture><source srcset="assets/jkj-creations-logo.webp" type="image/webp"><img src="assets/jkj-creations-logo.webp" alt="JKJ Creations"></picture><p class="gold">NAKSHATHRA GAYAKAR · STAR SINGERS 2026</p><div class="footer-note"><small>© 2026 JKJ CREATIONS. All rights reserved.</small><div class="digital-support"><p>Digital Support By: <a href="https://digital.ojilztag.com" target="_blank" rel="noopener noreferrer">OJILZTAG.COM</a></p></div><small><a href="admin.html" style="color:#e8ca82">Admin Portal</a></small></div></footer><button class="backtop" type="button" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-<script src="site-config.js?v=20261116-core1"></script>
+<script src="site-config.js?v=20261117-fee300-utr12"></script>
 <script>
 const backTop=document.querySelector('.backtop');const updateBackTop=()=>{if(backTop)backTop.classList.toggle('visible',window.scrollY>420);};window.addEventListener('scroll',updateBackTop,{passive:true});updateBackTop();
 (()=>{const menuButton=document.querySelector('.menu');const nav=document.querySelector('nav');if(menuButton&&nav){menuButton.addEventListener('click',()=>{const opened=nav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(opened));menuButton.setAttribute('aria-label',opened?'Close menu':'Open menu');menuButton.textContent=opened?'✕':'☰';});nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{nav.classList.remove('open');menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label','Open menu');menuButton.textContent='☰';}));}})();
@@ -769,7 +769,7 @@ if(registrationForm){
 })();;
 </script>
 
-<script src="backend-client.js?v=20261116-finalbridge4"></script>
+<script src="backend-client.js?v=20261117-fee300-utr12"></script>
 <div id="registrationSuccessModal" class="registration-success-modal" hidden role="dialog" aria-modal="true" aria-labelledby="registrationSuccessTitle">
  <div class="registration-success-card">
   <div class="registration-success-mark" aria-hidden="true">✓</div>
