@@ -22,6 +22,7 @@ const REG_HEADERS = [
 ];
 const AUDIT_HEADERS = ['Timestamp','Admin','Action','Record ID','Details'];
 const SETTINGS_HEADERS = ['Setting','Value','Description'];
+const NOTICE_HEADERS = ['Notice ID','Title','Message','Status','Created At','Created By','Updated At','Updated By'];
 const FINANCE_HEADERS = ['Submitted At','Tracking Ref','Participant Name','UTR / Transaction ID','Expected Fee','Payment Status'];
 
 function setupStarSingersBackend() {
@@ -150,6 +151,7 @@ function doPost(e) {
       case 'verifypayment': out=verifyPayment_(p); break;
       case 'reviewregistration': out=review_(p); break;
       case 'adminsettings': out=manageSiteSettings_(p); break;
+      case 'adminnotices': out=manageNotices_(p); break;
       case 'changepassword': out=changePassword_(p); break;
       case 'adminlogout': out=logout_(p); break;
       default: throw new Error('Unsupported action.');
@@ -426,10 +428,15 @@ function readSiteSettings_() {
     const rows=sh.getRange(2,1,last-1,2).getDisplayValues();
     rows.forEach((r,i)=>{
       const key=String(r[0]||''),value=String(r[1]||'');
-      // One-time migration: replace the previous default fee with the newly approved ₹300 fee.
-      if(key==='Registration Fee'&&Number(value)===500){sh.getRange(i+2,2).setValue(300);out[key]='300';}
-      else out[key]=value;
+      if(key==='Registration Fee'){
+        if(Number(value)!==300)sh.getRange(i+2,2).setValue(300);
+        out[key]='300';
+      } else out[key]=value;
     });
+  }
+  if(!out['Registration Fee']){
+    sh.appendRow(['Registration Fee',300,'INR per individual entry — fixed event fee']);
+    out['Registration Fee']='300';
   }
   return out;
 }
@@ -456,6 +463,78 @@ function manageSiteSettings_(p) {
   });
   audit_(admin.user,'SITE_SETTINGS_UPDATED','PUBLIC_SITE',changed.join(', '));
   return {success:true,settings:publicSiteSettings_(),updated:changed};
+}
+
+
+/**
+ * NOTICE MANAGEMENT
+ * API action: adminnotices
+ * settingsAction: get | create | update | publish | unpublish | archive | delete
+ * Delete is permanent: the matching row is physically removed from the Notices sheet.
+ */
+function noticesSheet_() {
+  const ss=db_();
+  let sh=ss.getSheetByName('Notices');
+  if(!sh){
+    sh=ss.insertSheet('Notices');
+    sh.getRange(1,1,1,NOTICE_HEADERS.length).setValues([NOTICE_HEADERS]).setFontWeight('bold');
+    sh.setFrozenRows(1);
+    sh.setColumnWidths(1,NOTICE_HEADERS.length,180);
+    sh.setColumnWidth(3,520);
+    sh.getRange('C:C').setWrap(true);
+  } else {
+    const actual=sh.getRange(1,1,1,Math.max(sh.getLastColumn(),NOTICE_HEADERS.length)).getDisplayValues()[0];
+    const matches=NOTICE_HEADERS.every((h,i)=>actual[i]===h);
+    if(!matches)throw new Error('Notices sheet headers do not match. No notice data was changed.');
+  }
+  return sh;
+}
+function noticeObject_(r) {
+  const fmt=v=>v instanceof Date?Utilities.formatDate(v,Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'):String(v||'');
+  return {noticeId:String(r[0]||''),title:String(r[1]||''),message:String(r[2]||''),status:String(r[3]||'Draft'),
+    createdAt:fmt(r[4]),createdBy:String(r[5]||''),updatedAt:fmt(r[6]),updatedBy:String(r[7]||'')};
+}
+function manageNotices_(p) {
+  const admin=requireAdmin_(p.sessionToken);
+  const action=String(p.settingsAction||'get').toLowerCase();
+  const sh=noticesSheet_();
+  const lock=LockService.getScriptLock();lock.waitLock(20000);
+  try {
+    const last=sh.getLastRow(),rows=last>1?sh.getRange(2,1,last-1,NOTICE_HEADERS.length).getValues():[];
+    if(action==='get'||action==='list'){
+      return {success:true,notices:rows.slice().reverse().map(noticeObject_)};
+    }
+    if(action==='create'){
+      const title=clean_(p.title,160),message=clean_(p.message,10000);
+      if(!title||!message)throw new Error('Notice title and message are required.');
+      const id='NTC-'+Utilities.getUuid().replace(/-/g,'').slice(0,12).toUpperCase(),now=new Date();
+      sh.appendRow([id,title,message,'Draft',now,admin.user,now,admin.user]);
+      audit_(admin.user,'NOTICE_CREATED',id,'Created as Draft.');
+      return {success:true,notice:noticeObject_([id,title,message,'Draft',now,admin.user,now,admin.user])};
+    }
+    const id=clean_(p.noticeId,40);
+    if(!id)throw new Error('Notice ID is required.');
+    const index=rows.findIndex(r=>String(r[0])===id);
+    if(index<0)throw new Error('Notice not found.');
+    const rowNumber=index+2,r=rows[index];
+    if(action==='delete'){
+      sh.deleteRow(rowNumber);
+      audit_(admin.user,'NOTICE_PERMANENTLY_DELETED',id,'Notice row permanently deleted from the Notices sheet.');
+      return {success:true,deleted:true,permanent:true,noticeId:id};
+    }
+    if(action==='update'){
+      const title=clean_(p.title,160),message=clean_(p.message,10000);
+      if(!title||!message)throw new Error('Notice title and message are required.');
+      r[1]=title;r[2]=message;
+    } else if(action==='publish') r[3]='Published';
+    else if(action==='unpublish') r[3]='Draft';
+    else if(action==='archive') r[3]='Archived';
+    else throw new Error('Unsupported notice action.');
+    r[6]=new Date();r[7]=admin.user;
+    sh.getRange(rowNumber,1,1,NOTICE_HEADERS.length).setValues([r]);
+    audit_(admin.user,'NOTICE_'+action.toUpperCase(),id,'Notice status: '+r[3]);
+    return {success:true,notice:noticeObject_(r)};
+  } finally {lock.releaseLock();}
 }
 
 function audit_(user,action,id,details){try{db_().getSheetByName(CFG.AUDIT_SHEET).appendRow([new Date(),user,action,id,details]);}catch(ignore){}}
