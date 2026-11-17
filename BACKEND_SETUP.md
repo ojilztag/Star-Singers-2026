@@ -5,12 +5,11 @@ Repository: https://github.com/ojilztag/Star-Singers-2026
 
 ## Backend architecture
 
-The public website is hosted from GitHub Pages. Registration, private file storage, admin authentication, payment review and notices use a separate Google Apps Script Web App backed by Google Sheets and private Google Drive folders.
+The public website is hosted from GitHub Pages. Registration, private file storage, admin authentication and payment review use a separate Google Apps Script Web App backed by Google Sheets and private Google Drive folders.
 
 Frontend files currently point to the deployed Web App URL in:
 - `backend-client.js` — registration form submissions
 - `admin.html` — admin dashboard actions
-- `index.html` — public Published notices display
 - `site-config.js` — public event settings controlled by the Admin Panel
 
 Do not change the URL unless a new Apps Script deployment has been created and tested.
@@ -24,7 +23,7 @@ Only do this if the Google Apps Script backend has not already been installed. *
 3. Copy the complete `Code.gs` file from this repository into the Apps Script editor and save.
 4. Run `installStarSingers2026()` once. Approve the requested Google Sheets and Drive permissions.
 5. Open the execution log and securely save the generated initial admin username and password. The generated password is shown during this one-time installation. Do not put it in GitHub or share it.
-6. The installer creates the database tabs (`Registrations`, `Notices`, `AuditLog`, `Settings`, `Payment Reconciliation`, and `Dashboard`) and private Drive folders for cropped photos, original photos and payment proofs.
+6. The installer creates the database tabs (`Registrations`, `AuditLog`, `Settings`, `Payment Reconciliation`, and `Dashboard`) and private Drive folders for cropped photos, original photos and payment proofs.
 7. In Apps Script, select **Deploy → New deployment → Web app**. Set **Execute as: Me** and **Who has access: Anyone**. Deploy and copy the URL ending in `/exec`.
 8. Confirm the URL matches the configured endpoint in all three frontend files listed above. If it differs, update all three files consistently.
 9. Open the `/exec` URL in a browser. It should return the plain-text health response: `STAR SINGERS 2026 API is active.`
@@ -38,7 +37,7 @@ Whenever `Code.gs` changes:
 2. Replace its code with the reviewed repository version and save.
 3. Select **Deploy → Manage deployments → Edit** on the existing Web App deployment.
 4. Select **New version**, keep Execute as **Me** and access as **Anyone**, then deploy.
-5. Re-test the health URL, a public notice read, admin login and a controlled test registration.
+5. Re-test the health URL, admin login and a controlled test registration.
 
 A GitHub commit or GitHub Pages deployment does **not** publish a new Apps Script version. The Apps Script deployment is a separate release step.
 
@@ -60,14 +59,6 @@ The Admin Panel includes an **Important Event Information · Website Content** e
 - The registration fee shown on the public form is read from Settings and is checked again by the backend at submission time.
 - Public dates and content are refreshed from the Apps Script Web App when the homepage loads. If the settings endpoint is unavailable, the existing authored page text remains as a fallback.
 
-## Notices publishing workflow
-
-1. Sign in to `https://jkjcreations.org/admin.html`.
-2. Create or edit the notice and choose **Published** to make it public. Draft notices remain private.
-3. Save the notice and confirm the admin list shows the updated status.
-4. Open `https://jkjcreations.org/` in a fresh tab. Confirm the notice title, date and full message appear in the Notices & Announcements section.
-5. If the notice does not appear, verify the deployed Apps Script version contains the current `doGet(e)`, `publicNotices_()` and `manageNotices_()` functions and that the Web App is deployed with public access.
-
 ## Privacy and security
 
 - Keep the spreadsheet and Drive folders private. Do not publish their URLs.
@@ -75,7 +66,6 @@ The Admin Panel includes an **Important Event Information · Website Content** e
 - Participant photos, original images and payment proofs should remain private and be opened only by authorised organisers.
 - Verify payments against the actual bank/UPI account before approval.
 - Define and publish an appropriate privacy, retention and contact policy before collecting real participant data.
-- Do not share test registrations or real participant information in public notices.
 
 ## Pre-launch acceptance tests
 
@@ -91,11 +81,8 @@ Complete these tests on a test record before announcing the registration system 
 - [ ] Approval issues one unique Participant ID; rejection does not issue an ID.
 - [ ] Entry Card preview, PNG download and WhatsApp sharing work on a phone and desktop.
 - [ ] Entry Card displays only the Participant ID, not the internal tracking reference or a second card ID.
-- [ ] Draft notices are hidden publicly; Published notices are visible.
-- [ ] Published notices appear on both the public Notices page and homepage ticker.
 - [ ] Admin-managed dates, fee, rules, prizes and contact details appear correctly on the homepage.
 - [ ] Registration submission succeeds when all required fields, fee and uploads are valid.
-- [ ] Notice edits and deletions are reflected after refresh.
 - [ ] Password change invalidates the previous admin session.
 - [ ] Public pages work at 320px, 375px, 430px, tablet widths, 1366px laptop and 1920px desktop.
 - [ ] Test records are removed only after the complete flow is verified.
