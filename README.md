@@ -9,9 +9,8 @@ NAKSHATHRA GAYAKAR – STAR SINGERS 2026 is an online Christmas Carol Singing Co
 - `index.html` — public event website, responsive navigation, event information, registration form and photo crop editor.
 - `responsive-polish.css` — shared mobile, tablet, laptop and desktop layout adjustments.
 - `backend-client.js` — registration bridge to Google Apps Script.
-- `admin.html` — secure admin dashboard, registration review, payment verification, Entry Card preview/download/share and notice management.
-- `Code.gs` — Google Apps Script API, Sheets database, private Drive uploads, admin authentication, manual payment review, Participant ID generation and notices.
-- Published notices are served by the Apps Script public notices endpoint and displayed on the homepage.
+- `admin.html` — secure admin dashboard, registration review, payment verification and Entry Card preview/download/share.
+- `Code.gs` — Google Apps Script API, Sheets database, private Drive uploads, admin authentication, manual payment review and Participant ID generation.
 - `assets/` — event artwork and JKJ CREATIONS branding.
 
 ## Registration workflow
@@ -30,8 +29,6 @@ The UTR / Transaction ID must be exactly 12 numeric digits. If payment is made f
 ## Entry Card
 The official Entry Card uses the participant's approved photo and official Participant ID. Internal tracking references are not participant-facing IDs and must not be printed as a second identifier.
 
-## Notices
-Admin-created notices are stored in the Google Sheets `Notices` tab. Only `Published` notices are returned to the public website. Draft and Archived notices are not public.
 
 ## Deployment
 GitHub Pages hosts the frontend. Google Apps Script is a separate backend deployment. Updating GitHub does not automatically publish new Apps Script code. Follow [BACKEND_SETUP.md](BACKEND_SETUP.md) for one-time setup, Apps Script redeployment and acceptance tests.
