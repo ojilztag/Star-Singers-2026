@@ -502,7 +502,18 @@ function noticesSheet_() {
   } else {
     const actual=sh.getRange(1,1,1,Math.max(sh.getLastColumn(),NOTICE_HEADERS.length)).getDisplayValues()[0];
     const matches=NOTICE_HEADERS.every((h,i)=>actual[i]===h);
-    if(!matches)throw new Error('Notices sheet headers do not match. No notice data was changed.');
+    if(!matches) {
+      if(sh.getLastRow()<=1) {
+        sh.clear();
+        sh.getRange(1,1,1,NOTICE_HEADERS.length).setValues([NOTICE_HEADERS]).setFontWeight('bold');
+        sh.setFrozenRows(1);
+        sh.setColumnWidths(1,NOTICE_HEADERS.length,180);
+        sh.setColumnWidth(3,520);
+        sh.getRange('C:C').setWrap(true);
+      } else {
+        throw new Error('Notices sheet headers do not match and it contains data. No existing notice data was changed.');
+      }
+    }
   }
   return sh;
 }
