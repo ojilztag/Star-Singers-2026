@@ -193,7 +193,7 @@ function register_(p) {
   const country=clean_(p.country,100),state=clean_(p.state,100),district=clean_(p.district,100);
   const phone=String(p.phone||'').trim(),utr=String(p.utr||'').trim();
   if(!name||!parish||!diocese||!country||!state||!district||!phone||!utr)throw new Error('Complete all required fields, including UTR / Transaction ID.');
-  if(!/^\\d{12}$/.test(utr))throw new Error('UTR / Transaction ID must contain exactly 12 digits.');
+  if(!/^\d{12}$/.test(utr))throw new Error('UTR / Transaction ID must contain exactly 12 digits.');
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
   if(String(p.feeConsent)!=='true')throw new Error('Registration fee consent is required.');
   const siteSettings=readSiteSettings_();
