@@ -11,7 +11,7 @@ NAKSHATHRA GAYAKAR – STAR SINGERS 2026 is an online Christmas Carol Singing Co
 - `backend-client.js` — registration bridge to Google Apps Script.
 - `admin.html` — secure admin dashboard, registration review, payment verification, Entry Card preview/download/share and notice management.
 - `Code.gs` — Google Apps Script API, Sheets database, private Drive uploads, admin authentication, manual payment review, Participant ID generation and notices.
-- `notices-data.js` + `notices.html` — public feed for Published notices only.
+- Published notices are served by the Apps Script public notices endpoint and displayed on the homepage.
 - `assets/` — event artwork and JKJ CREATIONS branding.
 
 ## Registration workflow
