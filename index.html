@@ -1168,7 +1168,6 @@ body.example-preview-open{overflow:hidden}
           <h3>LIJO JOSEPH</h3>
           <p class="coordinator-designation">Digital Coordinator</p>
           <span class="coordinator-official-badge">✦ &nbsp; OFFICIAL COORDINATOR</span>
-          <p class="coordinator-id">COORDINATOR ID <strong>JKJ-DC-001</strong></p>
         </div>
       </header>
 
@@ -1762,125 +1761,107 @@ if(registrationForm){
 </script>
 
 <style id="coordinator-profile-mobile-final">
-/* Final coordinator profile refresh — isolated to the Coordinators section */
+/* Compact premium coordinator card — photo-forward, mobile-first */
 .coordinator-section{position:relative}
-.coordinator-section-title{margin-bottom:24px!important}
-.coordinator-section-title .eyebrow{color:#d9bd78!important;letter-spacing:2px}
+.coordinator-section-title{margin-bottom:16px!important}
+.coordinator-section-title .eyebrow{color:#d9bd78!important;letter-spacing:1.7px}
 .coordinator-section-title h2{margin-bottom:0!important}
-.coordinator-profile-wrap{width:100%;max-width:900px;margin:0 auto;padding:0 14px 12px;box-sizing:border-box}
+.coordinator-profile-wrap{width:100%;max-width:680px;margin:0 auto;padding:0 12px 8px;box-sizing:border-box}
 .coordinator-profile{
-  --cp-gold:#dfc27b;
-  --cp-gold-soft:#f2dfad;
-  --cp-navy:#0a2638;
-  --cp-navy-2:#12364b;
-  --cp-burgundy:#542638;
-  width:100%;max-width:780px;margin:0 auto;padding:0;
-  overflow:hidden;box-sizing:border-box;
-  color:#f7f5ef;
-  border:1px solid rgba(223,194,123,.88);
-  border-radius:24px;
-  background:linear-gradient(145deg,#12364b 0%,#0a2638 58%,#071b2b 100%);
-  box-shadow:0 18px 48px rgba(0,0,0,.28),0 0 0 4px rgba(223,194,123,.07);
+ --cp-gold:#dfc27b;--cp-gold-soft:#f2dfad;
+ width:100%;max-width:640px;margin:0 auto;padding:0;overflow:hidden;box-sizing:border-box;
+ color:#f7f5ef;border:1px solid rgba(223,194,123,.82);border-radius:19px;
+ background:linear-gradient(145deg,#12364b 0%,#0a2638 60%,#071b2b 100%);
+ box-shadow:0 10px 28px rgba(0,0,0,.22),0 0 0 3px rgba(223,194,123,.055)
 }
 .coordinator-profile-header{
-  display:grid;grid-template-columns:190px minmax(0,1fr);align-items:center;
-  gap:26px;padding:24px 28px;
-  background:linear-gradient(112deg,rgba(84,38,56,.56),rgba(10,38,56,.18) 58%);
-  border-bottom:1px solid rgba(223,194,123,.48);
+ display:grid;grid-template-columns:154px minmax(0,1fr);align-items:center;gap:20px;
+ padding:17px 19px;background:linear-gradient(112deg,rgba(84,38,56,.48),rgba(10,38,56,.14));
+ border-bottom:1px solid rgba(223,194,123,.4)
 }
 .coordinator-profile-photo{
-  display:block;width:190px;height:205px;max-width:100%;
-  margin:0!important;padding:0!important;object-fit:cover;object-position:center 28%;
-  border:3px solid var(--cp-gold-soft);border-radius:19px;
-  box-shadow:0 8px 24px rgba(0,0,0,.3);box-sizing:border-box;
+ display:block;width:154px;height:166px;max-width:100%;margin:0!important;padding:0!important;
+ object-fit:cover;object-position:center 28%;border:2px solid var(--cp-gold-soft);
+ border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,.25);box-sizing:border-box
 }
 .coordinator-profile-identity{min-width:0;display:flex;flex-direction:column;align-items:flex-start}
-.coordinator-brandline{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}
-.coordinator-brandline span{font-size:12px;font-weight:800;letter-spacing:2.4px;color:var(--cp-gold-soft)}
-.coordinator-brandline img{display:block;width:54px;height:44px;object-fit:contain}
-.coordinator-profile-identity h3{margin:0 0 7px!important;color:#fff;font:700 clamp(27px,4vw,40px)/1.08 Georgia,serif;letter-spacing:.4px}
-.coordinator-designation{margin:0 0 14px!important;color:#e4e8ed;font-size:17px;font-weight:600;line-height:1.4}
-.coordinator-official-badge{display:inline-flex;align-items:center;justify-content:center;padding:9px 15px;border:1px solid #dfc27b;border-radius:999px;background:linear-gradient(135deg,#8b6b32,#5a421f);color:#fff4d2;font-size:11px;font-weight:800;letter-spacing:1px}
-.coordinator-id{margin:14px 0 0!important;color:#c8d3dd;font-size:11px;font-weight:700;letter-spacing:1.1px}
-.coordinator-id strong{display:inline-block;margin-left:6px;color:var(--cp-gold-soft);font-size:13px;letter-spacing:.7px}
-.coordinator-contact{display:flex;justify-content:center;padding:17px 24px;border-bottom:1px solid rgba(223,194,123,.36);background:rgba(3,17,29,.24)}
+.coordinator-brandline{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.coordinator-brandline span{font-size:10px;font-weight:800;letter-spacing:1.8px;color:var(--cp-gold-soft)}
+.coordinator-brandline img{display:block;width:42px;height:34px;object-fit:contain}
+.coordinator-profile-identity h3{margin:0 0 5px!important;color:#fff;font:700 clamp(24px,3.5vw,32px)/1.08 Georgia,serif;letter-spacing:.2px}
+.coordinator-designation{margin:0 0 10px!important;color:#e4e8ed;font-size:14px;font-weight:600;line-height:1.35}
+.coordinator-official-badge{display:inline-flex;align-items:center;justify-content:center;padding:7px 11px;
+ border:1px solid #dfc27b;border-radius:999px;background:linear-gradient(135deg,#8b6b32,#5a421f);
+ color:#fff4d2;font-size:9px;font-weight:800;letter-spacing:.7px}
+.coordinator-contact{display:flex;justify-content:center;padding:10px 16px;border-bottom:1px solid rgba(223,194,123,.3);background:rgba(3,17,29,.2)}
 .coordinator-whatsapp{
-  display:inline-flex;align-items:center;justify-content:center;gap:12px;
-  width:min(100%,410px);min-height:58px;padding:10px 20px;box-sizing:border-box;
-  border:1px solid rgba(223,194,123,.85);border-radius:16px;
-  background:linear-gradient(105deg,#173d43,#102f3b 55%,#263344);
-  color:#fff;text-decoration:none!important;
-  box-shadow:0 5px 16px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.08);
-  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;width:min(100%,310px);min-height:43px;
+ padding:7px 12px;box-sizing:border-box;border:1px solid rgba(223,194,123,.72);border-radius:12px;
+ background:linear-gradient(105deg,#173d43,#102f3b 55%,#263344);color:#fff;text-decoration:none!important;
+ box-shadow:0 3px 10px rgba(0,0,0,.17);transition:transform .18s ease,box-shadow .18s ease
 }
-.coordinator-whatsapp:hover{transform:translateY(-2px);border-color:#f4dda0;box-shadow:0 9px 22px rgba(0,0,0,.27)}
-.coordinator-whatsapp svg{display:block;flex:0 0 30px;width:30px;height:30px;fill:#39d98a}
-.coordinator-whatsapp span{font-size:clamp(16px,2.4vw,21px);font-weight:800;letter-spacing:.4px;white-space:nowrap}
-.coordinator-whatsapp b{margin-left:auto;padding:7px 10px;border-radius:8px;background:rgba(223,194,123,.16);color:#f1d995;font-size:9px;letter-spacing:1.1px}
-.coordinator-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:22px 24px}
+.coordinator-whatsapp:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(0,0,0,.23)}
+.coordinator-whatsapp svg{display:block;flex:0 0 22px;width:22px;height:22px;fill:#39d98a}
+.coordinator-whatsapp span{font-size:16px;font-weight:800;letter-spacing:.1px;white-space:nowrap}
+.coordinator-whatsapp b{margin-left:auto;padding:5px 7px;border-radius:6px;background:rgba(223,194,123,.15);color:#f1d995;font-size:8px;letter-spacing:.7px}
+.coordinator-details{display:grid;grid-template-columns:1fr;gap:8px;padding:13px 15px}
 .coordinator-detail-card{
-  display:flex;align-items:flex-start;gap:14px;min-width:0;padding:17px 16px;
-  border:1px solid rgba(223,194,123,.38);border-radius:15px;
-  background:linear-gradient(135deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+ display:flex;align-items:center;gap:11px;min-width:0;padding:10px 11px;
+ border:1px solid rgba(223,194,123,.32);border-radius:12px;
+ background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.018))
 }
-.coordinator-experience{grid-column:1/-1}
+.coordinator-experience{grid-column:auto}
 .coordinator-detail-icon{
-  display:flex;flex:0 0 40px;width:40px;height:40px;align-items:center;justify-content:center;
-  border:1px solid rgba(242,223,173,.6);border-radius:12px;
-  background:linear-gradient(145deg,#94713a,#584323);color:#fff1c8;font-size:19px;
+ display:flex;flex:0 0 33px;width:33px;height:33px;align-items:center;justify-content:center;
+ border:1px solid rgba(242,223,173,.5);border-radius:9px;
+ background:linear-gradient(145deg,#94713a,#584323);color:#fff1c8;font-size:16px
 }
-.coordinator-detail-card h4{margin:1px 0 7px!important;color:#f0d99e;font-size:11px;line-height:1.3;letter-spacing:1.1px}
-.coordinator-detail-card p{margin:0!important;color:#e4eaf0;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.coordinator-detail-card h4{margin:0 0 3px!important;color:#f0d99e;font-size:9px;line-height:1.25;letter-spacing:.85px}
+.coordinator-detail-card p{margin:0!important;color:#e4eaf0;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
 .coordinator-conclusion{
-  display:flex;align-items:flex-start;gap:15px;margin:0 24px 24px;padding:18px 20px;
-  border:1px solid rgba(223,194,123,.65);border-left:4px solid #b58b4c;border-radius:15px;
-  background:linear-gradient(100deg,rgba(84,38,56,.42),rgba(255,255,255,.035));
+ display:flex;align-items:flex-start;gap:10px;margin:0 15px 14px;padding:11px 13px;
+ border:1px solid rgba(223,194,123,.55);border-left:3px solid #b58b4c;border-radius:12px;
+ background:linear-gradient(100deg,rgba(84,38,56,.34),rgba(255,255,255,.025))
 }
-.coordinator-conclusion-mark{flex:0 0 auto;color:#f0d28c;font-size:27px;line-height:1.2}
-.coordinator-conclusion h4{margin:0 0 6px!important;color:#f0d99e;font-size:11px;letter-spacing:1.5px}
-.coordinator-conclusion p{margin:0!important;color:#edf0f3;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.coordinator-conclusion-mark{flex:0 0 auto;color:#f0d28c;font-size:20px;line-height:1.2}
+.coordinator-conclusion h4{margin:0 0 4px!important;color:#f0d99e;font-size:9px;letter-spacing:1.2px}
+.coordinator-conclusion p{margin:0!important;color:#edf0f3;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
 @media(max-width:650px){
-  .coordinator-section-title{margin-bottom:17px!important}
-  .coordinator-profile-wrap{padding:0 2px 8px}
-  .coordinator-profile{max-width:440px;border-radius:19px}
-  .coordinator-profile-header{grid-template-columns:112px minmax(0,1fr);gap:15px;padding:16px 14px}
-  .coordinator-profile-photo{width:112px;height:142px;border-width:2px;border-radius:13px;object-position:center 28%}
-  .coordinator-brandline{gap:5px;margin-bottom:8px}
-  .coordinator-brandline span{font-size:9px;letter-spacing:1.3px}
-  .coordinator-brandline img{width:38px;height:32px}
-  .coordinator-profile-identity h3{font-size:clamp(21px,6vw,27px);line-height:1.08;overflow-wrap:anywhere}
-  .coordinator-designation{font-size:13px;margin-bottom:10px!important}
-  .coordinator-official-badge{padding:7px 9px;font-size:8px;letter-spacing:.65px}
-  .coordinator-id{margin-top:10px!important;font-size:9px;letter-spacing:.5px}
-  .coordinator-id strong{font-size:10px}
-  .coordinator-contact{padding:13px 12px}
-  .coordinator-whatsapp{min-height:54px;gap:9px;padding:9px 12px;border-radius:14px}
-  .coordinator-whatsapp svg{flex-basis:27px;width:27px;height:27px}
-  .coordinator-whatsapp span{font-size:clamp(15px,4.3vw,18px);letter-spacing:0}
-  .coordinator-whatsapp b{font-size:8px;padding:6px 7px}
-  .coordinator-details{grid-template-columns:minmax(0,1fr);gap:10px;padding:15px 13px}
-  .coordinator-experience{grid-column:auto}
-  .coordinator-detail-card{gap:12px;padding:14px 12px;border-radius:13px}
-  .coordinator-detail-icon{flex-basis:36px;width:36px;height:36px;border-radius:10px;font-size:17px}
-  .coordinator-detail-card h4{font-size:10px;letter-spacing:.85px}
-  .coordinator-detail-card p{font-size:13px;line-height:1.55}
-  .coordinator-conclusion{gap:11px;margin:0 13px 15px;padding:14px 13px;border-radius:13px}
-  .coordinator-conclusion-mark{font-size:22px}
-  .coordinator-conclusion p{font-size:12px;line-height:1.55}
+ .coordinator-section-title{margin-bottom:12px!important}
+ .coordinator-profile-wrap{max-width:430px;padding:0 5px 6px}
+ .coordinator-profile{border-radius:16px}
+ .coordinator-profile-header{grid-template-columns:124px minmax(0,1fr);gap:13px;padding:13px 12px}
+ .coordinator-profile-photo{width:124px;height:142px;border-radius:12px}
+ .coordinator-brandline{gap:4px;margin-bottom:6px}
+ .coordinator-brandline span{font-size:8px;letter-spacing:1.1px}
+ .coordinator-brandline img{width:33px;height:28px}
+ .coordinator-profile-identity h3{font-size:clamp(20px,5.7vw,25px);line-height:1.05;overflow-wrap:anywhere}
+ .coordinator-designation{font-size:12px;margin-bottom:8px!important}
+ .coordinator-official-badge{padding:6px 8px;font-size:7px;letter-spacing:.5px}
+ .coordinator-contact{padding:8px 10px}
+ .coordinator-whatsapp{width:min(100%,270px);min-height:39px;gap:7px;padding:6px 9px;border-radius:10px}
+ .coordinator-whatsapp svg{flex-basis:20px;width:20px;height:20px}
+ .coordinator-whatsapp span{font-size:14px}
+ .coordinator-whatsapp b{font-size:7px;padding:4px 6px}
+ .coordinator-details{gap:7px;padding:10px}
+ .coordinator-detail-card{gap:9px;padding:9px;border-radius:10px}
+ .coordinator-detail-icon{flex-basis:29px;width:29px;height:29px;border-radius:8px;font-size:14px}
+ .coordinator-detail-card h4{font-size:8px;letter-spacing:.65px}
+ .coordinator-detail-card p{font-size:11px;line-height:1.4}
+ .coordinator-conclusion{gap:8px;margin:0 10px 10px;padding:9px 10px;border-radius:10px}
+ .coordinator-conclusion-mark{font-size:17px}
+ .coordinator-conclusion h4{font-size:8px}
+ .coordinator-conclusion p{font-size:10.5px;line-height:1.4}
 }
-@media(max-width:370px){
-  .coordinator-profile-header{grid-template-columns:94px minmax(0,1fr);gap:11px;padding:13px 11px}
-  .coordinator-profile-photo{width:94px;height:124px}
-  .coordinator-brandline span{font-size:8px;letter-spacing:1px}
-  .coordinator-brandline img{width:32px;height:28px}
-  .coordinator-profile-identity h3{font-size:20px}
-  .coordinator-designation{font-size:12px}
-  .coordinator-official-badge{font-size:7px;padding:6px 7px}
-  .coordinator-id{font-size:8px}
-  .coordinator-id strong{font-size:9px}
-  .coordinator-whatsapp{gap:7px;padding:8px 9px}
-  .coordinator-whatsapp span{font-size:14px}
-  .coordinator-whatsapp b{font-size:7px;padding:5px 6px}
+@media(max-width:350px){
+ .coordinator-profile-header{grid-template-columns:108px minmax(0,1fr);gap:10px;padding:11px 9px}
+ .coordinator-profile-photo{width:108px;height:130px}
+ .coordinator-brandline span{font-size:7px}
+ .coordinator-brandline img{width:29px;height:25px}
+ .coordinator-profile-identity h3{font-size:19px}
+ .coordinator-designation{font-size:11px}
+ .coordinator-official-badge{font-size:6.5px;padding:5px 6px}
+ .coordinator-whatsapp span{font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){.coordinator-whatsapp{transition:none}}
 </style>
