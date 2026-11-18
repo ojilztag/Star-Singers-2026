@@ -1998,6 +1998,9 @@ if(registrationForm){
       }));
     }
     const hash=location.hash.slice(1);const hashIndex=slides.findIndex(el=>el.id===hash);if(hashIndex>=0)go(hashIndex,false);else go(0,false);
+    /* Always open the mobile slideshow at the top; prevent browser scroll restoration from leaving the footer in view. */
+    window.scrollTo(0,0);
+    window.addEventListener('pageshow',function(){if(mq.matches)window.scrollTo(0,0);},{once:true});
     start();
   }
   function disable(){
