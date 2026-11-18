@@ -193,19 +193,28 @@ body{padding-top:80px}
 .digital-profile-info p{max-width:270px;margin:0 auto;color:#dce6eb;font-size:10px;line-height:1.45;letter-spacing:.1px}
 .digital-whatsapp-link{display:inline-flex;align-items:center;justify-content:center;min-height:34px;min-width:154px;box-sizing:border-box;margin:12px auto 0;padding:6px 22px;border:1px solid #48b98a;border-radius:8px;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.5px;background:linear-gradient(180deg,#16865d,#0d6848);color:#fff;box-shadow:0 4px 12px #0003;transition:background .2s ease,transform .2s ease}
 .digital-whatsapp-link:hover{background:linear-gradient(180deg,#1b9a6b,#117b55);transform:translateY(-1px)}
-/* Refined coordinator identity and contact hierarchy; preserve the shared square frame and photo scale */
-.digital-profile-info{padding:0 3px}
-.digital-profile-org{display:block;margin:0 0 3px;color:#d9bd78;font-size:8px;font-weight:900;letter-spacing:2.2px}
-.digital-profile-info h3{margin:0 0 3px;font-size:21px;line-height:1.08;letter-spacing:1.3px}
-.digital-profile-designation{display:inline-block;margin:0 auto 9px;padding:4px 10px;border:1px solid #d9bd7880;border-radius:30px;background:#d9bd7812;color:#f3d995;font-size:8px;font-weight:900;letter-spacing:1.55px}
-.digital-profile-responsibilities{width:100%;max-width:275px;margin:0 auto;text-align:center}
-.digital-profile-responsibilities>b{display:block;margin-bottom:4px;color:#e9d18f;font-size:7.5px;font-weight:900;letter-spacing:1.25px}
-.digital-profile-responsibilities p{max-width:none;margin:0 auto;color:#dce6eb;font-size:9px;line-height:1.4}
-.digital-profile-responsibilities i{color:#e9d18f;font-style:normal;padding:0 1px}
-.digital-whatsapp-link{min-width:174px;min-height:35px;gap:7px;margin-top:9px;padding:5px 14px}
-.digital-whatsapp-link svg{width:15px;height:15px;fill:currentColor;flex:0 0 auto}
-.digital-whatsapp-link span{font-size:10px}
-.digital-whatsapp-link strong{font-size:10px;letter-spacing:.25px}
+/* Compact coordinator card: single role label, larger portrait, mobile-safe frame */
+.digital-coordinator-card{width:min(340px,100%);max-width:100%;height:340px;min-width:0;aspect-ratio:1/1;margin:18px auto 0;box-sizing:border-box}
+.digital-profile-main{padding:10px 14px 9px}
+.digital-profile-photo{width:120px;height:120px;margin-bottom:6px}
+.digital-profile-info{padding:0 2px}
+.digital-profile-org{display:block;margin:0 0 2px;color:#d9bd78;font-size:8px;font-weight:900;letter-spacing:2px}
+.digital-profile-info h3{margin:0 0 5px;font-size:21px;line-height:1.08;letter-spacing:1.3px;color:#fff}
+.digital-profile-summary{max-width:275px;margin:0 auto;color:#dce6eb;font-size:9.5px;line-height:1.4}
+.digital-whatsapp-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:32px;margin:9px auto 0;padding:5px 14px;border:1px solid #48b98a;border-radius:30px;text-decoration:none;background:linear-gradient(180deg,#16865d,#0d6848);color:#fff;box-shadow:0 4px 12px #0003}
+.digital-whatsapp-link svg{width:17px;height:17px;fill:currentColor;flex:0 0 auto}
+.digital-whatsapp-link strong{font-size:11px;letter-spacing:.35px}
+@media(max-width:760px){
+.digital-coordinator-card{width:100%;max-width:100%;height:340px;margin:16px auto 0}
+.digital-profile-heading{flex-basis:52px;padding:5px 13px}
+.digital-profile-heading img{width:70px;height:36px}
+.digital-profile-heading h2{font-size:12px;letter-spacing:.9px}
+.digital-profile-main{padding:10px 10px 8px}
+.digital-profile-photo{width:120px;height:120px;margin-bottom:5px}
+.digital-profile-info h3{font-size:20px}
+.digital-profile-summary{font-size:9px;max-width:260px}
+.digital-whatsapp-link{min-height:31px;margin-top:8px;padding:4px 12px}
+}
 @media(max-width:760px){
 .digital-profile-info h3{font-size:20px}
 .digital-profile-designation{margin-bottom:8px}
@@ -351,17 +360,13 @@ body.example-preview-open{overflow:hidden}
 <div class="team-info digital-profile-info">
 <span class="digital-profile-org">JKJ CREATIONS</span>
 <h3>LIJO JOSEPH</h3>
-<span class="digital-profile-designation">DIGITAL COORDINATOR</span>
-<div class="digital-profile-responsibilities">
-<b>AREAS OF RESPONSIBILITY</b>
-<p>Digital Operations <i>·</i> Website Coordination <i>·</i> Technical Support</p>
-</div>
-<a class="digital-whatsapp-link" href="https://wa.me/919447342070?text=Hello%2C%20I%20am%20contacting%20you%20regarding%20JKJ%20CREATIONS." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Lijo Joseph at +91 94473 42070">
+<p class="digital-profile-summary">Digital platforms, website updates &amp; technical support.</p>
+<a class="digital-whatsapp-link" href="https://wa.me/919447342070?text=Hello%2C%20I%20am%20contacting%20you%20regarding%20JKJ%20CREATIONS." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp +91 94473 42070">
 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.52 3.48A11.8 11.8 0 0 0 12.1 0C5.58 0 .27 5.3.27 11.83c0 2.08.55 4.12 1.6 5.92L.17 24l6.4-1.68a11.9 11.9 0 0 0 5.53 1.4h.01c6.52 0 11.83-5.3 11.83-11.82 0-3.16-1.23-6.13-3.42-8.42ZM12.11 21.7h-.01a9.86 9.86 0 0 1-5.02-1.37l-.36-.21-3.8 1 1.01-3.7-.23-.38a9.83 9.83 0 1 1 8.41 4.66Zm5.4-7.37c-.3-.15-1.77-.87-2.05-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.47-.89-.8-1.49-1.79-1.66-2.09-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.48.71.3 1.26.49 1.69.62.71.22 1.36.19 1.87.12.57-.09 1.77-.73 2.02-1.44.25-.72.25-1.32.17-1.45-.07-.13-.27-.2-.57-.35Z"/></svg>
-<span>WhatsApp</span><strong>+91 94473 42070</strong>
+<strong>+91 94473 42070</strong>
 </a>
 </div></div>
-</article><p class="team-note">Official names and photographs will be added after confirmation. · സ്ഥിരീകരിച്ച പേരുകളും ഫോട്ടോകളും പിന്നീട് ചേർക്കും.</p></section><section class="section" id="schedule"><div class="title"><p class="eyebrow">IMPORTANT DATES</p><h2>USA First Edition <span>Schedule</span></h2><p>Dates will be updated after organiser approval. · സംഘാടകരുടെ അംഗീകാരത്തിന് ശേഷം തീയതികൾ ചേർക്കും.</p></div><div class="timeline"><article><b>Registration Opens</b><span id="siteDateOpens">To be announced</span></article><article><b>Registration Closes</b><span id="siteDateCloses">To be announced</span></article><article><b>Video Submission Deadline</b><span id="siteDateVideo">To be announced</span></article><article><b>Results Announcement</b><span id="siteDateResults">To be announced</span></article></div><div class="notice">All dates and times will be published with the applicable timezone. Registration and video submission deadlines are separate. · സമയമേഖല ഉൾപ്പെടുത്തി ഔദ്യോഗിക തീയതികൾ പ്രസിദ്ധീകരിക്കും.</div></section>
+</article></section><section class="section" id="schedule"><div class="title"><p class="eyebrow">IMPORTANT DATES</p><h2>USA First Edition <span>Schedule</span></h2><p>Dates will be updated after organiser approval. · സംഘാടകരുടെ അംഗീകാരത്തിന് ശേഷം തീയതികൾ ചേർക്കും.</p></div><div class="timeline"><article><b>Registration Opens</b><span id="siteDateOpens">To be announced</span></article><article><b>Registration Closes</b><span id="siteDateCloses">To be announced</span></article><article><b>Video Submission Deadline</b><span id="siteDateVideo">To be announced</span></article><article><b>Results Announcement</b><span id="siteDateResults">To be announced</span></article></div><div class="notice">All dates and times will be published with the applicable timezone. Registration and video submission deadlines are separate. · സമയമേഖല ഉൾപ്പെടുത്തി ഔദ്യോഗിക തീയതികൾ പ്രസിദ്ധീകരിക്കും.</div></section>
 
 <section class="section alt" id="registration"><div class="title"><p class="eyebrow">OFFICIAL ENTRY FORM</p><h2>Participant <span>Registration</span></h2><p>ആവശ്യമായ വിവരങ്ങൾ മാത്രം പൂരിപ്പിക്കുക. · Complete the required details.</p></div>
 <div class="registration-shell"><form id="participantRegistration" class="registration-form">
