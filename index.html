@@ -341,8 +341,9 @@ body.example-preview-open{overflow:hidden}
   #main-content.mobile-section-slideshow { position:relative; padding-bottom:48px; }
   #main-content.mobile-section-slideshow > .mobile-slide {
     display:none !important; box-sizing:border-box;
-    max-height:calc(100svh - 112px); overflow-y:auto;
-    overscroll-behavior:contain; padding-bottom:10px; scrollbar-width:thin;
+    max-height:calc(100vh - 112px); max-height:calc(100dvh - 112px); overflow-y:auto;
+    overscroll-behavior:contain; padding:0 0 72px; scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch;
   }
   #main-content.mobile-section-slideshow > .mobile-slide.mobile-slide-active {
     display:block !important; animation:mobileSlideIn .28s ease-out;
@@ -2085,7 +2086,17 @@ if(registrationForm){
     main.addEventListener('touchstart',pauseBriefly,{passive:true});
     main.addEventListener('wheel',pauseBriefly,{passive:true});
     main.addEventListener('focusin',pauseBriefly);
-    main.addEventListener('click',e=>{if(e.target.closest('a[href^="#"]')){const id=e.target.closest('a[href^="#"]').getAttribute('href').slice(1);const idx=slides.findIndex(el=>el.id===id);if(idx>=0)go(idx);}});
+    main.addEventListener('click',e=>{
+      const hashLink=e.target.closest('a[href^="#"]');
+      if(hashLink){const id=hashLink.getAttribute('href').slice(1);const idx=slides.findIndex(el=>el.id===id);if(idx>=0){go(idx);return;}}
+      if(e.target.closest('a,button,input,select,textarea,summary,label,[role="button"],.mobile-slideshow-controls'))return;
+      const active=slides[current];
+      if(!active || !active.contains(e.target))return;
+      const rect=active.getBoundingClientRect();
+      const x=e.clientX-rect.left;
+      if(x<rect.width*0.42)go(current-1);
+      else if(x>rect.width*0.58)go(current+1);
+    });
     const nav=document.querySelector('.top nav');
     const menuButton=document.querySelector('.menu');
     if(nav){
