@@ -534,3 +534,114 @@ For every new coordinator, duplicate the approved coordinator-card structure and
 - After a shared frame change, check desktop and mobile layouts and verify every coordinator's photo, number and WhatsApp link independently.
 
 **Maintenance instruction:** This section is the authoritative design reference for all current and future coordinator profile cards. One approved frame, reused consistently for everyone.
+
+---
+
+## 19. Permanent documentation, change log and backup policy
+
+This section defines the required documentation procedure for every future project update. It is a maintenance requirement, not an assertion that a backup has automatically been made for every historical change.
+
+### Documentation is part of every change
+
+Whenever a website, Admin Panel, backend, configuration, asset, workflow or deployment change is made:
+
+1. Fetch the latest README.md and the latest affected source files from the main branch before editing.
+2. Read the relevant existing documentation and inspect the current implementation. Do not rely only on old chat messages, screenshots, memory or an earlier local copy.
+3. Implement and verify the requested change with the smallest safe scope.
+4. Update this README in the same work session, recording the new current state and any changed instructions.
+5. Add a dated entry to the Change Log below, including the exact files changed, behaviour changed, behaviour deliberately preserved, verification performed and any manual deployment still required.
+6. Create or refresh README.md.backup from the exact final contents of README.md after the README update has been committed.
+7. Report both commit links and clearly state whether the live website/backend was actually verified.
+
+If the change is documentation-only, record that fact. If no source code was changed, do not imply that application behaviour changed.
+
+### What every update record must capture
+
+For each meaningful change, document:
+- Date (UTC where available) and short change title.
+- Request / reason for the change.
+- Files and components affected.
+- Previous behaviour and new behaviour.
+- Desktop appearance and behaviour, where relevant.
+- Mobile appearance and behaviour, where relevant.
+- Approved layout details preserved: dimensions, alignment, spacing, typography, colours, image crop, borders, responsive breakpoints and interaction behaviour, as applicable.
+- Related frontend/backend API fields, actions, data columns or settings, where applicable.
+- Data migration or configuration impact.
+- Tests and checks actually performed, including devices/viewports if known.
+- Known limitations, unresolved issues and follow-up work.
+- Git commit SHA and link.
+- Separate hosting or Apps Script deployment status.
+
+Never write tested, fixed, deployed or live unless the corresponding action was actually performed and verified. Distinguish source-code review from browser testing and live deployment verification.
+
+### Design and behaviour preservation record
+
+The current approved coordinator profile-card design is specified in Section 18. That specification is a locked reference unless the organiser explicitly requests a global design change.
+
+For all other website sections, do not invent measurements or claim that a layout is locked unless it has been inspected in the current source or explicitly approved by the organiser. When a section is changed:
+- Capture the current desktop and mobile appearance before editing when visual regression risk exists.
+- Record the actual CSS selectors, dimensions, spacing and responsive rules that matter to the change.
+- Preserve unrelated page alignment, navigation, slide behaviour, scroll behaviour, buttons, links and existing content.
+- Compare the changed section with the pre-change version.
+- Check neighbouring sections for overflow, overlap, unexpected shifts and mobile scroll regressions.
+- If an approved earlier version is the reference, record its exact Git commit SHA and file path. Do not use a vague label such as old design.
+- If the exact reference cannot be inspected, say so and ask for the required reference instead of guessing.
+
+### Backup file rules
+
+- README.md is the current master documentation.
+- README.md.backup is a point-in-time copy of the master README.
+- After every README update, refresh README.md.backup so its contents exactly match the committed README.md.
+- Use Git history as the version history; do not overwrite or delete historical commits.
+- A backup README is documentation only. It is not a backup of source code, Google Sheets, Drive uploads, Apps Script properties, secrets or deployments.
+- Do not store passwords, tokens, private IDs, participant personal data, UTRs or payment proofs in either README file.
+- If the backup update fails, state that clearly. Do not claim that both files are backed up.
+- For a full project backup, separately identify and back up the repository source/assets and the external Apps Script, Sheets and Drive data using their appropriate secure procedures.
+
+### Restore procedure
+
+To restore an earlier README:
+1. Identify the exact commit or backup version to restore.
+2. Inspect its contents and confirm that it is the intended version.
+3. Fetch the current README.md and its current blob SHA.
+4. Update README.md with the selected content and a clear restore commit message.
+5. Refresh README.md.backup from the restored README.md.
+6. Record the restore commit and source version in the Change Log.
+
+To restore application code or design:
+1. Identify the exact file and known-good commit.
+2. Inspect the relevant diff and dependencies before restoring.
+3. Fetch the latest target file and SHA.
+4. Restore only the intended file(s) or change(s), unless a full rollback is explicitly approved.
+5. Preserve unrelated fixes made after the reference commit.
+6. Test the affected desktop/mobile views and connected functionality.
+7. Update this README and backup after the restore.
+8. Verify the relevant hosting or Apps Script deployment separately.
+
+Never restore an entire old project snapshot just because one component needs reverting. Prefer a narrow, reviewed restore.
+
+### Change Log
+
+Add newest entries at the top. Keep older entries; do not silently replace or erase history.
+
+| Date (UTC) | Change | Files | Verification / deployment |
+|---|---|---|---|
+| 2026-11-18 | Added permanent documentation, visual-regression, change-log and backup/restore policy; refreshed README backup | README.md, README.md.backup | GitHub commits recorded; live website not changed by this documentation update |
+
+### Required close-out checklist
+
+Before closing any future implementation task, confirm:
+- [ ] Latest source files were fetched before editing.
+- [ ] Requested scope was implemented without unrelated changes.
+- [ ] Desktop layout checked where the change affects desktop.
+- [ ] Mobile layout and touch/scroll behaviour checked where relevant.
+- [ ] Existing links, buttons, forms and navigation checked where affected.
+- [ ] Frontend/backend contract and data safety reviewed where relevant.
+- [ ] README current-state documentation updated.
+- [ ] Change Log entry added with exact files and commit reference.
+- [ ] README.md.backup refreshed from the final README.
+- [ ] GitHub commit links recorded.
+- [ ] Hosting / Apps Script deployment status stated accurately.
+- [ ] Any unverified behaviour or pending manual action disclosed.
+
+Standing instruction: Treat this README as the project handover document. A future developer or assistant should be able to understand the verified current implementation, approved design constraints, known gaps, previous changes and safe next steps without assuming that planned features are already live.
