@@ -503,6 +503,15 @@ For every future request:
 - Preserve the current card as the master layout; do not replace it with a new portrait/vertical layout or a different card concept.
 - The frame, overall dimensions and background are considered **locked**. Do not alter them during routine content or alignment fixes.
 
+### Coordinator card display arrangement
+
+- Keep the completed **Lijo Joseph — Digital Coordinator** card as the only populated coordinator profile card.
+- Remove the empty Patron and Main Coordinator placeholder cards from this profile area.
+- Display **two additional empty square frames only**, matching the approved coordinator card frame exactly. These are reserved for future coordinator profiles.
+- The two reserved frames must contain no placeholder photo, text, icons or sample details until real profile content is supplied.
+- Keep the three frames in the same responsive gallery: three across on wide screens, two across on medium screens, and stacked on mobile.
+- Do not change the locked frame, square ratio, border or navy / deep teal / gold palette.
+
 ### Current profile content
 
 - Organisation: **JKJ CREATIONS**
