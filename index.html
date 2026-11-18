@@ -665,6 +665,46 @@ body.example-preview-open{overflow:hidden}
 .digital-conclusion p{font-size:7px!important}
 }
 
+
+/* Coordinator profile gallery: one completed profile + two blank matching frames */
+.digital-profile-gallery{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  align-items:start;
+  justify-content:center;
+  gap:16px;
+  width:100%;
+  max-width:1300px;
+  margin:0 auto;
+  padding:0 18px 22px;
+  box-sizing:border-box;
+}
+.digital-profile-gallery>.digital-profile-shell,
+.digital-profile-gallery>.digital-profile-empty{
+  width:100%!important;
+  max-width:420px!important;
+  min-width:0!important;
+  aspect-ratio:1/1!important;
+  margin:0 auto!important;
+  box-sizing:border-box!important;
+}
+.digital-profile-empty{
+  display:block;
+  border:1px solid #d9bd78;
+  border-radius:17px;
+  background:linear-gradient(145deg,#12364b 0%,#0a2938 58%,#071b2b 100%);
+  box-shadow:0 8px 22px #0004;
+  overflow:hidden;
+}
+@media(max-width:900px){
+  .digital-profile-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+}
+@media(max-width:620px){
+  .digital-profile-gallery{grid-template-columns:minmax(0,1fr);gap:14px;padding:0 14px 20px}
+  .digital-profile-gallery>.digital-profile-shell,
+  .digital-profile-gallery>.digital-profile-empty{width:min(100%,390px)!important;max-width:390px!important}
+}
+
 </style>
 </head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
@@ -733,7 +773,8 @@ body.example-preview-open{overflow:hidden}
 <article class="sponsor-profile"><div class="photo-placeholder sponsor-gallery-photo" role="img" aria-label="Add sponsor 4 photo or logo"><span class="photo-plus">＋</span><b>ADD PHOTO</b><small>Photo / Company Logo</small></div><div class="sponsor-gallery-info"><span>OFFICIAL SPONSOR</span><h3>Sponsor name to be announced</h3><p>Company / Individual</p></div></article>
 <article class="sponsor-profile"><div class="photo-placeholder sponsor-gallery-photo" role="img" aria-label="Add sponsor 5 photo or logo"><span class="photo-plus">＋</span><b>ADD PHOTO</b><small>Photo / Company Logo</small></div><div class="sponsor-gallery-info"><span>OFFICIAL SPONSOR</span><h3>Sponsor name to be announced</h3><p>Company / Individual</p></div></article>
 <article class="sponsor-profile"><div class="photo-placeholder sponsor-gallery-photo" role="img" aria-label="Add sponsor 6 photo or logo"><span class="photo-plus">＋</span><b>ADD PHOTO</b><small>Photo / Company Logo</small></div><div class="sponsor-gallery-info"><span>OFFICIAL SPONSOR</span><h3>Sponsor name to be announced</h3><p>Company / Individual</p></div></article>
-</div><p class="team-note">Sponsor names, logos, photographs and acknowledgements will be published after confirmation and approval. · സ്ഥിരീകരണവും അംഗീകാരവും ലഭിച്ച ശേഷം സ്പോൺസർമാരുടെ വിവരങ്ങൾ പ്രസിദ്ധീകരിക്കും.</p></section><section class="section team-section" id="team"><div class="title"><p class="eyebrow">EVENT LEADERSHIP</p><h2>Patron & <span>Main Coordinator</span></h2><p>മത്സരത്തിന് നേതൃത്വം നൽകുന്നവരെ പരിചയപ്പെടാം.</p></div><div class="team-grid featured-leaders"><article class="team-card leader-card"><div class="photo-placeholder coordinator-photo leader-photo" role="img" aria-label="Patron photo placeholder"><span class="photo-plus">＋</span><b>PATRON PHOTO</b><small>Photo to be added</small></div><div class="team-info"><span class="team-role">PATRON · രക്ഷാധികാരി</span><h3>Name to be announced</h3><p>Official patron of NAKSHATHRA GAYAKAR – STAR SINGERS 2026.</p></div></article><article class="team-card leader-card"><div class="photo-placeholder coordinator-photo leader-photo" role="img" aria-label="Main coordinator photo placeholder"><span class="photo-plus">＋</span><b>MAIN COORDINATOR PHOTO</b><small>Photo to be added</small></div><div class="team-info"><span class="team-role">MAIN COORDINATOR · മുഖ്യ കോർഡിനേറ്റർ</span><h3>Name to be announced</h3><p>Overall event coordination, participant support and official communication.</p></div></article></div><article class="digital-profile-shell" aria-label="JKJ Creations Digital Coordinator profile">
+</div><p class="team-note">Sponsor names, logos, photographs and acknowledgements will be published after confirmation and approval. · സ്ഥിരീകരണവും അംഗീകാരവും ലഭിച്ച ശേഷം സ്പോൺസർമാരുടെ വിവരങ്ങൾ പ്രസിദ്ധീകരിക്കും.</p></section><section class="section team-section" id="team"><div class="title"><p class="eyebrow">EVENT LEADERSHIP</p><h2>Patron & <span>Main Coordinator</span></h2><p>മത്സരത്തിന് നേതൃത്വം നൽകുന്നവരെ പരിചയപ്പെടാം.</p></div><div class="digital-profile-gallery">
+<article class="digital-profile-shell" aria-label="JKJ Creations Digital Coordinator profile">
   <header class="digital-profile-header">
     <img src="assets/lijo-joseph-coordinator.jpg" alt="Lijo Joseph — Digital Coordinator" class="digital-profile-photo">
     <div class="digital-profile-heading-info">
@@ -776,7 +817,10 @@ body.example-preview-open{overflow:hidden}
       <p>Committed to reliable digital coordination, smooth website operations and responsive technical support for JKJ CREATIONS.</p>
     </div>
   </section>
-</article></section><section class="section" id="schedule"><div class="title"><p class="eyebrow">IMPORTANT DATES</p><h2>USA First Edition <span>Schedule</span></h2><p>Dates will be updated after organiser approval. · സംഘാടകരുടെ അംഗീകാരത്തിന് ശേഷം തീയതികൾ ചേർക്കും.</p></div><div class="timeline"><article><b>Registration Opens</b><span id="siteDateOpens">To be announced</span></article><article><b>Registration Closes</b><span id="siteDateCloses">To be announced</span></article><article><b>Video Submission Deadline</b><span id="siteDateVideo">To be announced</span></article><article><b>Results Announcement</b><span id="siteDateResults">To be announced</span></article></div><div class="notice">All dates and times will be published with the applicable timezone. Registration and video submission deadlines are separate. · സമയമേഖല ഉൾപ്പെടുത്തി ഔദ്യോഗിക തീയതികൾ പ്രസിദ്ധീകരിക്കും.</div></section>
+</article>
+  <div class="digital-profile-empty" aria-label="Reserved coordinator profile frame"></div>
+  <div class="digital-profile-empty" aria-label="Reserved coordinator profile frame"></div>
+</div></section><section class="section" id="schedule"><div class="title"><p class="eyebrow">IMPORTANT DATES</p><h2>USA First Edition <span>Schedule</span></h2><p>Dates will be updated after organiser approval. · സംഘാടകരുടെ അംഗീകാരത്തിന് ശേഷം തീയതികൾ ചേർക്കും.</p></div><div class="timeline"><article><b>Registration Opens</b><span id="siteDateOpens">To be announced</span></article><article><b>Registration Closes</b><span id="siteDateCloses">To be announced</span></article><article><b>Video Submission Deadline</b><span id="siteDateVideo">To be announced</span></article><article><b>Results Announcement</b><span id="siteDateResults">To be announced</span></article></div><div class="notice">All dates and times will be published with the applicable timezone. Registration and video submission deadlines are separate. · സമയമേഖല ഉൾപ്പെടുത്തി ഔദ്യോഗിക തീയതികൾ പ്രസിദ്ധീകരിക്കും.</div></section>
 
 <section class="section alt" id="registration"><div class="title"><p class="eyebrow">OFFICIAL ENTRY FORM</p><h2>Participant <span>Registration</span></h2><p>ആവശ്യമായ വിവരങ്ങൾ മാത്രം പൂരിപ്പിക്കുക. · Complete the required details.</p></div>
 <div class="registration-shell"><form id="participantRegistration" class="registration-form">
