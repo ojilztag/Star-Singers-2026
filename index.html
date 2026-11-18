@@ -980,6 +980,106 @@ body.example-preview-open{overflow:hidden}
   .digital-conclusion p{font-size:7.5px!important}
 }
 
+
+/* PREMIUM FINISH PASS — leadership spacing, centered WhatsApp and subtle light motion */
+.team-section>.title{
+  margin-bottom:12px!important;
+}
+.team-section>.digital-profile-gallery{
+  padding-top:0!important;
+}
+.digital-profile-gallery{
+  row-gap:20px!important;
+}
+.digital-profile-shell{
+  position:relative!important;
+  isolation:isolate!important;
+  box-shadow:0 0 0 1px #d9bd7830,0 8px 24px #0005!important;
+  animation:coordinatorFrameGlow 5.5s ease-in-out infinite!important;
+}
+.digital-profile-shell::after{
+  content:"";
+  position:absolute;
+  z-index:5;
+  top:0;
+  left:-35%;
+  width:28%;
+  height:2px;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,#fff1b8,#d9bd78,transparent);
+  opacity:.8;
+  animation:coordinatorGoldSweep 7s ease-in-out infinite;
+}
+.digital-contact-section{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  padding:5px 10px!important;
+}
+.digital-contact-link{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:11px!important;
+  margin:0 auto!important;
+  padding:7px 19px!important;
+  border:1px solid #39c97988!important;
+  border-radius:999px!important;
+  background:linear-gradient(100deg,#0e594b88,#123e4a88)!important;
+  box-shadow:0 0 12px #22c87924,inset 0 0 10px #ffffff08!important;
+  color:#fff!important;
+  text-align:center!important;
+  transition:background .25s ease,box-shadow .25s ease,transform .25s ease!important;
+}
+.digital-contact-link svg{
+  transform-origin:center!important;
+  animation:whatsappIconPulse 2.8s ease-in-out infinite!important;
+  filter:drop-shadow(0 0 4px #35d17b70)!important;
+}
+.digital-contact-link strong{
+  display:block!important;
+  letter-spacing:.35px!important;
+  font-variant-numeric:tabular-nums!important;
+}
+.digital-contact-link:focus-visible{
+  outline:2px solid #f4d58f!important;
+  outline-offset:3px!important;
+}
+.digital-profile-empty{
+  animation:coordinatorFrameGlow 5.5s ease-in-out infinite!important;
+}
+@keyframes whatsappIconPulse{
+  0%,100%{transform:scale(1);filter:drop-shadow(0 0 2px #35d17b55)}
+  50%{transform:scale(1.08);filter:drop-shadow(0 0 7px #35d17bcc)}
+}
+@keyframes coordinatorFrameGlow{
+  0%,100%{box-shadow:0 0 0 1px #d9bd7825,0 8px 24px #0005}
+  50%{box-shadow:0 0 9px #d9bd7833,0 8px 26px #0006}
+}
+@keyframes coordinatorGoldSweep{
+  0%{left:-35%;opacity:0}
+  15%{opacity:.85}
+  55%{left:110%;opacity:.65}
+  70%,100%{left:110%;opacity:0}
+}
+@media(max-width:620px){
+  .team-section>.title{margin-bottom:10px!important}
+  .team-section>.digital-profile-gallery{padding-top:0!important}
+  .digital-profile-gallery{row-gap:18px!important}
+  .digital-contact-section{padding:4px 8px!important}
+  .digital-contact-link{
+    gap:9px!important;
+    padding:6px 15px!important;
+    font-size:clamp(14px,4vw,17px)!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .digital-profile-shell,.digital-profile-empty,.digital-profile-shell::after,
+  .digital-contact-link svg{animation:none!important}
+  .digital-contact-link{transition:none!important}
+}
+
 </style>
 </head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
