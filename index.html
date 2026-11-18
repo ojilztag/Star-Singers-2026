@@ -385,6 +385,14 @@ body.example-preview-open{overflow:hidden}
   @keyframes mobileSlideIn { from {opacity:.65;transform:translateX(8px)} to {opacity:1;transform:translateX(0)} }
 }
 @media (min-width: 651px) { .mobile-slideshow-controls { display:none !important; } }
+
+/* Coordinator gallery: preserve the existing approved card design and dimensions */
+.coordinator-profile-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;justify-items:center;gap:22px;width:100%;max-width:1320px;margin:0 auto;padding:0 12px 8px;box-sizing:border-box}
+.coordinator-profile-gallery>.coordinator-profile{width:100%;max-width:640px;min-width:0;margin:0 auto}
+.coordinator-photo-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:linear-gradient(145deg,#102e43,#071b2b);color:#e6d39b;text-align:center;font-size:11px;font-weight:800;letter-spacing:1px}
+.coordinator-photo-placeholder small{font-size:8px;letter-spacing:1.2px;color:#c9d2d9}
+.coordinator-contact-placeholder{min-height:43px;align-items:center;color:#e6d39b;font-size:9px;font-weight:800;letter-spacing:1px}
+@media(max-width:760px){.coordinator-profile-gallery{grid-template-columns:minmax(0,1fr);gap:16px;padding:0 5px 8px}.coordinator-profile-gallery>.coordinator-profile{width:100%;max-width:640px}}
 </style><link rel="stylesheet" href="responsive-polish.css?v=20261117-payment-example-align2"><style>@media(max-width:760px){footer{padding:17px 14px 14px!important;margin-top:22px!important}footer img{width:112px!important;height:58px!important}footer .footer-title-desktop{display:none!important}footer .gold{margin:5px 0 3px!important}.footer-title-mobile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;margin:5px auto 7px;padding:0 6px;text-align:center;color:#f3dfaa;line-height:1.12;letter-spacing:1.5px}.footer-title-mobile span{font-size:clamp(11px,3.2vw,13px);font-weight:700}.footer-title-mobile strong{font:700 clamp(19px,5.5vw,25px)/1.1 Georgia,serif;color:#fff;letter-spacing:2px}.footer-title-mobile b{font:700 clamp(17px,4.8vw,22px)/1.1 Georgia,serif;color:#dfc27b;letter-spacing:3px}footer .footer-note{margin:8px auto 0!important;padding:16px 14px!important;gap:5px!important}footer .footer-note small{font-size:10px!important;line-height:1.65}footer .footer-note .digital-support{margin:-3px 0!important;padding:0 12px 2px!important}footer .footer-note .digital-support p{font-size:12px!important;letter-spacing:1.2px!important}}@media(min-width:761px){.footer-title-mobile{display:none}}
 /* FINAL FIX — keep the existing square card and align every item inside its frame */
 .digital-profile-shell{
@@ -1203,8 +1211,8 @@ body.example-preview-open{overflow:hidden}
     <h2>Meet Our <span>Coordinators</span></h2>
   </div>
 
-  <div class="coordinator-profile-wrap">
-    <article class="coordinator-profile" aria-label="JKJ Creations Digital Coordinator profile">
+  <div class="coordinator-profile-gallery">
+<article class="coordinator-profile" aria-label="JKJ Creations Digital Coordinator profile">
       <header class="coordinator-profile-header">
         <img src="assets/lijo-joseph-coordinator.jpg"
              alt="Lijo Joseph, Digital Coordinator"
@@ -1258,6 +1266,52 @@ body.example-preview-open{overflow:hidden}
         </section>
       </div>
 
+    </article>
+  
+    <article class="coordinator-profile" aria-label="JKJ Creations Creative Operations Coordinator profile">
+      <header class="coordinator-profile-header">
+        <div class="coordinator-profile-photo coordinator-photo-placeholder" role="img" aria-label="Sangeeth Thomas photo to be added">
+          <span>PHOTO</span>
+          <small>TO BE ADDED</small>
+        </div>
+        <div class="coordinator-profile-identity">
+          <div class="coordinator-brandline">
+            <span>JKJ CREATIONS</span>
+            <img src="assets/jkj-creations-logo.webp" alt="JKJ Creations logo">
+          </div>
+          <h3>SANGEETH THOMAS</h3>
+          <p class="coordinator-designation">Creative Operations Coordinator</p>
+          <span class="coordinator-official-badge">✦ &nbsp; OFFICIAL COORDINATOR</span>
+        </div>
+      </header>
+
+      <div class="coordinator-contact coordinator-contact-placeholder">
+        <span>CONTACT DETAILS TO BE ADDED</span>
+      </div>
+
+      <div class="coordinator-details">
+        <section class="coordinator-detail-card">
+          <span class="coordinator-detail-icon" aria-hidden="true">✦</span>
+          <div>
+            <h4>ASSIGNED PROGRAMME</h4>
+            <p>Creative Operations &amp; Programme Coordination</p>
+          </div>
+        </section>
+        <section class="coordinator-detail-card">
+          <span class="coordinator-detail-icon" aria-hidden="true">⌘</span>
+          <div>
+            <h4>AREA OF RESPONSIBILITY</h4>
+            <p>Coordination of organisational activities, programme planning, event operations &amp; creative project support.</p>
+          </div>
+        </section>
+        <section class="coordinator-detail-card coordinator-experience">
+          <span class="coordinator-detail-icon" aria-hidden="true">◈</span>
+          <div>
+            <h4>PROFESSIONAL EXPERIENCE</h4>
+            <p>Keyboard Player, Music Programmer &amp; Music Director. Based in Bengaluru, Karnataka; works in the Kannada Film Industry across multiple languages and music album categories.</p>
+          </div>
+        </section>
+      </div>
     </article>
   </div>
 </section><section class="section" id="schedule"><div class="title"><p class="eyebrow">IMPORTANT DATES</p><h2>USA First Edition <span>Schedule</span></h2><p>Dates will be updated after organiser approval. · സംഘാടകരുടെ അംഗീകാരത്തിന് ശേഷം തീയതികൾ ചേർക്കും.</p></div><div class="timeline"><article><b>Registration Opens</b><span id="siteDateOpens">To be announced</span></article><article><b>Registration Closes</b><span id="siteDateCloses">To be announced</span></article><article><b>Video Submission Deadline</b><span id="siteDateVideo">To be announced</span></article><article><b>Results Announcement</b><span id="siteDateResults">To be announced</span></article></div><div class="notice">All dates and times will be published with the applicable timezone. Registration and video submission deadlines are separate. · സമയമേഖല ഉൾപ്പെടുത്തി ഔദ്യോഗിക തീയതികൾ പ്രസിദ്ധീകരിക്കും.</div></section>
