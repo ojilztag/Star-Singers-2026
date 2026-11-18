@@ -1934,9 +1934,11 @@ if(registrationForm){
   const main=document.getElementById('main-content');
   if(!main) return;
   const mq=window.matchMedia('(max-width: 650px)');
-  const slides=Array.from(main.children).filter(el=>el.tagName==='SECTION');
+  const sections=Array.from(main.children).filter(el=>el.tagName==='SECTION');
+  const footer=document.querySelector('body > footer');
+  const slides=footer?[...sections,footer]:sections;
   if(!slides.length) return;
-  let current=0, timer=null, resumeTimer=null, controls=null;
+  let current=0, timer=null, resumeTimer=null, controls=null, footerPlaceholder=null;
   const interval=9000;
   function stop(){ if(timer){clearInterval(timer);timer=null;} }
   function pauseBriefly(){
@@ -1961,6 +1963,11 @@ if(registrationForm){
   function enable(){
     if(!mq.matches || controls) return;
     main.classList.add('mobile-section-slideshow');
+    if(footer && footer.parentNode && footer.parentNode!==main){
+      footerPlaceholder=document.createComment('footer-position');
+      footer.parentNode.insertBefore(footerPlaceholder,footer);
+      main.appendChild(footer);
+    }
     slides.forEach((el,i)=>{el.classList.add('mobile-slide'); if(i===0)el.classList.add('mobile-slide-active');});
     controls=document.createElement('div');
     controls.className='mobile-slideshow-controls';
@@ -1984,6 +1991,11 @@ if(registrationForm){
     if(controls){controls.remove();controls=null;}
     main.classList.remove('mobile-section-slideshow');
     slides.forEach(el=>el.classList.remove('mobile-slide','mobile-slide-active'));
+    if(footer && footerPlaceholder && footerPlaceholder.parentNode){
+      footerPlaceholder.parentNode.insertBefore(footer,footerPlaceholder);
+      footerPlaceholder.remove();
+      footerPlaceholder=null;
+    }
   }
   function sync(){if(mq.matches)enable();else disable();}
   sync();
