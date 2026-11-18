@@ -491,65 +491,46 @@ For every future request:
 
 ---
 
-## 18. Star Singers 2026 — Digital Coordinator Profile Card (design baseline locked)
+## 18. Star Singers 2026 — Coordinator Profile Card (standard frame locked)
 
-**Status:** Frame and visual foundation are fixed. Future refinements must preserve this baseline unless the organiser explicitly asks to redesign it.
+**Status:** The coordinator profile-card frame shown on the website is the approved reusable master design. Use the same frame and visual system for every future coordinator profile. Do not create a different card style for each person.
 
-### Locked design decisions
+### Locked frame and visual style
 
-- Keep the existing profile card concept and its **1:1 square aspect ratio**.
-- Preserve the current outer frame, inner border, corner treatment, card structure and event-matched background palette.
-- Keep the existing **navy / deep teal / gold** colour direction so the card remains consistent with the Star Singers 2026 website theme.
-- Preserve the current card as the master layout; do not replace it with a new portrait/vertical layout or a different card concept.
-- The frame, overall dimensions and background are considered **locked**. Do not alter them during routine content or alignment fixes.
+- Use the same wide, horizontal profile-card layout: portrait on the left and coordinator details on the right.
+- Preserve the rounded outer card, fine gold border, internal dividers, dark navy / deep teal background and gold accents.
+- Keep the portrait in the left-hand photo area, with the same crop treatment and frame styling. Do not change the approved portrait dimensions when adding another coordinator.
+- Keep the same card width, proportions, padding, border radius and responsive behaviour across all coordinator cards.
+- On mobile, keep the same side-by-side portrait-and-details header where it fits; scale and wrap text without clipping or changing the card concept.
+- Use the same typography hierarchy, spacing, badge treatment, WhatsApp contact-row style and responsibility-row styling for every person.
 
-### Coordinator card display arrangement
+### Standard content order for every coordinator
 
-- Keep the completed **Lijo Joseph — Digital Coordinator** card as the only populated coordinator profile card.
-- Remove the empty Patron and Main Coordinator placeholder cards from this profile area.
-- Display **two additional empty square frames only**, matching the approved coordinator card frame exactly. These are reserved for future coordinator profiles.
-- The two reserved frames must contain no placeholder photo, text, icons or sample details until real profile content is supplied.
-- Keep the three frames in the same responsive gallery: three across on wide screens, two across on medium screens, and stacked on mobile.
-- Do not change the locked frame, square ratio, border or navy / deep teal / gold palette.
+1. **Portrait:** coordinator photo on the left, using the same photo frame and crop treatment.
+2. **Official badge:** OFFICIAL COORDINATOR at the top of the information area.
+3. **Organisation identity:** JKJ CREATIONS text and the JKJ CREATIONS logo, using the same alignment and scale.
+4. **WhatsApp contact number:** show a small WhatsApp icon immediately beside the phone number. The icon belongs beside the number, not beside the person's name.
+5. **Designation:** display the coordinator's role below the phone number.
+6. **Contact action row:** show the person's name in large, bold text with the WhatsApp contact action and the CHAT label. Keep the same button layout for every profile.
+7. **Assigned programme / responsibilities:** use matching bordered information rows with the same icon placement, heading style and body text treatment.
 
-### Current profile content
+### Content and asset rules
 
-- Organisation: **JKJ CREATIONS**
-- Role: **Digital Coordinator**
-- Profile name: **LIJO JOSEPH**
-- Contact: **WhatsApp icon +91 94473 42070**
-- Areas of responsibility:
-  - Digital Operations
-  - Website Coordination
-  - Technical Support
-- A short professional description for each responsibility and a Conclusion section are included in the card.
+- Only use the actual person's supplied name, role, phone number, photograph and approved responsibility details.
+- Use the official JKJ CREATIONS logo asset consistently; do not substitute a different logo or create a different logo treatment for each profile.
+- Keep each person's WhatsApp link connected to that person's own verified number. Never copy another coordinator's number or chat URL.
+- Do not invent profile details. If information or a photograph has not been supplied, leave that content unfilled until it is provided; do not publish sample personal data.
+- Keep all content inside the existing card frame. Do not allow text, icons, images or buttons to overlap or overflow.
 
-### Allowed future refinements
+### Reusable template rule
 
-The organiser has approved making small improvements over time while keeping the frame fixed. Permitted adjustments include:
-
-- Profile photo size and crop, while keeping it inside the existing header area.
-- Name, logo and designation alignment within the existing header.
-- WhatsApp icon and number alignment.
-- Text size, line spacing and wrapping inside the existing content area.
-- Spacing and alignment of the three responsibility rows.
-- Conclusion text placement and spacing inside its own section.
-
-### Non-negotiable layout rules
-
-1. Every text element, icon, image and content section must remain fully inside the existing card frame.
-2. No overlap between the profile header, WhatsApp contact, responsibility rows or Conclusion.
-3. Keep the photo and text aligned within the existing horizontal profile header; do not move the photo into a new standalone top section.
-4. Keep each responsibility in its own clearly readable row.
-5. Keep Conclusion in its own bottom section inside the card.
-6. On mobile, scale and wrap content to fit the same square card without clipping or overflow.
-7. Do not change the locked frame, aspect ratio, background palette or overall card concept while making these refinements.
+For every new coordinator, duplicate the approved coordinator-card structure and replace only the person-specific content and assets. Keep the frame, layout, colour palette, logo treatment, typography hierarchy, contact-row design, responsibility-row design and mobile behaviour identical. Any change to the shared frame must be treated as a global design change and applied consistently to all coordinator cards.
 
 ### Implementation reference
 
-- Main file: `index.html`
-- Latest recorded profile-card alignment commit: `bfabd25b4ba1219c8303fb6e5261684bf46ca66b`
-- This commit records the latest CSS alignment pass. It does not by itself confirm that every mobile browser has been visually tested; verify the live mobile rendering after future changes.
-- For any subsequent edit, fetch the latest `index.html`, preserve the locked frame rules above, make only the requested internal adjustment, and record the new commit SHA here when appropriate.
+- Main file: index.html
+- Current reference baseline: commit 06dc382 (the version restored at the organiser's request on 18 November 2026).
+- Before adding or editing coordinator cards, fetch the latest index.html and this README. Preserve the standard frame above and make only the requested content changes.
+- After a shared frame change, check desktop and mobile layouts and verify every coordinator's photo, number and WhatsApp link independently.
 
-**Maintenance instruction:** Treat this section as the design backup/reference for the Digital Coordinator Profile Card. Future work should refine the content inside the existing frame, not redesign the frame itself.
+**Maintenance instruction:** This section is the authoritative design reference for all current and future coordinator profile cards. One approved frame, reused consistently for everyone.
