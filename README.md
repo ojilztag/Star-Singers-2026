@@ -487,3 +487,60 @@ For every future request:
 **Still awaiting organiser confirmation:** official age cut-off date; exact inclusive age boundaries for Junior/Senior/Super Senior; email requirement; participant photo requirement; final decision on ID prefix/migration and when the official ID is issued; the missing tenth export selection if ten are still desired.
 
 **No implementation of the future category system or report centre should begin until these open rules are confirmed and the actual existing spreadsheet/backend schema has been inspected.**
+
+
+---
+
+## 18. Star Singers 2026 — Digital Coordinator Profile Card (design baseline locked)
+
+**Status:** Frame and visual foundation are fixed. Future refinements must preserve this baseline unless the organiser explicitly asks to redesign it.
+
+### Locked design decisions
+
+- Keep the existing profile card concept and its **1:1 square aspect ratio**.
+- Preserve the current outer frame, inner border, corner treatment, card structure and event-matched background palette.
+- Keep the existing **navy / deep teal / gold** colour direction so the card remains consistent with the Star Singers 2026 website theme.
+- Preserve the current card as the master layout; do not replace it with a new portrait/vertical layout or a different card concept.
+- The frame, overall dimensions and background are considered **locked**. Do not alter them during routine content or alignment fixes.
+
+### Current profile content
+
+- Organisation: **JKJ CREATIONS**
+- Role: **Digital Coordinator**
+- Profile name: **LIJO JOSEPH**
+- Contact: **WhatsApp icon +91 94473 42070**
+- Areas of responsibility:
+  - Digital Operations
+  - Website Coordination
+  - Technical Support
+- A short professional description for each responsibility and a Conclusion section are included in the card.
+
+### Allowed future refinements
+
+The organiser has approved making small improvements over time while keeping the frame fixed. Permitted adjustments include:
+
+- Profile photo size and crop, while keeping it inside the existing header area.
+- Name, logo and designation alignment within the existing header.
+- WhatsApp icon and number alignment.
+- Text size, line spacing and wrapping inside the existing content area.
+- Spacing and alignment of the three responsibility rows.
+- Conclusion text placement and spacing inside its own section.
+
+### Non-negotiable layout rules
+
+1. Every text element, icon, image and content section must remain fully inside the existing card frame.
+2. No overlap between the profile header, WhatsApp contact, responsibility rows or Conclusion.
+3. Keep the photo and text aligned within the existing horizontal profile header; do not move the photo into a new standalone top section.
+4. Keep each responsibility in its own clearly readable row.
+5. Keep Conclusion in its own bottom section inside the card.
+6. On mobile, scale and wrap content to fit the same square card without clipping or overflow.
+7. Do not change the locked frame, aspect ratio, background palette or overall card concept while making these refinements.
+
+### Implementation reference
+
+- Main file: `index.html`
+- Latest recorded profile-card alignment commit: `bfabd25b4ba1219c8303fb6e5261684bf46ca66b`
+- This commit records the latest CSS alignment pass. It does not by itself confirm that every mobile browser has been visually tested; verify the live mobile rendering after future changes.
+- For any subsequent edit, fetch the latest `index.html`, preserve the locked frame rules above, make only the requested internal adjustment, and record the new commit SHA here when appropriate.
+
+**Maintenance instruction:** Treat this section as the design backup/reference for the Digital Coordinator Profile Card. Future work should refine the content inside the existing frame, not redesign the frame itself.
