@@ -1939,7 +1939,7 @@ if(registrationForm){
   const slides=footer?[...sections,footer]:sections;
   if(!slides.length) return;
   let current=0, timer=null, resumeTimer=null, controls=null, footerPlaceholder=null;
-  const interval=9000;
+  /* Keep the Home slide as the landing view; slides change only through user navigation. */
   function stop(){ if(timer){clearInterval(timer);timer=null;} }
   function pauseBriefly(){
     stop();
@@ -1957,8 +1957,7 @@ if(registrationForm){
   }
   function start(){
     stop();
-    if(!mq.matches) return;
-    timer=setInterval(()=>go(current+1,false),interval);
+    /* No automatic slide rotation: prevent the page drifting to the footer. */
   }
   function enable(){
     if(!mq.matches || controls) return;
@@ -1998,9 +1997,13 @@ if(registrationForm){
       }));
     }
     const hash=location.hash.slice(1);const hashIndex=slides.findIndex(el=>el.id===hash);if(hashIndex>=0)go(hashIndex,false);else go(0,false);
-    /* Always open the mobile slideshow at the top; prevent browser scroll restoration from leaving the footer in view. */
-    window.scrollTo(0,0);
-    window.addEventListener('pageshow',function(){if(mq.matches)window.scrollTo(0,0);},{once:true});
+    /* Direct visits to the main domain must always begin at Home, not a restored footer position. */
+    if('scrollRestoration' in history) history.scrollRestoration='manual';
+    if(!location.hash){go(0,false);window.scrollTo(0,0);}
+    window.addEventListener('pageshow',function(){
+      if(!mq.matches)return;
+      if(!location.hash){go(0,false);window.scrollTo(0,0);}
+    });
     start();
   }
   function disable(){
