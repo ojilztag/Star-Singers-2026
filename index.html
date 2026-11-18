@@ -705,6 +705,281 @@ body.example-preview-open{overflow:hidden}
   .digital-profile-gallery>.digital-profile-empty{width:min(100%,390px)!important;max-width:390px!important}
 }
 
+
+/* READABILITY PASS — preserve the approved square frame and restore clear spacing */
+.digital-profile-gallery{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:start!important;
+  justify-items:center!important;
+  gap:22px!important;
+  width:100%!important;
+  max-width:1320px!important;
+  margin:0 auto!important;
+  padding:18px 20px 26px!important;
+  box-sizing:border-box!important;
+}
+.digital-profile-gallery>.digital-profile-shell,
+.digital-profile-gallery>.digital-profile-empty{
+  width:100%!important;
+  max-width:420px!important;
+  aspect-ratio:1/1!important;
+  margin:0 auto!important;
+}
+.digital-profile-shell{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:34% 12% 34% 20%!important;
+  gap:0!important;
+  padding:0!important;
+  aspect-ratio:1/1!important;
+  height:auto!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+.digital-profile-header{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:14px!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:100%!important;
+  padding:10px 14px!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+.digital-profile-photo{
+  flex:0 0 108px!important;
+  width:108px!important;
+  height:116px!important;
+  max-width:108px!important;
+  min-width:108px!important;
+  object-fit:cover!important;
+  object-position:center 30%!important;
+  margin:0!important;
+}
+.digital-profile-heading-info{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  gap:4px!important;
+  min-width:0!important;
+  height:100%!important;
+  overflow:hidden!important;
+  text-align:left!important;
+}
+.digital-profile-brandline{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:6px!important;
+  width:100%!important;
+  margin:0 0 2px!important;
+}
+.digital-profile-org{
+  font-size:10px!important;
+  line-height:1.25!important;
+  letter-spacing:1.1px!important;
+}
+.digital-profile-logo{
+  flex:0 0 38px!important;
+  width:38px!important;
+  height:32px!important;
+  object-fit:contain!important;
+}
+.digital-profile-heading-info h3{
+  width:100%!important;
+  margin:2px 0!important;
+  font-size:clamp(21px,2.2vw,27px)!important;
+  line-height:1.12!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
+.digital-profile-role{
+  margin:0 0 3px!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+}
+.digital-profile-official{
+  margin:0!important;
+  padding:6px 10px!important;
+  font-size:8px!important;
+  line-height:1.2!important;
+}
+.digital-contact-section{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:100%!important;
+  padding:5px 16px!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+.digital-contact-link{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  max-width:100%!important;
+  font-size:clamp(15px,1.6vw,18px)!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+}
+.digital-contact-link svg{
+  flex:0 0 27px!important;
+  width:27px!important;
+  height:27px!important;
+}
+.digital-details-section{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:space-evenly!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+  margin:7px 11px!important;
+  padding:5px 10px!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+  border:1px solid #d9bd7880!important;
+  border-radius:12px!important;
+}
+.digital-detail-row{
+  display:grid!important;
+  flex:1 1 0!important;
+  grid-template-columns:30px minmax(100px,.9fr) minmax(0,1.2fr)!important;
+  align-items:center!important;
+  gap:9px!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:5px 2px!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+.digital-detail-icon{
+  width:27px!important;
+  height:27px!important;
+  min-width:27px!important;
+  font-size:15px!important;
+}
+.digital-detail-title{
+  font-size:10px!important;
+  line-height:1.25!important;
+  font-weight:800!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
+.digital-detail-value{
+  padding-left:8px!important;
+  font-size:9px!important;
+  line-height:1.35!important;
+  overflow-wrap:break-word!important;
+}
+.digital-conclusion{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+  margin:0 11px 9px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+.digital-conclusion h4{
+  padding:5px 11px!important;
+  font-size:9px!important;
+  line-height:1.2!important;
+}
+.digital-conclusion-content{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  gap:9px!important;
+  min-width:0!important;
+  padding:6px 10px!important;
+}
+.digital-conclusion-icon{
+  font-size:19px!important;
+}
+.digital-conclusion p{
+  font-size:9px!important;
+  line-height:1.35!important;
+  overflow-wrap:break-word!important;
+}
+.digital-profile-empty{
+  display:block!important;
+  border:1px solid #d9bd78!important;
+  border-radius:17px!important;
+  background:linear-gradient(145deg,#12364b 0%,#0a2938 58%,#071b2b 100%)!important;
+  box-shadow:0 8px 22px #0004!important;
+  overflow:hidden!important;
+}
+@media(max-width:900px){
+  .digital-profile-gallery{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important}
+}
+@media(max-width:620px){
+  .digital-profile-gallery{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:18px!important;
+    padding:12px 14px 22px!important;
+  }
+  .digital-profile-gallery>.digital-profile-shell,
+  .digital-profile-gallery>.digital-profile-empty{
+    width:min(100%,400px)!important;
+    max-width:400px!important;
+  }
+  .digital-profile-shell{
+    grid-template-rows:34% 12% 34% 20%!important;
+  }
+  .digital-profile-header{gap:11px!important;padding:8px 10px!important}
+  .digital-profile-photo{
+    flex-basis:96px!important;
+    width:96px!important;
+    height:106px!important;
+    max-width:96px!important;
+    min-width:96px!important;
+  }
+  .digital-profile-heading-info{gap:3px!important}
+  .digital-profile-org{font-size:9px!important}
+  .digital-profile-logo{flex-basis:32px!important;width:32px!important;height:27px!important}
+  .digital-profile-heading-info h3{font-size:clamp(19px,5.5vw,24px)!important}
+  .digital-profile-role{font-size:11px!important}
+  .digital-profile-official{font-size:7px!important;padding:5px 8px!important}
+  .digital-contact-section{padding:4px 12px!important}
+  .digital-contact-link{font-size:clamp(14px,4vw,16px)!important;gap:8px!important}
+  .digital-contact-link svg{flex-basis:24px!important;width:24px!important;height:24px!important}
+  .digital-details-section{margin:6px 8px!important;padding:4px 7px!important}
+  .digital-detail-row{grid-template-columns:25px minmax(88px,.9fr) minmax(0,1.2fr)!important;gap:7px!important;padding:4px 1px!important}
+  .digital-detail-icon{width:23px!important;height:23px!important;min-width:23px!important;font-size:13px!important}
+  .digital-detail-title{font-size:9px!important;line-height:1.25!important}
+  .digital-detail-value{font-size:8px!important;line-height:1.3!important;padding-left:6px!important}
+  .digital-conclusion{margin:0 8px 8px!important}
+  .digital-conclusion h4{font-size:8px!important}
+  .digital-conclusion-content{gap:7px!important;padding:5px 7px!important}
+  .digital-conclusion-icon{font-size:17px!important}
+  .digital-conclusion p{font-size:8px!important;line-height:1.3!important}
+}
+@media(max-width:370px){
+  .digital-profile-header{gap:8px!important;padding:7px 8px!important}
+  .digital-profile-photo{flex-basis:86px!important;width:86px!important;height:98px!important;max-width:86px!important;min-width:86px!important}
+  .digital-profile-heading-info h3{font-size:18px!important}
+  .digital-profile-role{font-size:10px!important}
+  .digital-profile-official{font-size:6px!important;padding:4px 6px!important}
+  .digital-detail-row{grid-template-columns:22px minmax(78px,.9fr) minmax(0,1.2fr)!important;gap:5px!important}
+  .digital-detail-icon{width:21px!important;height:21px!important;min-width:21px!important}
+  .digital-detail-title{font-size:8px!important}
+  .digital-detail-value{font-size:7.5px!important}
+  .digital-conclusion p{font-size:7.5px!important}
+}
+
 </style>
 </head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
