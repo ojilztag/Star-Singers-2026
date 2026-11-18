@@ -342,8 +342,8 @@ body.example-preview-open{overflow:hidden}
   #main-content.mobile-section-slideshow > .mobile-slide {
     display:none !important; box-sizing:border-box;
     max-height:calc(100vh - 112px); max-height:calc(100dvh - 112px); overflow-y:auto;
-    overscroll-behavior:contain; padding:0 0 72px; scrollbar-width:thin;
-    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain; padding:0 0 84px; scrollbar-width:thin;
+    -webkit-overflow-scrolling:touch; touch-action:pan-y pinch-zoom;
   }
   #main-content.mobile-section-slideshow > .mobile-slide.mobile-slide-active {
     display:block !important; animation:mobileSlideIn .28s ease-out;
@@ -2083,20 +2083,26 @@ if(registrationForm){
     const next=document.createElement('button');next.type='button';next.textContent='›';next.setAttribute('aria-label','Next slide');
     prev.addEventListener('click',()=>go(current-1));next.addEventListener('click',()=>go(current+1));
     controls.append(prev,dots,count,next);document.body.appendChild(controls);
-    main.addEventListener('touchstart',pauseBriefly,{passive:true});
+    let swipeStart=null;
+    const interactiveSelector='a,button,input,select,textarea,summary,label,[role="button"],.mobile-slideshow-controls';
+    main.addEventListener('touchstart',e=>{
+      pauseBriefly();
+      const touch=e.changedTouches[0];
+      swipeStart={x:touch.clientX,y:touch.clientY,interactive:!!e.target.closest(interactiveSelector)};
+    },{passive:true});
+    main.addEventListener('touchend',e=>{
+      if(!swipeStart)return;
+      const start=swipeStart;swipeStart=null;
+      if(start.interactive)return;
+      const touch=e.changedTouches[0];
+      const dx=touch.clientX-start.x,dy=touch.clientY-start.y;
+      if(Math.abs(dx)<50 || Math.abs(dx)<Math.abs(dy)*1.25)return;
+      if(Math.abs(dy)>75)return;
+      go(dx<0?current+1:current-1);
+    },{passive:true});
+    main.addEventListener('touchcancel',()=>{swipeStart=null;},{passive:true});
     main.addEventListener('wheel',pauseBriefly,{passive:true});
     main.addEventListener('focusin',pauseBriefly);
-    main.addEventListener('click',e=>{
-      const hashLink=e.target.closest('a[href^="#"]');
-      if(hashLink){const id=hashLink.getAttribute('href').slice(1);const idx=slides.findIndex(el=>el.id===id);if(idx>=0){go(idx);return;}}
-      if(e.target.closest('a,button,input,select,textarea,summary,label,[role="button"],.mobile-slideshow-controls'))return;
-      const active=slides[current];
-      if(!active || !active.contains(e.target))return;
-      const rect=active.getBoundingClientRect();
-      const x=e.clientX-rect.left;
-      if(x<rect.width*0.42)go(current-1);
-      else if(x>rect.width*0.58)go(current+1);
-    });
     const nav=document.querySelector('.top nav');
     const menuButton=document.querySelector('.menu');
     if(nav){
