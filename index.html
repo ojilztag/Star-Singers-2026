@@ -1159,8 +1159,12 @@ body.example-preview-open{overflow:hidden}
 
 </style>
 
+
+
 <style id="jkj-canonical-photo-frame-standard">
-/* Single source of truth: all uploaded photos sit inside fixed 1:1 frames.
+/* LAST stylesheet in the cascade — single source of truth for all uploaded photo frames.
+   No component-specific stylesheet may override these dimensions or fit rules.
+   All uploaded photos sit inside fixed 1:1 frames.
    Existing card structure, typography, content and unrelated styling stay intact. */
 
 /* Coordinator portraits: frame and image are square; image fills the gold frame. */
@@ -1277,7 +1281,6 @@ body.example-preview-open{overflow:hidden}
   }
 }
 </style>
-
 </head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 <header class="top"><div class="head">
@@ -2060,11 +2063,6 @@ if(registrationForm){
  padding:17px 19px;background:transparent;
  border-bottom:1px solid rgba(223,194,123,.4)
 }
-.coordinator-profile-photo{
- display:block;width:154px;height:166px;max-width:100%;margin:0!important;padding:0!important;
- object-fit:cover;object-position:center 28%;border:2px solid var(--cp-gold-soft);
- border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,.25);box-sizing:border-box
-}
 .coordinator-profile-identity{min-width:0;display:flex;flex-direction:column;align-items:flex-start}
 .coordinator-brandline{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .coordinator-brandline span{font-size:10px;font-weight:800;letter-spacing:1.8px;color:var(--cp-gold-soft)}
@@ -2112,7 +2110,6 @@ if(registrationForm){
  .coordinator-profile-wrap{max-width:430px;padding:0 5px 6px}
  .coordinator-profile{border-radius:16px}
  .coordinator-profile-header{grid-template-columns:124px minmax(0,1fr);gap:13px;padding:13px 12px}
- .coordinator-profile-photo{width:124px;height:142px;border-radius:12px}
  .coordinator-brandline{gap:4px;margin-bottom:6px}
  .coordinator-brandline span{font-size:8px;letter-spacing:1.1px}
  .coordinator-brandline img{width:33px;height:28px}
@@ -2136,7 +2133,6 @@ if(registrationForm){
 }
 @media(max-width:350px){
  .coordinator-profile-header{grid-template-columns:108px minmax(0,1fr);gap:10px;padding:11px 9px}
- .coordinator-profile-photo{width:108px;height:130px}
  .coordinator-brandline span{font-size:7px}
  .coordinator-brandline img{width:29px;height:25px}
  .coordinator-profile-identity h3{font-size:19px}
@@ -2160,9 +2156,7 @@ if(registrationForm){
 .coordinator-conclusion{display:none!important}
 @media(max-width:650px){
  .coordinator-profile-header{padding:11px 12px;gap:13px}
- /* Portrait remains 124 x 142 px, exactly as before */
- .coordinator-profile-photo{width:124px;height:142px}
- .coordinator-whatsapp{width:min(100%,280px);min-height:35px;padding:5px 8px}
+.coordinator-whatsapp{width:min(100%,280px);min-height:35px;padding:5px 8px}
  .coordinator-whatsapp span{font-size:12px;font-weight:500}
  .coordinator-details{gap:5px;padding:8px 9px}
  .coordinator-detail-card{padding:7px 8px}
