@@ -743,3 +743,11 @@ This is a repository/source and CI audit. GitHub Actions can verify syntax, stat
 |---|---|---|---|
 | 2026-11-19 | Moved canonical square photo-frame rules after all component styles; removed duplicate coordinator portrait dimensions; added static site-integrity checks to GitHub Actions. Preserved existing card design and mobile section navigation. | index.html, scripts/check-site.py, .github/workflows/quality.yml, README.md, README.md.backup | JavaScript syntax and static site-integrity checks passed on commit c8f8260; Pages deployment result pending at time of documentation. Browser/device visual testing and backend end-to-end testing remain pending. |
 
+
+
+### Coordinator portrait size restoration and inner-image fill — 2026-11-19
+- Historical comparison confirmed the original coordinator portrait used a 154 × 166 px desktop frame and a 124 × 142 px mobile frame.
+- The square-frame consolidation had reduced the mobile coordinator frame to 124 × 124 px. Restore a larger square mobile frame: 142 × 142 px for 351–650 px viewports, and 124 × 124 px for narrow screens at or below 350 px. Desktop remains 154 × 154 px.
+- The coordinator header grid column is matched to the frame at each mobile breakpoint so the photo does not overflow or get clipped by its own column.
+- Explicitly size the inner `.coordinator-profile-photo > img` to 100% width and height with centered `object-fit: cover`, zero padding/margins and no inner border. This ensures the uploaded square image fills the gold frame edge-to-edge.
+- No card structure, identity text, colours, navigation, sponsor sizes or unrelated layout changed.
