@@ -17,3 +17,5 @@ jobs:
           node-version: 22
       - name: Check backend, frontend and inline JavaScript
         run: python3 scripts/check-js.py
+      - name: Check page structure, assets, CSS and photo-frame contract
+        run: python3 scripts/check-site.py
