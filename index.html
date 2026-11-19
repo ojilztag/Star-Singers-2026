@@ -395,6 +395,20 @@ body.example-preview-open{overflow:hidden}
 .coordinator-contact-placeholder{min-height:43px;align-items:center;color:#e6d39b;font-size:9px;font-weight:800;letter-spacing:1px}
 @media(max-width:760px){.coordinator-profile-gallery{grid-template-columns:minmax(0,1fr);gap:16px;padding:0 5px 8px}.coordinator-profile-gallery>.coordinator-profile{width:100%;max-width:640px}}
 
+
+/* Square uploads fill their square frames edge-to-edge, with no letterbox gaps */
+.digital-profile-photo,
+.coordinator-profile-photo,
+.coordinator-photo,
+.sponsor-photo,
+.sponsor-gallery-photo,
+.coordinator-photo-frame img{
+ object-fit:cover!important;
+ object-position:center!important;
+ background:transparent!important;
+}
+.coordinator-photo-frame{background:transparent!important}
+
 </style><link rel="stylesheet" href="responsive-polish.css?v=20261117-payment-example-align2"><style>@media(max-width:760px){footer{padding:17px 14px 14px!important;margin-top:22px!important}footer img{width:112px!important;height:58px!important}footer .footer-title-desktop{display:none!important}footer .gold{margin:5px 0 3px!important}.footer-title-mobile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;margin:5px auto 7px;padding:0 6px;text-align:center;color:#f3dfaa;line-height:1.12;letter-spacing:1.5px}.footer-title-mobile span{font-size:clamp(11px,3.2vw,13px);font-weight:700}.footer-title-mobile strong{font:700 clamp(19px,5.5vw,25px)/1.1 Georgia,serif;color:#fff;letter-spacing:2px}.footer-title-mobile b{font:700 clamp(17px,4.8vw,22px)/1.1 Georgia,serif;color:#dfc27b;letter-spacing:3px}footer .footer-note{margin:8px auto 0!important;padding:16px 14px!important;gap:5px!important}footer .footer-note small{font-size:10px!important;line-height:1.65}footer .footer-note .digital-support{margin:-3px 0!important;padding:0 12px 2px!important}footer .footer-note .digital-support p{font-size:12px!important;letter-spacing:1.2px!important}}@media(min-width:761px){.footer-title-mobile{display:none}}
 /* FINAL FIX — keep the existing square card and align every item inside its frame */
 .digital-profile-shell{
@@ -2054,7 +2068,7 @@ if(registrationForm){
 .sponsor-gallery-photo{
  width:108px!important;height:108px!important;flex-basis:108px!important;
  aspect-ratio:1/1!important;min-height:0!important;max-width:100%;
- object-fit:contain!important;object-position:center!important;
+ object-fit:cover!important;object-position:center!important;
  box-sizing:border-box!important;overflow:hidden;
 }
 .digital-profile-photo{padding:2px!important}
@@ -2068,7 +2082,7 @@ if(registrationForm){
 .coordinator-profile-photo img,
 .coordinator-photo img{
  display:block!important;width:100%!important;height:100%!important;max-width:none!important;
- object-fit:contain!important;object-position:center!important;margin:0!important;
+ object-fit:cover!important;object-position:center!important;margin:0!important;
 }
 @media(max-width:650px){
  .digital-profile-photo,.coordinator-profile-photo,.coordinator-photo,.sponsor-photo,.sponsor-gallery-photo{
