@@ -2191,6 +2191,106 @@ if(registrationForm){
     flex-basis:100px!important;width:100px!important;height:100px!important;
   }
 }
+
+
+/* ── JKJ adaptive viewport standard ──
+   Fluid containment and text reflow only. Existing visual identity, card geometry,
+   square photo-frame dimensions, spacing system and desktop composition are retained. */
+:root{
+  --jkj-viewport-gutter:clamp(10px,2.4vw,24px);
+}
+html,body{
+  max-inline-size:100%;
+  min-inline-size:320px;
+  overflow-x:clip;
+}
+body{inline-size:100%}
+main#main-content,main#main-content>*,
+main#main-content .section,main#main-content .container,
+main#main-content .wrap{
+  min-inline-size:0;
+  max-inline-size:100%;
+}
+main#main-content :is(.section,.feature,.info-card,.card,.rule,.prize,.contact-panel,
+  .coordinator-profile,.sponsor-profile,.registration-form,.payment-modal-card){
+  min-inline-size:0;
+  overflow-wrap:anywhere;
+}
+main#main-content :is(.card-grid,.features,.timeline,.rule-list,.concept-grid,.vision-grid,
+  .coordinator-profile-gallery,.sponsor-gallery,.form-grid){
+  min-inline-size:0;
+}
+main#main-content :is(.card-grid,.features,.timeline,.rule-list,.concept-grid,.vision-grid,
+  .coordinator-profile-gallery,.sponsor-gallery,.form-grid)>*{
+  min-inline-size:0;
+  max-inline-size:100%;
+}
+main#main-content :is(h1,h2,h3,h4,p,li,label,small,strong,span){
+  min-inline-size:0;
+  max-inline-size:100%;
+}
+main#main-content :is(img,video,canvas,svg){
+  max-inline-size:100%;
+}
+main#main-content :is(input,select,textarea,button){
+  max-inline-size:100%;
+  min-inline-size:0;
+}
+@media(max-width:900px){
+  main#main-content :is(.carol-showcase,.about,.payment-qr-panel){
+    min-inline-size:0;
+  }
+  main#main-content :is(.carol-showcase,.about,.payment-qr-panel)>*{
+    min-inline-size:0;
+    max-inline-size:100%;
+  }
+}
+@media(max-width:760px){
+  main#main-content .coordinator-profile-header{
+    grid-template-columns:124px minmax(0,1fr);
+  }
+  main#main-content .coordinator-profile-identity{
+    min-inline-size:0;
+    max-inline-size:100%;
+  }
+  main#main-content .coordinator-profile-identity h3,
+  main#main-content .coordinator-designation,
+  main#main-content .coordinator-official-badge,
+  main#main-content .coordinator-brandline span{
+    max-inline-size:100%;
+    white-space:normal!important;
+    overflow-wrap:anywhere;
+    word-break:normal;
+  }
+  main#main-content .sponsor-gallery-info,
+  main#main-content .sponsor-gallery-info h3,
+  main#main-content .sponsor-gallery-info p{
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+}
+@media(max-width:480px){
+  main#main-content .section{
+    max-inline-size:calc(100% - 20px);
+  }
+  main#main-content :is(.coordinator-profile,.sponsor-profile,.registration-form){
+    max-inline-size:100%;
+  }
+  main#main-content .coordinator-profile-header{
+    grid-template-columns:minmax(108px,124px) minmax(0,1fr);
+    gap:clamp(8px,2.5vw,13px);
+  }
+}
+@media(max-width:350px){
+  main#main-content .coordinator-profile-header{
+    grid-template-columns:108px minmax(0,1fr);
+    gap:8px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
 </style>
 
 <script>
