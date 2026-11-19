@@ -396,6 +396,15 @@ body.example-preview-open{overflow:hidden}
 @media(max-width:760px){.coordinator-profile-gallery{grid-template-columns:minmax(0,1fr);gap:16px;padding:0 5px 8px}.coordinator-profile-gallery>.coordinator-profile{width:100%;max-width:640px}}
 
 
+
+/* MOBILE ONLY: remove the tinted coordinator photo-header background */
+@media(max-width:760px){
+ .coordinator-profile-header{
+  background:transparent!important;
+  background-image:none!important;
+ }
+}
+
 /* Square uploads fill their square frames edge-to-edge, with no letterbox gaps */
 .digital-profile-photo,
 .coordinator-profile-photo,
