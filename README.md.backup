@@ -693,3 +693,12 @@ Upload the image into the repository's `assets/` folder with that exact filename
 ### Mobile coordinator gold frame inset adjustment
 - On mobile only, the coordinator photo's gold frame is slightly reduced and inset by 4px to keep its edge neatly within the photo column.
 - The frame remains square; the source image, border color, card layout, and desktop dimensions are unchanged.
+
+
+### Permanent photo-frame standard (single source of truth)
+- Coordinator portraits, digital profile photos, sponsor photos and sponsor-gallery photos use square 1:1 frames.
+- Uploaded square images fill the frame edge-to-edge with centered `object-fit: cover`; no background-colored inner gutters or letterbox gaps are allowed.
+- Coordinator photo frames retain the existing gold border and use one consistent mobile/desktop sizing rule. The Biji wrapper and direct coordinator image use the same frame dimensions.
+- Sponsor placeholders retain their existing card dimensions while enforcing a square ratio; uploaded images fill those placeholders.
+- Future changes must edit this canonical rule rather than append competing photo-size overrides. Preserve card layout, text, colors and unrelated page content.
+- Participant photo upload already uses a square crop ratio; keep that behavior aligned with this display standard.
