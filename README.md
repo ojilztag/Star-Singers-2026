@@ -710,3 +710,36 @@ Upload the image into the repository's `assets/` folder with that exact filename
 - Sponsor and coordinator frame sizes may differ by component, but every frame remains square. Existing card structure, typography, content, and unrelated page styling must not be changed for photo updates.
 - Before every future update, fetch the latest `main` source and its SHA; make only the requested scoped change; preserve the canonical photo-frame standard; update this README and `README.md.backup`; verify the committed source and assets.
 - Do not add competing/duplicate photo CSS rules. Extend the canonical stylesheet only when a genuinely new photo-frame class is introduced.
+
+
+## 21. Website-wide responsive and integrity audit — 2026-11-19
+
+### Audit scope and verified findings
+
+- Reviewed the current `index.html`, `admin.html`, `responsive-polish.css`, `site-config.js`, `backend-client.js`, `Code.gs`, existing quality workflow and repository asset tree.
+- Confirmed the mobile page uses a deliberate section-by-section slideshow at narrow widths, while desktop uses the full-page layout. This behaviour is preserved; it is not silently removed as part of responsive cleanup.
+- Found that the square photo-frame stylesheet was not the last stylesheet in the document cascade: the coordinator component stylesheet appeared after it. Moved the canonical photo-frame stylesheet after the component stylesheet so its square dimensions and image-fit rules are authoritative.
+- Removed the coordinator component stylesheet's duplicate portrait width/height declarations. The approved portrait card, header grid, text, border styling and component layout remain otherwise unchanged.
+- The canonical photo standard now governs coordinator portrait frames, the Biji wrapper and its inner image, digital/team portraits, prize-sponsor photo placeholders and sponsor-directory photo placeholders. Frames remain 1:1 at desktop, mobile and narrow-mobile breakpoints; images use centered `object-fit: cover`.
+- Confirmed both public pages have unique HTML IDs, local referenced files resolve in the repository, existing image elements have alt text, the viewport meta tag is present, and the README backup matches the master at the time of this audit.
+- Confirmed the current GitHub Actions JavaScript syntax check passes. Added a separate static site-integrity check to CI for page structure, local assets, CSS brace balance, image alt text, viewport metadata, canonical photo-frame rules and README backup parity.
+
+### Ongoing maintenance rules
+
+1. Fetch the latest `main` source and blob SHA before every edit.
+2. Make the smallest scoped change; do not append another conflicting CSS override.
+3. Keep `#jkj-canonical-photo-frame-standard` as the final inline stylesheet and the single source of truth for photo-frame dimensions and image fit.
+4. Preserve the current desktop layout and the intentional mobile section-navigation experience unless the organiser explicitly requests a change.
+5. After each change, run both GitHub Actions checks, inspect the latest Pages deployment result, update this README and refresh `README.md.backup`.
+6. Never report a live visual check unless a real browser/device test was performed.
+
+### Verification boundary
+
+This is a repository/source and CI audit. GitHub Actions can verify syntax, static page integrity and the Pages build/deployment job; it cannot prove the final appearance on every Android Chrome, iOS Safari or desktop browser. The live website must still be visually checked at representative viewport sizes. The Google Apps Script backend, live payment verification, email/WhatsApp delivery and real registration transactions were not changed by this frontend audit and require separate controlled end-to-end tests before they can be marked verified.
+
+### Audit change log
+
+| Date (UTC) | Change | Files | Verification / deployment |
+|---|---|---|---|
+| 2026-11-19 | Moved canonical square photo-frame rules after all component styles; removed duplicate coordinator portrait dimensions; added static site-integrity checks to GitHub Actions. Preserved existing card design and mobile section navigation. | index.html, scripts/check-site.py, .github/workflows/quality.yml, README.md, README.md.backup | JavaScript syntax and static site-integrity checks passed on commit c8f8260; Pages deployment result pending at time of documentation. Browser/device visual testing and backend end-to-end testing remain pending. |
+
