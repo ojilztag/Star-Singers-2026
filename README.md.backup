@@ -688,3 +688,8 @@ Upload the image into the repository's `assets/` folder with that exact filename
 ### Mobile coordinator photo-frame interior cleanup
 - On mobile only, the coordinator photo image element has no background color or background image, preventing card tint from showing through any unpainted part of the photo frame.
 - No card layout, frame border, dimensions, spacing, image source, or desktop styling is changed by this targeted rule.
+
+
+### Mobile coordinator gold frame inset adjustment
+- On mobile only, the coordinator photo's gold frame is slightly reduced and inset by 4px to keep its edge neatly within the photo column.
+- The frame remains square; the source image, border color, card layout, and desktop dimensions are unchanged.
