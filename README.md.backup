@@ -683,3 +683,8 @@ Upload the image into the repository's `assets/` folder with that exact filename
 ### Mobile coordinator photo background fix
 - On mobile widths (up to 760px), `.coordinator-profile-header` explicitly uses a transparent background and disables background images so no tinted gradient appears behind the photo.
 - Desktop styling is not changed by this mobile-only override.
+
+
+### Mobile coordinator photo-frame interior cleanup
+- On mobile only, the coordinator photo image element has no background color or background image, preventing card tint from showing through any unpainted part of the photo frame.
+- No card layout, frame border, dimensions, spacing, image source, or desktop styling is changed by this targeted rule.
