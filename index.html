@@ -413,19 +413,6 @@ body.example-preview-open{overflow:hidden}
  }
 }
 
-/* Square uploads fill their square frames edge-to-edge, with no letterbox gaps */
-.digital-profile-photo,
-.coordinator-profile-photo,
-.coordinator-photo,
-.sponsor-photo,
-.sponsor-gallery-photo,
-.coordinator-photo-frame img{
- object-fit:cover!important;
- object-position:center!important;
- background:transparent!important;
-}
-.coordinator-photo-frame{background:transparent!important}
-
 </style><link rel="stylesheet" href="responsive-polish.css?v=20261117-payment-example-align2"><style>@media(max-width:760px){footer{padding:17px 14px 14px!important;margin-top:22px!important}footer img{width:112px!important;height:58px!important}footer .footer-title-desktop{display:none!important}footer .gold{margin:5px 0 3px!important}.footer-title-mobile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;margin:5px auto 7px;padding:0 6px;text-align:center;color:#f3dfaa;line-height:1.12;letter-spacing:1.5px}.footer-title-mobile span{font-size:clamp(11px,3.2vw,13px);font-weight:700}.footer-title-mobile strong{font:700 clamp(19px,5.5vw,25px)/1.1 Georgia,serif;color:#fff;letter-spacing:2px}.footer-title-mobile b{font:700 clamp(17px,4.8vw,22px)/1.1 Georgia,serif;color:#dfc27b;letter-spacing:3px}footer .footer-note{margin:8px auto 0!important;padding:16px 14px!important;gap:5px!important}footer .footer-note small{font-size:10px!important;line-height:1.65}footer .footer-note .digital-support{margin:-3px 0!important;padding:0 12px 2px!important}footer .footer-note .digital-support p{font-size:12px!important;letter-spacing:1.2px!important}}@media(min-width:761px){.footer-title-mobile{display:none}}
 /* FINAL FIX — keep the existing square card and align every item inside its frame */
 .digital-profile-shell{
@@ -1171,6 +1158,126 @@ body.example-preview-open{overflow:hidden}
 }
 
 </style>
+
+<style id="jkj-canonical-photo-frame-standard">
+/* Single source of truth: all uploaded photos sit inside fixed 1:1 frames.
+   Existing card structure, typography, content and unrelated styling stay intact. */
+
+/* Coordinator portraits: frame and image are square; image fills the gold frame. */
+.coordinator-profile-photo,
+.coordinator-photo-frame{
+  display:block!important;
+  flex:0 0 154px!important;
+  width:154px!important;
+  height:154px!important;
+  min-width:0!important;
+  max-width:100%!important;
+  aspect-ratio:1/1!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  margin:0!important;
+  padding:0!important;
+  border:2px solid var(--cp-gold-soft,#f2dfad)!important;
+  border-radius:15px!important;
+  background:transparent!important;
+  object-fit:cover!important;
+  object-position:center!important;
+}
+.coordinator-photo-frame{position:relative!important}
+.coordinator-photo-frame>img{
+  display:block!important;
+  width:100%!important;height:100%!important;
+  max-width:none!important;min-width:0!important;
+  margin:0!important;padding:0!important;
+  border:0!important;border-radius:inherit!important;
+  box-sizing:border-box!important;
+  object-fit:cover!important;object-position:center!important;
+  background:transparent!important;
+}
+.coordinator-profile-photo.coordinator-photo-placeholder{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+/* Digital coordinator and team portraits. */
+.digital-profile-photo,
+.coordinator-photo{
+  display:block!important;
+  flex:0 0 108px!important;
+  width:108px!important;height:108px!important;
+  min-width:0!important;max-width:100%!important;
+  aspect-ratio:1/1!important;
+  box-sizing:border-box!important;
+  padding:0!important;
+  object-fit:cover!important;object-position:center!important;
+  overflow:hidden!important;
+}
+
+/* Prize sponsor and sponsor-directory frames retain their own established sizes,
+   but width and height are always equal. */
+.photo-placeholder.sponsor-photo,
+.photo-placeholder.sponsor-gallery-photo{
+  position:relative!important;
+  aspect-ratio:1/1!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+.photo-placeholder.sponsor-photo{
+  flex:0 0 104px!important;width:104px!important;height:104px!important;
+}
+.photo-placeholder.sponsor-gallery-photo{
+  flex:0 0 136px!important;width:136px!important;height:136px!important;
+}
+.photo-placeholder.sponsor-photo>img,
+.photo-placeholder.sponsor-gallery-photo>img,
+.sponsor-photo>img,
+.sponsor-gallery-photo>img{
+  position:absolute!important;inset:0!important;
+  display:block!important;width:100%!important;height:100%!important;
+  max-width:none!important;min-width:0!important;
+  margin:0!important;padding:0!important;
+  border:0!important;border-radius:inherit!important;
+  box-sizing:border-box!important;
+  object-fit:cover!important;object-position:center!important;
+}
+
+/* Mobile sizes: still square; no independent width/height overrides. */
+@media(max-width:650px){
+  .coordinator-profile-photo,
+  .coordinator-photo-frame{
+    flex-basis:124px!important;width:124px!important;height:124px!important;
+    border-radius:12px!important;
+  }
+  .digital-profile-photo,.coordinator-photo{
+    flex-basis:96px!important;width:96px!important;height:96px!important;
+  }
+  .photo-placeholder.sponsor-photo{
+    flex-basis:96px!important;width:96px!important;height:96px!important;
+  }
+  .photo-placeholder.sponsor-gallery-photo{
+    flex-basis:112px!important;width:112px!important;height:112px!important;
+  }
+}
+@media(max-width:350px){
+  .coordinator-profile-photo,
+  .coordinator-photo-frame{
+    flex-basis:108px!important;width:108px!important;height:108px!important;
+    border-radius:10px!important;
+  }
+  .digital-profile-photo,.coordinator-photo{
+    flex-basis:86px!important;width:86px!important;height:86px!important;
+  }
+  .photo-placeholder.sponsor-photo{
+    flex-basis:86px!important;width:86px!important;height:86px!important;
+  }
+  .photo-placeholder.sponsor-gallery-photo{
+    flex-basis:100px!important;width:100px!important;height:100px!important;
+  }
+}
+</style>
+
 </head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 <header class="top"><div class="head">
@@ -2038,18 +2145,6 @@ if(registrationForm){
  .coordinator-whatsapp span{font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){.coordinator-whatsapp{transition:none}}
-/* Biji P. John: square photo frame; show the complete square image without a blank lower area */
-.coordinator-photo-frame{
- display:block;position:relative;flex:0 0 154px;width:154px;height:154px;max-width:100%;margin:0!important;padding:0!important;
- overflow:hidden;border:2px solid var(--cp-gold-soft);border-radius:15px;
- box-shadow:0 5px 15px rgba(0,0,0,.25);box-sizing:border-box;background:#071b2b
-}
-.coordinator-photo-frame img{
- display:block;width:100%;height:100%;max-width:none;margin:0!important;padding:0!important;
- object-fit:contain;object-position:center;border:0;border-radius:12px;box-sizing:border-box
-}
-@media(max-width:650px){.coordinator-photo-frame{flex-basis:124px;width:124px;height:124px;border-radius:12px}}
-@media(max-width:350px){.coordinator-photo-frame{flex-basis:108px;width:108px;height:108px}}
 /* Final compact layout: keep portrait dimensions unchanged */
 .coordinator-profile{max-width:620px}
 .coordinator-profile-header{padding:13px 15px;gap:16px}
@@ -2078,60 +2173,6 @@ if(registrationForm){
 
 
 
-/* CANONICAL PHOTO FRAME STANDARD — keep all uploaded photos square and edge-to-edge */
-.coordinator-profile-photo,
-.coordinator-photo-frame{
- display:block;flex:0 0 154px;width:154px;height:154px;max-width:100%;
- aspect-ratio:1/1;box-sizing:border-box;overflow:hidden;
- margin:0 4px;padding:0;background:transparent;
- border:2px solid var(--cp-gold-soft);border-radius:15px;
- object-fit:cover;object-position:center;
-}
-.coordinator-photo-frame img{
- display:block;width:100%;height:100%;max-width:none;margin:0;padding:0;
- border:0;border-radius:inherit;box-sizing:border-box;
- object-fit:cover;object-position:center;background:transparent;
-}
-.digital-profile-photo,
-.coordinator-photo{
- display:block;flex:0 0 108px;width:108px;height:108px;max-width:100%;
- aspect-ratio:1/1;box-sizing:border-box;overflow:hidden;
- padding:0;object-fit:cover;object-position:center;
-}
-.photo-placeholder.sponsor-photo,
-.photo-placeholder.sponsor-gallery-photo{
- aspect-ratio:1/1;box-sizing:border-box;overflow:hidden;
-}
-.photo-placeholder.sponsor-photo img,
-.photo-placeholder.sponsor-gallery-photo img,
-.sponsor-photo img,
-.sponsor-gallery-photo img,
-.digital-profile-photo img,
-.coordinator-profile-photo img,
-.coordinator-photo img{
- display:block;width:100%;height:100%;max-width:none;margin:0;padding:0;
- box-sizing:border-box;object-fit:cover;object-position:center;
-}
-@media(max-width:650px){
- .coordinator-profile-photo,
- .coordinator-photo-frame{
-  flex-basis:108px;width:108px;height:108px;
-  margin:0 4px;border-radius:12px;
- }
- .digital-profile-photo,.coordinator-photo{
-  flex-basis:96px;width:96px;height:96px;
- }
-}
-@media(max-width:350px){
- .coordinator-profile-photo,
- .coordinator-photo-frame{
-  flex-basis:92px;width:92px;height:92px;
-  margin:0 4px;border-radius:10px;
- }
- .digital-profile-photo,.coordinator-photo{
-  flex-basis:86px;width:86px;height:86px;
- }
-}
 </style>
 
 
