@@ -1161,126 +1161,7 @@ body.example-preview-open{overflow:hidden}
 
 
 
-<style id="jkj-canonical-photo-frame-standard">
-/* LAST stylesheet in the cascade — single source of truth for all uploaded photo frames.
-   No component-specific stylesheet may override these dimensions or fit rules.
-   All uploaded photos sit inside fixed 1:1 frames.
-   Existing card structure, typography, content and unrelated styling stay intact. */
 
-/* Coordinator portraits: frame and image are square; image fills the gold frame. */
-.coordinator-profile-photo,
-.coordinator-photo-frame{
-  display:block!important;
-  flex:0 0 154px!important;
-  width:154px!important;
-  height:154px!important;
-  min-width:0!important;
-  max-width:100%!important;
-  aspect-ratio:1/1!important;
-  box-sizing:border-box!important;
-  overflow:hidden!important;
-  margin:0!important;
-  padding:0!important;
-  border:2px solid var(--cp-gold-soft,#f2dfad)!important;
-  border-radius:15px!important;
-  background:transparent!important;
-  object-fit:cover!important;
-  object-position:center!important;
-}
-.coordinator-photo-frame{position:relative!important}
-.coordinator-photo-frame>img{
-  display:block!important;
-  width:100%!important;height:100%!important;
-  max-width:none!important;min-width:0!important;
-  margin:0!important;padding:0!important;
-  border:0!important;border-radius:inherit!important;
-  box-sizing:border-box!important;
-  object-fit:cover!important;object-position:center!important;
-  background:transparent!important;
-}
-.coordinator-profile-photo.coordinator-photo-placeholder{
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  justify-content:center!important;
-}
-
-/* Digital coordinator and team portraits. */
-.digital-profile-photo,
-.coordinator-photo{
-  display:block!important;
-  flex:0 0 108px!important;
-  width:108px!important;height:108px!important;
-  min-width:0!important;max-width:100%!important;
-  aspect-ratio:1/1!important;
-  box-sizing:border-box!important;
-  padding:0!important;
-  object-fit:cover!important;object-position:center!important;
-  overflow:hidden!important;
-}
-
-/* Prize sponsor and sponsor-directory frames retain their own established sizes,
-   but width and height are always equal. */
-.photo-placeholder.sponsor-photo,
-.photo-placeholder.sponsor-gallery-photo{
-  position:relative!important;
-  aspect-ratio:1/1!important;
-  box-sizing:border-box!important;
-  overflow:hidden!important;
-}
-.photo-placeholder.sponsor-photo{
-  flex:0 0 104px!important;width:104px!important;height:104px!important;
-}
-.photo-placeholder.sponsor-gallery-photo{
-  flex:0 0 136px!important;width:136px!important;height:136px!important;
-}
-.photo-placeholder.sponsor-photo>img,
-.photo-placeholder.sponsor-gallery-photo>img,
-.sponsor-photo>img,
-.sponsor-gallery-photo>img{
-  position:absolute!important;inset:0!important;
-  display:block!important;width:100%!important;height:100%!important;
-  max-width:none!important;min-width:0!important;
-  margin:0!important;padding:0!important;
-  border:0!important;border-radius:inherit!important;
-  box-sizing:border-box!important;
-  object-fit:cover!important;object-position:center!important;
-}
-
-/* Mobile sizes: still square; no independent width/height overrides. */
-@media(max-width:650px){
-  .coordinator-profile-photo,
-  .coordinator-photo-frame{
-    flex-basis:124px!important;width:124px!important;height:124px!important;
-    border-radius:12px!important;
-  }
-  .digital-profile-photo,.coordinator-photo{
-    flex-basis:96px!important;width:96px!important;height:96px!important;
-  }
-  .photo-placeholder.sponsor-photo{
-    flex-basis:96px!important;width:96px!important;height:96px!important;
-  }
-  .photo-placeholder.sponsor-gallery-photo{
-    flex-basis:112px!important;width:112px!important;height:112px!important;
-  }
-}
-@media(max-width:350px){
-  .coordinator-profile-photo,
-  .coordinator-photo-frame{
-    flex-basis:108px!important;width:108px!important;height:108px!important;
-    border-radius:10px!important;
-  }
-  .digital-profile-photo,.coordinator-photo{
-    flex-basis:86px!important;width:86px!important;height:86px!important;
-  }
-  .photo-placeholder.sponsor-photo{
-    flex-basis:86px!important;width:86px!important;height:86px!important;
-  }
-  .photo-placeholder.sponsor-gallery-photo{
-    flex-basis:100px!important;width:100px!important;height:100px!important;
-  }
-}
-</style>
 </head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 <header class="top"><div class="head">
@@ -2169,7 +2050,126 @@ if(registrationForm){
 
 </style>
 
+<style id="jkj-canonical-photo-frame-standard">
+/* LAST stylesheet in the cascade — single source of truth for all uploaded photo frames.
+   No component-specific stylesheet may override these dimensions or fit rules.
+   All uploaded photos sit inside fixed 1:1 frames.
+   Existing card structure, typography, content and unrelated styling stay intact. */
 
+/* Coordinator portraits: frame and image are square; image fills the gold frame. */
+.coordinator-profile-photo,
+.coordinator-photo-frame{
+  display:block!important;
+  flex:0 0 154px!important;
+  width:154px!important;
+  height:154px!important;
+  min-width:0!important;
+  max-width:100%!important;
+  aspect-ratio:1/1!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  margin:0!important;
+  padding:0!important;
+  border:2px solid var(--cp-gold-soft,#f2dfad)!important;
+  border-radius:15px!important;
+  background:transparent!important;
+  object-fit:cover!important;
+  object-position:center!important;
+}
+.coordinator-photo-frame{position:relative!important}
+.coordinator-photo-frame>img{
+  display:block!important;
+  width:100%!important;height:100%!important;
+  max-width:none!important;min-width:0!important;
+  margin:0!important;padding:0!important;
+  border:0!important;border-radius:inherit!important;
+  box-sizing:border-box!important;
+  object-fit:cover!important;object-position:center!important;
+  background:transparent!important;
+}
+.coordinator-profile-photo.coordinator-photo-placeholder{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+/* Digital coordinator and team portraits. */
+.digital-profile-photo,
+.coordinator-photo{
+  display:block!important;
+  flex:0 0 108px!important;
+  width:108px!important;height:108px!important;
+  min-width:0!important;max-width:100%!important;
+  aspect-ratio:1/1!important;
+  box-sizing:border-box!important;
+  padding:0!important;
+  object-fit:cover!important;object-position:center!important;
+  overflow:hidden!important;
+}
+
+/* Prize sponsor and sponsor-directory frames retain their own established sizes,
+   but width and height are always equal. */
+.photo-placeholder.sponsor-photo,
+.photo-placeholder.sponsor-gallery-photo{
+  position:relative!important;
+  aspect-ratio:1/1!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+.photo-placeholder.sponsor-photo{
+  flex:0 0 104px!important;width:104px!important;height:104px!important;
+}
+.photo-placeholder.sponsor-gallery-photo{
+  flex:0 0 136px!important;width:136px!important;height:136px!important;
+}
+.photo-placeholder.sponsor-photo>img,
+.photo-placeholder.sponsor-gallery-photo>img,
+.sponsor-photo>img,
+.sponsor-gallery-photo>img{
+  position:absolute!important;inset:0!important;
+  display:block!important;width:100%!important;height:100%!important;
+  max-width:none!important;min-width:0!important;
+  margin:0!important;padding:0!important;
+  border:0!important;border-radius:inherit!important;
+  box-sizing:border-box!important;
+  object-fit:cover!important;object-position:center!important;
+}
+
+/* Mobile sizes: still square; no independent width/height overrides. */
+@media(max-width:650px){
+  .coordinator-profile-photo,
+  .coordinator-photo-frame{
+    flex-basis:124px!important;width:124px!important;height:124px!important;
+    border-radius:12px!important;
+  }
+  .digital-profile-photo,.coordinator-photo{
+    flex-basis:96px!important;width:96px!important;height:96px!important;
+  }
+  .photo-placeholder.sponsor-photo{
+    flex-basis:96px!important;width:96px!important;height:96px!important;
+  }
+  .photo-placeholder.sponsor-gallery-photo{
+    flex-basis:112px!important;width:112px!important;height:112px!important;
+  }
+}
+@media(max-width:350px){
+  .coordinator-profile-photo,
+  .coordinator-photo-frame{
+    flex-basis:108px!important;width:108px!important;height:108px!important;
+    border-radius:10px!important;
+  }
+  .digital-profile-photo,.coordinator-photo{
+    flex-basis:86px!important;width:86px!important;height:86px!important;
+  }
+  .photo-placeholder.sponsor-photo{
+    flex-basis:86px!important;width:86px!important;height:86px!important;
+  }
+  .photo-placeholder.sponsor-gallery-photo{
+    flex-basis:100px!important;width:100px!important;height:100px!important;
+  }
+}
+</style>
 
 <script>
 (function(){
