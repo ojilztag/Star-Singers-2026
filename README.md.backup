@@ -770,3 +770,14 @@ This is a repository/source and CI audit. GitHub Actions can verify syntax, stat
 - On mobile, coordinator names and role/designation text must remain fully inside the identity column.
 - Short names stay on one line when they fit; longer names wrap naturally onto the next line instead of clipping, overflowing, or being forced into a single line.
 - Preserve the existing portrait frame size, header grid, card design, and desktop typography/layout. This is a text-wrapping correction only.
+
+
+## 24. Adaptive viewport and responsive quality standard — 2026-11-19
+
+- The public website uses a fluid containment standard for viewport widths from 320 px upward. Layout content, grid/flex children, controls, media and text are constrained to their available width to prevent horizontal overflow.
+- Tablet and mobile breakpoints reflow content naturally. Coordinator names, designations, badges and sponsor text wrap inside their existing columns instead of being clipped or extending beyond card edges.
+- The coordinator photo column retains its established square-frame sizes; the responsive identity column adapts to the remaining width. The canonical 1:1 photo-frame rules remain authoritative and unchanged.
+- Existing page sections, mobile slideshow navigation, desktop composition, card designs, colors, typography, content, form behavior and backend integrations are preserved. This update adds viewport containment and text reflow safeguards only.
+- The static quality check now verifies the adaptive viewport contract and its 900 px, 760 px, 480 px and 350 px breakpoints.
+- This standard must be followed for future categories, coordinators, sponsors, participants and other new content. New components must use flexible grid tracks (minmax(0, 1fr)), allow text wrapping, and avoid fixed widths that exceed their parent.
+- Verification is limited to source/static checks and GitHub Actions. Actual appearance still requires representative-device/browser testing; no claim is made that every physical device has been individually tested.
