@@ -673,3 +673,8 @@ Upload the image into the repository's `assets/` folder with that exact filename
 - Square uploaded photos fill their square frames edge-to-edge using `object-fit: cover` and centered positioning.
 - This avoids empty/black letterbox areas inside the frame while retaining the square frame shape. Square source photos are expected; non-square photos may be cropped to fill.
 - Apply the same display rule to coordinator, digital profile, sponsor and supporter photo frames.
+
+
+### Coordinator header background cleanup
+- Removed the tinted gradient background from `.coordinator-profile-header` so the photo area blends cleanly with the coordinator card background.
+- The coordinator card structure, photo border/frame, text and spacing remain unchanged.
