@@ -667,3 +667,9 @@ Upload the image into the repository's `assets/` folder with that exact filename
 - Source images are shown fully inside their frames with `object-fit: contain`; they are not stretched or cropped.
 - Participant registration photo selection is also prepared as a square image.
 - This rule applies to future photos added to the existing supported photo-frame classes. Preserve each card's surrounding layout and content unless the organiser explicitly requests a design change.
+
+
+### Square photo frame fit refinement
+- Square uploaded photos fill their square frames edge-to-edge using `object-fit: cover` and centered positioning.
+- This avoids empty/black letterbox areas inside the frame while retaining the square frame shape. Square source photos are expected; non-square photos may be cropped to fill.
+- Apply the same display rule to coordinator, digital profile, sponsor and supporter photo frames.
