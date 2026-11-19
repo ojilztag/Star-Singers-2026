@@ -654,3 +654,9 @@ The Biji P. John coordinator profile image element uses this exact repository as
 `assets/biji-p-john-coordinator.jpg`
 
 Upload the image into the repository's `assets/` folder with that exact filename (same spelling, hyphens and `.jpg` extension). The existing coordinator profile-card frame, dimensions, alignment, spacing and visual treatment are not to be changed when this asset is added. This source reference does not mean the image file has already been uploaded; until the exact asset exists on the deployed branch, the browser may show a missing image.
+
+
+### Biji P. John square photo display
+- The Biji P. John coordinator photo uses a dedicated square frame (`.coordinator-photo-frame`).
+- The complete source image is displayed with `object-fit: contain`; the frame is square at desktop and mobile sizes, avoiding the unused blank area below the photo.
+- This is a photo-frame-only adjustment. Coordinator card structure, identity content, and the surrounding profile design remain unchanged.
