@@ -678,3 +678,8 @@ Upload the image into the repository's `assets/` folder with that exact filename
 ### Coordinator header background cleanup
 - Removed the tinted gradient background from `.coordinator-profile-header` so the photo area blends cleanly with the coordinator card background.
 - The coordinator card structure, photo border/frame, text and spacing remain unchanged.
+
+
+### Mobile coordinator photo background fix
+- On mobile widths (up to 760px), `.coordinator-profile-header` explicitly uses a transparent background and disables background images so no tinted gradient appears behind the photo.
+- Desktop styling is not changed by this mobile-only override.
