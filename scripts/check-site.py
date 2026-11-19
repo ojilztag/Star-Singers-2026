@@ -127,6 +127,20 @@ def main():
         if not re.search(r"object-fit\s*:\s*cover", css):
             failures.append("Canonical photo stylesheet must use object-fit: cover")
 
+        adaptive_contract = (
+            "JKJ adaptive viewport standard",
+            "min-inline-size:320px",
+            "overflow-x:clip",
+            "@media(max-width:900px)",
+            "@media(max-width:760px)",
+            "@media(max-width:480px)",
+            "@media(max-width:350px)",
+            ".coordinator-profile-identity h3",
+        )
+        for rule in adaptive_contract:
+            if rule not in css:
+                failures.append(f"Adaptive viewport standard is missing rule: {rule}")
+
     readme = ROOT / "README.md"
     backup = ROOT / "README.md.backup"
     if not readme.is_file() or not backup.is_file():
