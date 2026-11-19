@@ -2045,6 +2045,43 @@ if(registrationForm){
 
 
 
+
+/* SITE-WIDE SQUARE PHOTO STANDARD — applies to every person/sponsor photo frame */
+.digital-profile-photo,
+.coordinator-profile-photo,
+.coordinator-photo,
+.sponsor-photo,
+.sponsor-gallery-photo{
+ width:108px!important;height:108px!important;flex-basis:108px!important;
+ aspect-ratio:1/1!important;min-height:0!important;max-width:100%;
+ object-fit:contain!important;object-position:center!important;
+ box-sizing:border-box!important;overflow:hidden;
+}
+.digital-profile-photo{padding:2px!important}
+.coordinator-profile-photo{padding:0!important}
+.coordinator-photo-frame{width:108px!important;height:108px!important;flex-basis:108px!important;aspect-ratio:1/1!important}
+.photo-placeholder{aspect-ratio:1/1!important;overflow:hidden}
+.photo-placeholder img,
+.sponsor-photo img,
+.sponsor-gallery-photo img,
+.digital-profile-photo img,
+.coordinator-profile-photo img,
+.coordinator-photo img{
+ display:block!important;width:100%!important;height:100%!important;max-width:none!important;
+ object-fit:contain!important;object-position:center!important;margin:0!important;
+}
+@media(max-width:650px){
+ .digital-profile-photo,.coordinator-profile-photo,.coordinator-photo,.sponsor-photo,.sponsor-gallery-photo{
+  width:96px!important;height:96px!important;flex-basis:96px!important;
+ }
+ .coordinator-photo-frame{width:96px!important;height:96px!important;flex-basis:96px!important}
+}
+@media(max-width:350px){
+ .digital-profile-photo,.coordinator-profile-photo,.coordinator-photo,.sponsor-photo,.sponsor-gallery-photo{
+  width:86px!important;height:86px!important;flex-basis:86px!important;
+ }
+ .coordinator-photo-frame{width:86px!important;height:86px!important;flex-basis:86px!important}
+}
 </style>
 
 
