@@ -758,3 +758,9 @@ This is a repository/source and CI audit. GitHub Actions can verify syntax, stat
 - Coordinator names stay on one line within the existing identity column, with a responsive font size to prevent the name extending beyond the card.
 - Desktop coordinator photo sizing remains unchanged. Sponsor, participant, and other photo frame rules are not changed by this coordinator-specific adjustment.
 - Preserve the established card layout, borders, gold frame, and image fill behaviour.
+
+
+## 22. Compact mobile slide navigation
+- Keep the mobile slideshow pager compact and close to the bottom safe area so it does not unnecessarily cover the active section.
+- Preserve previous/next controls, the current slide count, and the full set of navigation dots; allow dots to compress slightly on narrow phones rather than overflow or disappear.
+- Keep desktop navigation unchanged. This is a mobile pager-only adjustment and must not alter section, category, coordinator, sponsor, or participant card layouts.
