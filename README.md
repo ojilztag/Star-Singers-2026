@@ -751,3 +751,10 @@ This is a repository/source and CI audit. GitHub Actions can verify syntax, stat
 - The coordinator header grid column is matched to the frame at each mobile breakpoint so the photo does not overflow or get clipped by its own column.
 - Explicitly size the inner `.coordinator-profile-photo > img` to 100% width and height with centered `object-fit: cover`, zero padding/margins and no inner border. This ensures the uploaded square image fills the gold frame edge-to-edge.
 - No card structure, identity text, colours, navigation, sponsor sizes or unrelated layout changed.
+
+
+## 21. Mobile coordinator portrait proportion
+- Coordinator profile cards use a 124 × 124 px square photo frame on mobile screens up to 650 px wide; very narrow screens use 108 × 108 px.
+- Coordinator names stay on one line within the existing identity column, with a responsive font size to prevent the name extending beyond the card.
+- Desktop coordinator photo sizing remains unchanged. Sponsor, participant, and other photo frame rules are not changed by this coordinator-specific adjustment.
+- Preserve the established card layout, borders, gold frame, and image fill behaviour.
