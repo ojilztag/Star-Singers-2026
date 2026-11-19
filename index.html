@@ -1318,7 +1318,7 @@ body.example-preview-open{overflow:hidden}
 
     <article class="coordinator-profile" aria-label="JKJ Creations Creative and Cultural Programme Coordinator profile">
       <header class="coordinator-profile-header">
-        <div class="coordinator-profile-photo">
+        <div class="coordinator-photo-frame">
           <img src="assets/biji-p-john-coordinator.jpg" alt="Biji P. John, Creative &amp; Cultural Programme Coordinator" loading="lazy">
         </div>
         <div class="coordinator-profile-identity">
@@ -2007,6 +2007,18 @@ if(registrationForm){
  .coordinator-whatsapp span{font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){.coordinator-whatsapp{transition:none}}
+/* Biji P. John: square photo frame; show the complete square image without a blank lower area */
+.coordinator-photo-frame{
+ display:block;position:relative;flex:0 0 154px;width:154px;height:154px;max-width:100%;margin:0!important;padding:0!important;
+ overflow:hidden;border:2px solid var(--cp-gold-soft);border-radius:15px;
+ box-shadow:0 5px 15px rgba(0,0,0,.25);box-sizing:border-box;background:#071b2b
+}
+.coordinator-photo-frame img{
+ display:block;width:100%;height:100%;max-width:none;margin:0!important;padding:0!important;
+ object-fit:contain;object-position:center;border:0;border-radius:12px;box-sizing:border-box
+}
+@media(max-width:650px){.coordinator-photo-frame{flex-basis:124px;width:124px;height:124px;border-radius:12px}}
+@media(max-width:350px){.coordinator-photo-frame{flex-basis:108px;width:108px;height:108px}}
 /* Final compact layout: keep portrait dimensions unchanged */
 .coordinator-profile{max-width:620px}
 .coordinator-profile-header{padding:13px 15px;gap:16px}
