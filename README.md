@@ -781,3 +781,9 @@ This is a repository/source and CI audit. GitHub Actions can verify syntax, stat
 - The static quality check now verifies the adaptive viewport contract and its 900 px, 760 px, 480 px and 350 px breakpoints.
 - This standard must be followed for future categories, coordinators, sponsors, participants and other new content. New components must use flexible grid tracks (minmax(0, 1fr)), allow text wrapping, and avoid fixed widths that exceed their parent.
 - Verification is limited to source/static checks and GitHub Actions. Actual appearance still requires representative-device/browser testing; no claim is made that every physical device has been individually tested.
+
+
+## 25. Homepage YouTube video update — 2026-11-19
+
+- The homepage hero video now uses YouTube video ID `mvRQuJ16yHE` (https://youtu.be/mvRQuJ16yHE).
+- Existing click-to-play, pause/play controls, privacy-enhanced embed host, and responsive video frame behavior are preserved.
