@@ -397,6 +397,14 @@ body.example-preview-open{overflow:hidden}
 
 
 
+/* MOBILE ONLY: keep the coordinator photo frame interior free of card tint */
+@media(max-width:760px){
+ .coordinator-profile-photo{
+  background-color:transparent!important;
+  background-image:none!important;
+ }
+}
+
 /* MOBILE ONLY: remove the tinted coordinator photo-header background */
 @media(max-width:760px){
  .coordinator-profile-header{
