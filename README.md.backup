@@ -702,3 +702,11 @@ Upload the image into the repository's `assets/` folder with that exact filename
 - Sponsor placeholders retain their existing card dimensions while enforcing a square ratio; uploaded images fill those placeholders.
 - Future changes must edit this canonical rule rather than append competing photo-size overrides. Preserve card layout, text, colors and unrelated page content.
 - Participant photo upload already uses a square crop ratio; keep that behavior aligned with this display standard.
+
+## Canonical square photo-frame standard
+- The single authoritative photo-frame stylesheet is `#jkj-canonical-photo-frame-standard` in `index.html`.
+- Coordinator portraits, digital coordinator/team portraits, prize-sponsor photos and sponsor-directory photos use 1:1 square frames.
+- Uploaded photos fill the frame edge-to-edge with `object-fit: cover`, centered; image dimensions are equal width and height at desktop, mobile and narrow mobile breakpoints.
+- Sponsor and coordinator frame sizes may differ by component, but every frame remains square. Existing card structure, typography, content, and unrelated page styling must not be changed for photo updates.
+- Before every future update, fetch the latest `main` source and its SHA; make only the requested scoped change; preserve the canonical photo-frame standard; update this README and `README.md.backup`; verify the committed source and assets.
+- Do not add competing/duplicate photo CSS rules. Extend the canonical stylesheet only when a genuinely new photo-frame class is introduced.
