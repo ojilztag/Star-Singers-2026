@@ -660,3 +660,10 @@ Upload the image into the repository's `assets/` folder with that exact filename
 - The Biji P. John coordinator photo uses a dedicated square frame (`.coordinator-photo-frame`).
 - The complete source image is displayed with `object-fit: contain`; the frame is square at desktop and mobile sizes, avoiding the unused blank area below the photo.
 - This is a photo-frame-only adjustment. Coordinator card structure, identity content, and the surrounding profile design remain unchanged.
+
+
+### Site-wide square photo standard
+- All uploaded person, coordinator, sponsor, supporter and sponsor-gallery photos use square (1:1) display frames.
+- Source images are shown fully inside their frames with `object-fit: contain`; they are not stretched or cropped.
+- Participant registration photo selection is also prepared as a square image.
+- This rule applies to future photos added to the existing supported photo-frame classes. Preserve each card's surrounding layout and content unless the organiser explicitly requests a design change.
