@@ -626,6 +626,7 @@ Add newest entries at the top. Keep older entries; do not silently replace or er
 
 | Date (UTC) | Change | Files | Verification / deployment |
 |---|---|---|---|
+| 2026-11-19 | Connected Biji P. John profile photo slot to the exact asset path `assets/biji-p-john-coordinator.jpg`; retained the existing coordinator card frame and layout. The image file itself is to be uploaded by the organiser. | index.html | Source updated; image display awaits upload of the exact-named asset; live browser rendering not verified |
 | 2026-11-18 | Added permanent documentation, visual-regression, change-log and backup/restore policy; refreshed README backup | README.md, README.md.backup | GitHub commits recorded; live website not changed by this documentation update |
 
 ### Required close-out checklist
@@ -645,3 +646,11 @@ Before closing any future implementation task, confirm:
 - [ ] Any unverified behaviour or pending manual action disclosed.
 
 Standing instruction: Treat this README as the project handover document. A future developer or assistant should be able to understand the verified current implementation, approved design constraints, known gaps, previous changes and safe next steps without assuming that planned features are already live.
+
+## 20. Biji P. John — photo asset path
+
+The Biji P. John coordinator profile image element uses this exact repository asset path:
+
+`assets/biji-p-john-coordinator.jpg`
+
+Upload the image into the repository's `assets/` folder with that exact filename (same spelling, hyphens and `.jpg` extension). The existing coordinator profile-card frame, dimensions, alignment, spacing and visual treatment are not to be changed when this asset is added. This source reference does not mean the image file has already been uploaded; until the exact asset exists on the deployed branch, the browser may show a missing image.
