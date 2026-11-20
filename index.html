@@ -419,32 +419,34 @@ body.example-preview-open{overflow:hidden}
 }
 
 
-/* Founder and music ministry feature — responsive photo-first profile */
-.founder-ministry-grid{display:grid;grid-template-columns:minmax(260px,.86fr) minmax(0,1.14fr);gap:20px;align-items:stretch}
-.founder-ministry-profile{padding:18px;border:1px solid var(--gold);border-radius:17px;background:linear-gradient(145deg,#071b31,#183548 60%,#351629);display:flex;flex-direction:column;gap:16px;min-width:0}
-.founder-photo-placeholder{aspect-ratio:4/5;width:100%;max-height:390px;border:1px dashed #e6c77d;border-radius:13px;background:radial-gradient(ellipse at 50% 38%,#e6c77d22,transparent 48%),linear-gradient(145deg,#132e45,#29182e);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#f7e5b5;gap:7px;padding:18px}
-.founder-photo-icon{font-size:48px;color:var(--gold)}
-.founder-photo-placeholder strong{font:700 15px var(--serif);letter-spacing:2px}
-.founder-photo-placeholder small{font-size:11px;color:#d5dfe0}
-.founder-identity h3{font:700 clamp(23px,3vw,32px)/1.15 var(--serif);color:#ffe4a4;margin:5px 0}
-.founder-label{font-size:10px;letter-spacing:2px;color:var(--gold);font-weight:bold;margin:0}
-.founder-role{color:#f1d69c;font-size:13px;font-weight:bold}
-.founder-copy{color:#d7e1df;font-size:13px}
-.founder-tags{display:flex;flex-wrap:wrap;gap:7px}
-.founder-tags span{border:1px solid #d9bd7880;border-radius:25px;padding:5px 10px;color:#ffe4ae;font-size:10px;letter-spacing:.5px}
-.founder-ministry-content{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;min-width:0}
-.founder-content-card{border:1px solid #d9bd7880;border-radius:14px;padding:19px;background:linear-gradient(145deg,#102c42,#183a38 65%,#311729);min-width:0}
-.founder-card-icon{font-size:25px;color:#f1d28c}
-.founder-content-card h3{font:700 19px var(--serif);color:#ffe4ad;margin:8px 0}
-.founder-content-card p{font-size:12px;color:#d9e2df}
-.founder-content-card small{font-size:10px;color:#d7c9aa}
-.founder-link-placeholder{margin-top:12px;border:1px dashed #d9bd7880;border-radius:9px;padding:10px;color:#f5dc9f;font-size:11px;background:#ffffff08}
-.usa-address-placeholder{padding:10px;border-left:2px solid var(--gold);background:#ffffff08}
-.founder-ministry-bottom{text-align:center;margin-top:22px;border-top:1px solid #d9bd7866;padding-top:17px}
-.founder-ministry-bottom p{font:italic clamp(19px,2.5vw,25px) var(--serif);color:#ffe2a0;margin:0 0 7px}
-.founder-ministry-bottom span{font-size:10px;letter-spacing:2px;color:#d4dedb}
-@media(max-width:760px){.founder-ministry-grid{grid-template-columns:1fr}.founder-ministry-profile{display:grid;grid-template-columns:minmax(112px,38%) minmax(0,1fr);align-items:center}.founder-photo-placeholder{aspect-ratio:3/4;max-height:250px;padding:8px}.founder-photo-icon{font-size:30px}.founder-identity h3{font-size:22px}.founder-tags span{font-size:9px;padding:4px 8px}}
-@media(max-width:480px){.founder-ministry-content{grid-template-columns:1fr}.founder-ministry-profile{padding:12px;gap:12px}.founder-content-card{padding:15px}}
+
+/* Featured founder card: existing coordinator profile visual system */
+.coordinator-founder-profile{grid-column:1/-1;width:100%;max-width:900px!important;margin:0 auto 8px!important;border-width:2px!important;box-shadow:0 14px 34px #0005,0 0 0 1px #d9bd7830}
+.coordinator-founder-profile .coordinator-profile-header{grid-template-columns:210px minmax(0,1fr);gap:22px;padding:18px 22px}
+.coordinator-founder-photo{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;width:190px;height:190px;max-width:100%;border:1px dashed #dfc27b;border-radius:14px;background:linear-gradient(145deg,#173c50,#091b2b);color:#f6dda1;text-align:center;box-shadow:inset 0 0 0 4px #d9bd7814,0 5px 14px #0003}
+.coordinator-founder-photo b{font-size:11px;letter-spacing:1.7px}
+.coordinator-founder-photo small{font-size:9px;color:#d6dce0}
+.coordinator-founder-profile .coordinator-profile-identity h3{font-size:clamp(27px,4vw,38px)}
+.coordinator-founder-profile .coordinator-designation{font-size:16px}
+.coordinator-founder-profile .coordinator-details{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:16px 20px}
+.coordinator-founder-profile .coordinator-detail-card{align-items:flex-start;min-height:78px;padding:13px}
+.coordinator-founder-profile .coordinator-detail-card p{font-size:12px;line-height:1.5}
+.coordinator-founder-profile .coordinator-conclusion{margin:0 20px 18px}
+@media(max-width:650px){
+ .coordinator-founder-profile{max-width:430px!important;margin-bottom:4px!important}
+ .coordinator-founder-profile .coordinator-profile-header{grid-template-columns:116px minmax(0,1fr);gap:12px;padding:12px}
+ .coordinator-founder-photo{width:112px;height:132px;border-radius:11px}
+ .coordinator-founder-photo b{font-size:9px;letter-spacing:1px}
+ .coordinator-founder-photo small{font-size:7px}
+ .coordinator-founder-profile .coordinator-profile-identity h3{font-size:clamp(19px,5.5vw,25px);line-height:1.08}
+ .coordinator-founder-profile .coordinator-designation{font-size:11px;margin-bottom:7px!important}
+ .coordinator-founder-profile .coordinator-official-badge{font-size:7px;padding:5px 7px}
+ .coordinator-founder-profile .coordinator-details{grid-template-columns:1fr;padding:10px 11px;gap:7px}
+ .coordinator-founder-profile .coordinator-detail-card{min-height:0;padding:10px}
+ .coordinator-founder-profile .coordinator-detail-card p{font-size:11px}
+ .coordinator-founder-profile .coordinator-conclusion{margin:0 11px 12px}
+}
+
 
 </style><link rel="stylesheet" href="responsive-polish.css?v=20261117-payment-example-align2"><style>@media(max-width:760px){footer{padding:17px 14px 14px!important;margin-top:22px!important}footer img{width:112px!important;height:58px!important}footer .footer-title-desktop{display:none!important}footer .gold{margin:5px 0 3px!important}.footer-title-mobile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;margin:5px auto 7px;padding:0 6px;text-align:center;color:#f3dfaa;line-height:1.12;letter-spacing:1.5px}.footer-title-mobile span{font-size:clamp(11px,3.2vw,13px);font-weight:700}.footer-title-mobile strong{font:700 clamp(19px,5.5vw,25px)/1.1 Georgia,serif;color:#fff;letter-spacing:2px}.footer-title-mobile b{font:700 clamp(17px,4.8vw,22px)/1.1 Georgia,serif;color:#dfc27b;letter-spacing:3px}footer .footer-note{margin:8px auto 0!important;padding:16px 14px!important;gap:5px!important}footer .footer-note small{font-size:10px!important;line-height:1.65}footer .footer-note .digital-support{margin:-3px 0!important;padding:0 12px 2px!important}footer .footer-note .digital-support p{font-size:12px!important;letter-spacing:1.2px!important}}@media(min-width:761px){.footer-title-mobile{display:none}}
 /* FINAL FIX — keep the existing square card and align every item inside its frame */
@@ -1265,10 +1267,32 @@ body.example-preview-open{overflow:hidden}
 </div><p class="team-note">Sponsor names, logos, photographs and acknowledgements will be published after confirmation and approval. · സ്ഥിരീകരണവും അംഗീകാരവും ലഭിച്ച ശേഷം സ്പോൺസർമാരുടെ വിവരങ്ങൾ പ്രസിദ്ധീകരിക്കും.</p></section><section class="section team-section coordinator-section" id="team">
   <div class="title coordinator-section-title">
     <p class="eyebrow">JKJ CREATIONS · EVENT LEADERSHIP</p>
-    <h2>Meet Our <span>Coordinators</span></h2>
+    <h2>Founder &amp; <span>Event Coordinators</span></h2>
   </div>
 
   <div class="coordinator-profile-gallery">
+    <article class="coordinator-profile coordinator-founder-profile" aria-label="Founder of JKJ Creations and Star Singers 2026, Rev. James K. John">
+      <header class="coordinator-profile-header">
+        <div class="coordinator-founder-photo" role="img" aria-label="Founder portrait photo placeholder">
+          <span aria-hidden="true" style="font-size:32px">✦</span>
+          <b>FOUNDER PHOTO</b><small>TO BE ADDED</small>
+        </div>
+        <div class="coordinator-profile-identity">
+          <div class="coordinator-brandline"><span>JKJ CREATIONS · FOUNDER</span><img src="assets/jkj-creations-logo.webp" alt="JKJ Creations logo"></div>
+          <h3>REV. JAMES K. JOHN</h3>
+          <p class="coordinator-designation">Founder of JKJ CREATIONS · Founder of the Star Singers 2026 Concept</p>
+          <span class="coordinator-official-badge">✦ &nbsp; FOUNDER &amp; VISIONARY</span>
+        </div>
+      </header>
+      <div class="coordinator-details">
+        <section class="coordinator-detail-card"><span class="coordinator-detail-icon" aria-hidden="true">✧</span><div><h4>MINISTRY JOURNEY</h4><p>From Chungathara, Malappuram District, Kerala. Began ministry as an Evangelist with Devanahalli Mission, Karnataka. After nearly two decades of missionary service and theological studies, ordained as a priest in the Mar Thoma Church.</p></div></section>
+        <section class="coordinator-detail-card"><span class="coordinator-detail-icon" aria-hidden="true">♫</span><div><h4>MUSIC &amp; CREATIVE WORK</h4><p>Passionate songwriter of spiritually enriching songs and writer of articles on faith and contemporary social issues. Music and creative expression are part of his ministry and vision.</p></div></section>
+        <section class="coordinator-detail-card"><span class="coordinator-detail-icon" aria-hidden="true">◎</span><div><h4>MULTILINGUAL PREACHER</h4><p>Shares the Gospel in Malayalam, Kannada, Telugu, Tamil, Hindi and other languages.</p></div></section>
+        <section class="coordinator-detail-card"><span class="coordinator-detail-icon" aria-hidden="true">⌖</span><div><h4>USA MINISTRY APPOINTMENTS</h4><p>Vicar of Emmanuel Mar Thoma Church, Lubbock, Texas, USA; and serving the Mar Thoma Congregation, San Antonio, Texas, USA.</p></div></section>
+      </div>
+      <div class="coordinator-conclusion"><span class="coordinator-conclusion-mark" aria-hidden="true">✦</span><div><h4>THE VISION BEHIND STAR SINGERS 2026</h4><p>To inspire faith and proclaim the transforming love of Christ through the Word, music and mission. <strong>Creating with Faith, Inspiring through Love.</strong></p></div></div>
+    </article>
+
 <article class="coordinator-profile" aria-label="JKJ Creations Digital Coordinator profile">
       <header class="coordinator-profile-header">
         <img src="assets/lijo-joseph-coordinator.jpg"
@@ -1720,60 +1744,7 @@ body.example-preview-open{overflow:hidden}
 <section class="section alt" id="faq"><div class="title"><p class="eyebrow">NEED TO KNOW?</p><h2>Frequently Asked <span>Questions</span></h2></div><div class="faq"><details><summary>When will registration begin? · രജിസ്ട്രേഷൻ എപ്പോൾ തുടങ്ങും?</summary><p>രജിസ്ട്രേഷൻ ആരംഭിക്കുന്ന തീയതി ഇതുവരെ പ്രഖ്യാപിച്ചിട്ടില്ല. ഔദ്യോഗികമായി അറിയിക്കും.</p></details><details><summary>Who can participate? · ആർക്കൊക്കെ പങ്കെടുക്കാം?</summary><p>യോഗ്യത, പ്രായം, വിഭാഗങ്ങൾ എന്നിവ സംഘാടകരുടെ ഔദ്യോഗിക സ്ഥിരീകരണത്തിന് കാത്തിരിക്കുകയാണ്.</p></details><details><summary>How do I submit my singing video? · വീഡിയോ എങ്ങനെ സമർപ്പിക്കാം?</summary><p>ഔദ്യോഗിക Submission Method, Video Format, Deadline എന്നിവ പിന്നീട് അറിയിക്കും. അനൗദ്യോഗിക Accounts-ലേക്ക് Entries അയക്കരുത്.</p></details><details><summary>What are the prizes? · സമ്മാനങ്ങൾ എന്തൊക്കെയാണ്?</summary><p>ഒന്നാം, രണ്ടാം, മൂന്നാം സമ്മാനത്തുകയും Special Awards-ഉം JKJ CREATIONS അറിയിക്കും.</p></details><details><summary>How will winners be selected? · വിജയികളെ എങ്ങനെ തിരഞ്ഞെടുക്കും?</summary><p>Jury Process-ഉം സ്ഥിരീകരിച്ച Evaluation Criteria-യും ഔദ്യോഗിക Competition Rules-ൽ പ്രസിദ്ധീകരിക്കും.</p></details><details><summary>Where can I get official updates? · ഔദ്യോഗിക അറിയിപ്പുകൾ എവിടെ ലഭിക്കും?</summary><p>ഈ Event Page-ഉം JKJ CREATIONS പ്രഖ്യാപിക്കുന്ന Official Communication Channels-ഉം പരിശോധിക്കുക.</p></details></div></section>
 <section class="section" id="contact"><div class="title"><p class="eyebrow">STAY CONNECTED</p><h2>Contact & <span>Organiser</span></h2></div><div class="contact-panel"><h3>JKJ CREATIONS</h3><p>Faith · Creativity · Service</p><p class="lead" id="siteContactText">Event സംബന്ധമായ അന്വേഷണങ്ങൾക്ക് സംഘാടകർ പ്രസിദ്ധീകരിക്കുന്ന ഔദ്യോഗിക Contact Details ഉപയോഗിക്കുക. ലഭ്യമായ ഫയലുകളിൽ Phone Number, Email, Social Links എന്നിവ നൽകിയിട്ടില്ലാത്തതിനാൽ ഇവിടെ ചേർത്തിട്ടില്ല.</p><p class="gold">Creating with Faith, Inspiring through Love.</p></div></section>
 
-<section class="section" id="founder-music-ministry" aria-labelledby="founder-music-title">
- <div class="title">
-  <p class="eyebrow">FOUNDER'S PROFILE · VISION · MUSIC MINISTRY</p>
-  <h2 id="founder-music-title">The Founder Behind <span>Star Singers 2026</span></h2>
-  <p>The vision, faith and creative ministry behind this musical initiative.</p>
- </div>
- <div class="founder-ministry-grid">
-  <div class="founder-ministry-profile">
-   <div class="founder-photo-placeholder" aria-label="Photo placeholder for Rev. James K. John">
-    <span class="founder-photo-icon" aria-hidden="true">✦</span>
-    <strong>FOUNDER'S PORTRAIT</strong>
-    <small>Photograph to be added</small>
-   </div>
-   <div class="founder-identity">
-    <p class="founder-label">FOUNDER · JKJ CREATIONS</p>
-    <h3>Rev. James K. John</h3>
-    <p class="founder-role">Founder of JKJ CREATIONS · Founder of the Star Singers 2026 Concept</p>
-    <p class="founder-copy">A Christian minister, multilingual preacher, songwriter and writer whose vision brings faith, music and creative expression together to inspire people and encourage the sharing of the Gospel.</p>
-    <div class="founder-tags"><span>Founder</span><span>Christian Ministry</span><span>Songwriter</span><span>Creative Vision</span></div>
-   </div>
-  </div>
-  <div class="founder-ministry-content">
-   <article class="founder-content-card">
-    <span class="founder-card-icon">✧</span><h3>His Journey & Ministry</h3>
-    <p>Rev. James K. John hails from Chungathara, Malappuram District, Kerala, India. He began his ministry as an Evangelist with Devanahalli Mission, Karnataka, following his high school education and elementary evangelism training. After nearly two decades of missionary service and theological studies, he was ordained as a priest in the Mar Thoma Church.</p>
-    <p>A multilingual preacher, he shares the Gospel in Malayalam, Kannada, Telugu, Tamil, Hindi and other languages.</p>
-   </article>
-   <article class="founder-content-card">
-    <span class="founder-card-icon">♫</span><h3>Music, Songs & Writing</h3>
-    <p>Beyond preaching, Rev. James K. John is passionate about writing spiritually enriching songs. His creative work is rooted in faith, worship and the desire to inspire others through music.</p>
-    <p>He also writes articles on faith and contemporary social issues, bringing spiritual reflection into conversation with everyday life.</p>
-    <div class="founder-link-placeholder">Song titles, lyrics, recordings and album details can be featured here as they are supplied.</div>
-   </article>
-   <article class="founder-content-card">
-    <span class="founder-card-icon">◈</span><h3>Founder & Creative Vision</h3>
-    <p>As the founder of JKJ CREATIONS and the Star Singers 2026 concept, Rev. James K. John brings together faith, creativity and service. This initiative provides a platform to celebrate singing talent and use music as a meaningful expression of faith and inspiration.</p>
-    <p class="founder-ministry-motto">“Creating with Faith, Inspiring through Love.”</p>
-   </article>
-   <article class="founder-content-card">
-    <span class="founder-card-icon">⌖</span><h3>Ministry in the United States</h3>
-    <p>The poster identifies his current ministry appointments as:</p>
-    <ul class="founder-usa-list">
-     <li>Vicar of Emmanuel Mar Thoma Church, Lubbock, Texas, USA</li>
-     <li>Serving the Mar Thoma Congregation, San Antonio, Texas, USA</li>
-    </ul>
-    <small>These are the ministry locations stated in the supplied poster; no street or postal address was provided there.</small>
-   </article>
-  </div>
- </div>
- <div class="founder-ministry-bottom">
-  <p>Faith · Creativity · Service</p>
-  <span>JKJ CREATIONS · STAR SINGERS 2026</span>
- </div>
-</section>
+
 
 </main>
 <footer><picture><source srcset="assets/jkj-creations-logo.webp" type="image/webp"><img src="assets/jkj-creations-logo.webp" alt="JKJ Creations"></picture><p class="gold footer-title-desktop">NAKSHATHRA GAYAKAR · STAR SINGERS 2026</p><div class="footer-title-mobile" aria-label="NAKSHATHRA GAYAKAR, STAR SINGERS, 2026"><span>NAKSHATHRA GAYAKAR</span><strong>STAR SINGERS</strong><b>2026</b></div><div class="footer-note"><small>© 2026 JKJ CREATIONS. All rights reserved.</small><div class="digital-support"><p>Digital Support By: <a href="https://digital.ojilztag.com" target="_blank" rel="noopener noreferrer">OJILZTAG.COM</a></p></div><div class="footer-policy-links" aria-label="Legal information"><a href="#privacy-policy">Privacy Policy</a><span aria-hidden="true">·</span><a href="#terms-conditions">Terms &amp; Conditions</a><span aria-hidden="true">·</span><a href="#refund-policy">Refund Policy</a></div></div></footer><button class="backtop" type="button" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
