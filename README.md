@@ -787,3 +787,17 @@ This is a repository/source and CI audit. GitHub Actions can verify syntax, stat
 
 - The homepage hero video now uses YouTube video ID `mvRQuJ16yHE` (https://youtu.be/mvRQuJ16yHE).
 - Existing click-to-play, pause/play controls, privacy-enhanced embed host, and responsive video frame behavior are preserved.
+
+
+## 26. Coordinator profile responsibilities aligned to event organisation — 2026-11-21
+
+- Updated the existing coordinator profiles for Sangeeth Thomas, Biji P. John and Sheen George so their assigned programmes and areas of responsibility describe the organisational work of STAR SINGERS 2026.
+- Sangeeth Thomas: designation changed to **Event Operations Coordinator**; assigned programme is **Event Operations & Team Coordination**; area covers organising event activities, coordinating team requirements, participant arrangements and programme execution.
+- Biji P. John: designation changed to **Programme & Participant Coordinator**; assigned programme is **Programme Planning & Participant Coordination**; area covers programme planning, participant coordination, group arrangements and event-related communication.
+- Sheen George remains **Project Coordinator**; assigned programme and area now describe project planning, participant/group coordination, committee organisation and event execution support.
+- Mini Anil and Lijo Joseph (Digital Coordinator) were deliberately left unchanged.
+- Existing professional-background statements, portraits, contact details/placeholders, card layout, styling and responsive behaviour were preserved.
+- Verification performed: inspected the latest README and homepage source, applied exact targeted text replacements and confirmed the GitHub content update succeeded. No live-browser or deployed-site visual test was performed.
+- Frontend file changed: `index.html`. Documentation changed: `README.md` and its matching `README.md.backup`.
+- Frontend deployment: GitHub source committed; live website deployment/appearance not independently verified.
+- Git commit for homepage: `0858989dbc2104309ca3ddc3b7a50058ef1ffbb7`.
