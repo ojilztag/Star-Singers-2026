@@ -801,3 +801,69 @@ This is a repository/source and CI audit. GitHub Actions can verify syntax, stat
 - Frontend file changed: `index.html`. Documentation changed: `README.md` and its matching `README.md.backup`.
 - Frontend deployment: GitHub source committed; live website deployment/appearance not independently verified.
 - Git commit for homepage: `0858989dbc2104309ca3ddc3b7a50058ef1ffbb7`.
+
+
+## 27. STAR SINGERS 2026 — 25-member coordinator role register and assignment rules — 2026-11-21
+
+**Status:** This is the master role-allocation register for the event coordinator team. The target is exactly 25 individual coordinators in total. Five existing profiles are already present in the website. The remaining 20 positions are reserved for future people and must be filled from the unassigned roles below.
+
+### Governing rules
+
+1. Before adding or editing any coordinator, read this section, Section 18 (locked profile-card standard), Section 26 (event-organisation responsibility direction), and the latest coordinator cards in `index.html`.
+2. Count people, not profile rows or role labels. The team target is 25 people total, including the five current profiles.
+3. Assign each future person exactly one primary designation from the unassigned register below. Select the most suitable unused role from the actual information supplied for that person. Do not ask the organiser to choose from a list when the supplied information is sufficient to make a grounded assignment.
+4. Once a role is assigned, mark it occupied in this register and never assign the same designation or substantially identical responsibility to another person. If the new person's details do not support any unused role, leave the designation/responsibility unpublished until reliable information is supplied; do not invent duties merely to fill a slot.
+5. Keep responsibilities distinct. Similar words are not enough to justify two roles: describe the actual different work area for each person, and avoid duplicating another profile's Assigned Programme or Area of Responsibility.
+6. The general coordinator team is responsible for organisation and project execution: team and participant arrangements, communication, planning, administration, activities, schedules, records, awards/prizes and event delivery. Coordinators are not assigned to sing, record songs, compose music, arrange background music, teach music, or provide musical performance/support for contestants. Contestants perform their own songs.
+7. Preserve the existing individual facts, photos, contact details and professional-background statements. A person's professional music background may remain as biography where already supplied, but must not be presented as a competition duty.
+8. **Exceptions retained as already approved:** Mini Anil's existing Programme & Creative Coordinator profile remains unchanged; Lijo Joseph remains Digital Coordinator. Do not reclassify either person into the general unassigned list. Sangeeth Thomas, Biji P. John and Sheen George retain the event-organisation role descriptions recorded in Section 26.
+9. Use the same approved profile-card frame and standard content order for all 25 people. Never create duplicate names, duplicate roles, duplicate responsibility text, copied contact links or invented personal details.
+10. The register is a planning control, not permission to publish blank/sample profiles. Add a public card only when the person's name and approved profile details/assets are available.
+
+### A. Existing assigned positions — 5 of 25 occupied
+
+| No. | Person | Current designation | Distinct assigned focus | Status |
+|---:|---|---|---|---|
+| 1 | Mini Anil | Programme & Creative Coordinator | Existing programme concept and creative planning profile; retained unchanged by organiser instruction | Occupied — exception |
+| 2 | Lijo Joseph | Digital Coordinator | Website, digital operations and technical support | Occupied — exception |
+| 3 | Sangeeth Thomas | Event Operations Coordinator | Event activity operations, team requirements and smooth execution | Occupied |
+| 4 | Biji P. John | Programme & Participant Coordinator | Programme planning, participant coordination, group arrangements and event communication | Occupied |
+| 5 | Sheen George | Project Coordinator | Overall project planning, committee organisation and event execution support | Occupied |
+
+### B. Remaining unique positions — 20 of 25 available
+
+| Slot | Reserved designation | Exclusive primary responsibility |
+|---:|---|---|
+| 6 | Team Organisation Coordinator | Organise the overall coordinator/working-team structure, task ownership and team coordination links. |
+| 7 | Group Formation Coordinator | Form and maintain participant groups, keeping group allocation orderly and avoiding duplicate placement. |
+| 8 | Volunteer Coordination Coordinator | Recruit/organise volunteers, allocate volunteer duties and coordinate their availability. |
+| 9 | Regional Coordination Coordinator | Coordinate event-related communication and arrangements across assigned regions or locations. |
+| 10 | Communication Coordinator | Manage routine official communication flow, notices and follow-ups between the organising team and relevant contacts. |
+| 11 | Participant Support Coordinator | Handle participant enquiries and practical assistance that are not registration processing or group allocation. |
+| 12 | Registration Coordination Coordinator | Coordinate registration follow-up, completeness checks and hand-off of registration queries to the authorised registration/admin process. |
+| 13 | Awards Coordination Coordinator | Coordinate award categories, recognition arrangements, award records and the award-presentation process. |
+| 14 | Prize Management Coordinator | Track prize items, readiness, allocation and fulfilment/distribution arrangements; keep separate from award-category administration. |
+| 15 | Sponsor Coordination Coordinator | Coordinate sponsor communication, agreed sponsor requirements and fulfilment of approved sponsor acknowledgements. |
+| 16 | Guest Coordination Coordinator | Coordinate invited guests, their event information, attendance and participation arrangements. |
+| 17 | Public Relations Coordinator | Coordinate outward-facing event announcements, public information and approved publicity contacts. |
+| 18 | Activity Coordination Coordinator | Coordinate non-performance event activities, activity requirements and their execution sequence. |
+| 19 | Team Management Coordinator | Monitor assigned team task progress, coordination needs and operational hand-offs; distinct from forming the team structure. |
+| 20 | Administrative Coordination Coordinator | Coordinate internal administrative records, approvals follow-up and routine office/committee documentation. |
+| 21 | Event Support Coordinator | Handle practical event-day support requirements and resolve logistical hand-offs not owned by another specialist role. |
+| 22 | Programme Implementation Coordinator | Track delivery of the approved programme plan and confirm that assigned programme steps are carried out. |
+| 23 | Participant Welfare Coordinator | Coordinate participant comfort, accessibility-related requests and welfare concerns during event participation. |
+| 24 | Schedule & Timeline Coordinator | Maintain the master activity calendar, deadlines, reminders and timing dependencies. |
+| 25 | Documentation & Records Coordinator | Maintain approved event documents, meeting notes, decision records and non-sensitive operational archives. |
+
+### Allocation control
+
+- Current occupied count: **5 / 25**.
+- Remaining reserved positions: **20 / 25**.
+- For each newly supplied person, compare their verified background/details with the remaining register, choose one best-fit unused designation, then remove that role from the available pool by marking it occupied in this section.
+- Update the table with the person's name and a concise, person-specific responsibility. Do not create an additional designation if an existing unused role accurately fits.
+- If a future person's facts overlap with an occupied role, choose the next best genuinely distinct unused role only when supported by their facts. Never force a mismatch.
+- When all 25 positions are occupied, do not add a 26th coordinator without a new explicit organiser decision.
+
+### Change control and verification boundary
+
+This register records the role-allocation framework and the current five assignments. It does not claim that the 20 future people have been identified, that their biographies have been received, or that the remaining public profile cards already exist. Every future update must refresh this register and `README.md.backup` in the same maintenance session, following Section 19.
