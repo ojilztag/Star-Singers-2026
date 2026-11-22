@@ -219,12 +219,13 @@ function entryMessage(r){
  '\n\n🆔 Participant Details'+
  '\n\nParticipant ID: '+String(r.registrationId||'')+
  '\nName: '+String(r.participantName||'')+
+ '\nAge Category: '+String(r.ageCategory||'Needs verification')+
  '\nParish: '+String(r.parishName||'')+
  '\nDiocese: '+String(r.diocese||'')+
  '\nResidence: '+residence+
   '\n\n🎫 Your Official Participant Entry Card Is Attached. Please Save It Safely For Future Reference.'+
  '\n\n📢 Share The Joy And Spread The Talent! Invite Your Friends And Family To Join This Musical Journey.'+
- '\n\n🎼 To Contact The Organizers: https://jkjcreations.org'+
+ '\n\n🌐 Official Website: JKJCREATIONS.ORG (https://jkjcreations.org)'+
  '\n\n✨ May Your Voice Shine And Your Talent Inspire! With Love And Best Wishes. 👏'+
  '\n\n❤️ JKJ CREATIONS'+
  '\nFaith • Creativity • Service';
@@ -275,10 +276,11 @@ $('records').addEventListener('click',e=>{
    const text=whatsappHeader()+'\n\n🎉 WELCOME TO THE STAR SINGERS FAMILY!\n\nDear '+String(r.participantName||'Participant')+',\n\n💐 Your registration has been officially approved. We are delighted to have you with us!\n\n━━━━━━━━━━━━━━━━\n🆔 OFFICIAL PARTICIPANT DETAILS\n━━━━━━━━━━━━━━━━\n'+
     detail('🆔 Participant ID',r.registrationId)+
     detail('👤 Name',r.participantName)+
+    detail('🏅 Age Category',r.ageCategory||'Needs verification')+
     detail('⛪ Parish',r.parishName)+
     detail('✝️ Diocese',r.diocese)+
     detail('🌍 Residence',residence)+
-    '\n🔒 Please save your Participant ID for future reference. Your Official Entry Card has been shared separately.\n\n📢 SHARE THE JOY · SPREAD THE TALENT!\nShare our official website with your friends and family, promote this musical initiative and invite others to join this wonderful musical journey.\n\n🌐 https://www.jkjcreations.org\n\n✨ May your voice shine and your talent inspire!\n\nWith love & best wishes,\n❤️ JKJ CREATIONS\nFaith • Creativity • Service ✨';
+    '\n🔒 Please save your Participant ID for future reference. Your Official Entry Card has been shared separately.\n\n📢 SHARE THE JOY · SPREAD THE TALENT!\nShare our official website with your friends and family, promote this musical initiative and invite others to join this wonderful musical journey.\n\n🌐 Official Website: JKJCREATIONS.ORG\nhttps://jkjcreations.org\n\n✨ May your voice shine and your talent inspire!\n\nWith love & best wishes,\n❤️ JKJ CREATIONS\nFaith • Creativity • Service ✨';
    const digits=String(r.phone||'').replace(/\D/g,'');
    if(!digits){msg('dashStatus','No valid WhatsApp number is saved for this registration.',true);return;}
    window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(text),'_blank','noopener');
