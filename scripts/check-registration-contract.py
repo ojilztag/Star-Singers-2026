@@ -14,7 +14,7 @@ checks = {
     "registration payload carries gender and DOB": "gender:form.elements.gender.value,dateOfBirth:form.elements.dateOfBirth.value" in client,
     "DOB and gender fields exist in public form": 'name="gender"' in index and 'name="dateOfBirth"' in index,
     "backend row mapping reads category columns 25–28": "gender:gender,dateOfBirth:dob,age:ageInfo?ageInfo.age:'',ageCategory:ageInfo?ageInfo.category:''" in code,
-    "append row writes all four category values after 24 legacy columns": "Pending Review','','','',gender,dateOfBirth,ageInfo.age,ageInfo.category" in code,
+    "registration row uses named headers instead of fragile positional indexes": "function registrationRow_(record)" in code and "REG_HEADERS.map(header=>" in code and "'Gender':gender" in code and "'Age Category':ageInfo.category" in code,
     "legacy repair makes backup before editing": code.index("copyTo(db_())") < code.index("sh.getRange(row,25,1,4).setValues"),
     "invalid gender is not inferred": "Gender could not be recovered from the stored value" in code,
     "six category filters exist in backend and admin": all(x in code and x in admin for x in ["male-junior","male-senior","male-super-senior","female-junior","female-senior","female-super-senior"]),
