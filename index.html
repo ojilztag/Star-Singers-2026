@@ -1198,6 +1198,61 @@ body.example-preview-open{overflow:hidden}
 
 
 
+
+<style id="jkj-category-highlight-vertical-cards">
+/* Main category concepts: each group remains one prominent, expandable-by-content card. */
+.category-groups{gap:26px}
+.category-group{
+  padding:clamp(22px,3.2vw,34px);
+  border-width:2px;
+  border-radius:22px;
+  box-shadow:0 16px 38px #0005, inset 0 1px 0 #ffffff12;
+}
+.category-group-heading{margin-bottom:25px;gap:24px}
+.category-group-heading h3{font-size:clamp(25px,3.4vw,34px);letter-spacing:.2px}
+.category-group-heading>div>p:last-child{font-size:14px;line-height:1.7}
+.category-illustration{width:146px;height:128px;flex-basis:146px}
+.category-age-grid{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.age-band{
+  display:block;
+  width:100%;
+  min-height:138px;
+  padding:20px 22px;
+  border-radius:15px;
+  background:linear-gradient(100deg,#ffffff12,#ffffff06);
+}
+.age-band>span{width:32px;height:32px;font-size:12px}
+.age-band h4{font-size:17px;margin:12px 0 6px}
+.age-band strong{display:block;font-size:15px}
+.common-group .category-group-heading{margin-bottom:22px}
+.common-group .notice.category-notice{max-width:none;margin:20px 0!important;line-height:1.8}
+.common-rules{display:flex;flex-direction:column;gap:12px}
+.common-rules article{
+  width:100%;
+  padding:19px 21px;
+  border-radius:14px;
+  background:linear-gradient(100deg,#ffffff10,#ffffff05);
+}
+.common-rules b{font-size:15px;margin-bottom:7px}
+.common-rules span{font-size:13px;line-height:1.75}
+@media(max-width:650px){
+  .category-groups{gap:18px}
+  .category-group{padding:18px;border-radius:17px}
+  .category-group-heading{gap:12px;margin-bottom:18px}
+  .category-illustration{width:88px;height:84px;flex-basis:88px}
+  .category-group-heading h3{font-size:22px}
+  .category-group-heading>div>p:last-child{font-size:12px}
+  .age-band{min-height:124px;padding:16px}
+  .age-band h4{font-size:15px}
+  .age-band strong{font-size:13px}
+  .common-rules article{padding:16px}
+}
+</style>
+
 </head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 <header class="top"><div class="head">
