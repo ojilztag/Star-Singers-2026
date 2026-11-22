@@ -18,7 +18,7 @@ const REG_HEADERS = [
   'WhatsApp Number','Entry Type','Registration Fee','UTR / Transaction ID',
   'Participant Photo Drive ID','Participant Photo Drive URL','Original Photo Drive ID','Original Photo Drive URL',
   'Payment Proof Drive ID','Payment Proof Drive URL','Payment Status',
-  'Registration Status','Admin Note','Reviewed At','Reviewed By'
+  'Registration Status','Admin Note','Reviewed At','Reviewed By','Gender','Date of Birth','Age at 31-Dec-2026','Age Category'
 ];
 const AUDIT_HEADERS = ['Timestamp','Admin','Action','Record ID','Details'];
 const SETTINGS_HEADERS = ['Setting','Value','Description'];
@@ -168,7 +168,7 @@ function reply_(type,data,token) {
 }
 function json_(v){return ContentService.createTextOutput(JSON.stringify(v)).setMimeType(ContentService.MimeType.JSON);}
 function db_(){const id=PropertiesService.getScriptProperties().getProperty('SS26_SPREADSHEET_ID');if(!id)throw new Error('Run setupStarSingersBackend() first.');return SpreadsheetApp.openById(id);}
-function sheet_(name,headers){const s=db_().getSheetByName(name);if(!s)throw new Error('Missing sheet: '+name);const h=s.getRange(1,1,1,headers.length).getDisplayValues()[0];if(headers.some((v,i)=>h[i]!==v))throw new Error('Sheet headers do not match. No data was changed.');return s;}
+function sheet_(name,headers){const s=db_().getSheetByName(name);if(!s)throw new Error('Missing sheet: '+name);if(name===CFG.REG_SHEET){const base=headers.slice(0,24),h=s.getRange(1,1,1,24).getDisplayValues()[0];if(base.some((v,i)=>h[i]!==v))throw new Error('Existing registration headers do not match. No data was changed.');if(s.getMaxColumns()<headers.length)s.insertColumnsAfter(s.getMaxColumns(),headers.length-s.getMaxColumns());const extra=s.getRange(1,25,1,headers.length-24).getDisplayValues()[0];headers.slice(24).forEach((v,i)=>{if(!extra[i])s.getRange(1,25+i).setValue(v);else if(extra[i]!==v)throw new Error('Registration category columns do not match. No data was changed.');});return s;}const h=s.getRange(1,1,1,headers.length).getDisplayValues()[0];if(headers.some((v,i)=>h[i]!==v))throw new Error('Sheet headers do not match. No data was changed.');return s;}
 function folder_(key){const id=PropertiesService.getScriptProperties().getProperty(key);if(!id)throw new Error('Drive folder not configured.');return DriveApp.getFolderById(id);}
 function clean_(v,n){return String(v==null?'':v).replace(/[<>]/g,'').trim().slice(0,n);}
 function digits_(v){return String(v||'').replace(/\D/g,'');}
@@ -192,6 +192,9 @@ function register_(p) {
   const name=clean_(p.participantName,120),parish=clean_(p.parishName,160),diocese=clean_(p.diocese,160);
   const country=clean_(p.country,100),state=clean_(p.state,100),district=clean_(p.district,100);
   const phone=String(p.phone||'').trim(),utr=String(p.utr||'').trim();
+  const gender=String(p.gender||'').trim(),dateOfBirth=String(p.dateOfBirth||'').trim(),ageInfo=calculateAgeCategory_(dateOfBirth);
+  if(!['Male','Female'].includes(gender))throw new Error('Select Male or Female.');
+  if(ageInfo.age<5)throw new Error('Participant must be at least 5 years old on 31 December 2026.');
   if(!name||!parish||!diocese||!country||!state||!district||!phone||!utr)throw new Error('Complete all required fields, including UTR / Transaction ID.');
   if(!/^\d{12}$/.test(utr))throw new Error('UTR / Transaction ID must contain exactly 12 digits.');
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
@@ -222,10 +225,11 @@ function register_(p) {
     proofSaved=savePrivate_(folder_('SS26_PROOFS_FOLDER_ID'),proof,ref,'PAYMENT');
     const now=new Date();
     sh.appendRow([ref,'',now,name,parish,diocese,country,state,district,phone,'Individual / Single Entry',configuredFee,utr,
-      photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','']);
+      photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','',gender,dateOfBirth,ageInfo.age,ageInfo.category]);
     const row=sh.getLastRow();
     // Preserve the complete international number as text (including leading + and country code).
     sh.getRange(row,10).setNumberFormat('@').setValue(phone);
+    sh.getRange(row,26).setNumberFormat('@').setValue(dateOfBirth);
     sh.getRange(row,3).setNumberFormat('dd-mmm-yyyy hh:mm:ss');
     audit_('PUBLIC','REGISTRATION_SUBMITTED',ref,'Photo and payment proof stored in private Drive folders.');
     const result={success:true,trackingRef:ref,message:'Registration request received. Payment and documents are pending organiser verification.'};
@@ -237,6 +241,12 @@ function register_(p) {
     if(proofSaved)try{DriveApp.getFileById(proofSaved.id).setTrashed(true);}catch(ignore){}
     throw err;
   } finally {lock.releaseLock();}
+}
+function calculateAgeCategory_(dobText){
+  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(dobText))throw new Error('Enter a valid Date of Birth.');
+  const p=dobText.split('-').map(Number),birth=new Date(Date.UTC(p[0],p[1]-1,p[2])),cutoff=new Date(Date.UTC(2026,11,31));
+  if(birth.getUTCFullYear()!==p[0]||birth.getUTCMonth()!==p[1]-1||birth.getUTCDate()!==p[2]||birth>cutoff)throw new Error('Date of Birth must be valid and on or before 31 December 2026.');
+  const age=2026-p[0];return {age:age,category:age<=17?'Junior':age<=39?'Senior':'Super Senior'};
 }
 function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();}
 function duplicatePhoneKey_(v){return String(v||'').replace(/\D/g,'');}
@@ -381,7 +391,7 @@ function rowObject_(r) {
   const d=r[2] instanceof Date?r[2]:new Date(r[2]);
   return {trackingRef:String(r[0]||''),registrationId:String(r[1]||''),submittedAt:isNaN(d.getTime())?'':Utilities.formatDate(d,Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'),
     participantName:String(r[3]||''),parishName:String(r[4]||''),diocese:String(r[5]||''),country:String(r[6]||''),state:String(r[7]||''),district:String(r[8]||''),phone:String(r[9]||''),entryType:String(r[10]||''),fee:r[11],utr:String(r[12]||''),
-    photoUrl:String(r[14]||''),originalPhotoUrl:String(r[16]||''),paymentProofUrl:String(r[18]||''),paymentStatus:String(r[19]||''),status:String(r[20]||''),adminNote:String(r[21]||'')};
+    photoUrl:String(r[14]||''),originalPhotoUrl:String(r[16]||''),paymentProofUrl:String(r[18]||''),paymentStatus:String(r[19]||''),status:String(r[20]||''),adminNote:String(r[21]||''),gender:String(r[24]||''),dateOfBirth:String(r[25]||''),age:String(r[26]||''),ageCategory:String(r[27]||'')};
 }
 function getEntryPhoto_(p) {
   const admin=requireAdmin_(p.sessionToken);
