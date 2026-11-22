@@ -225,7 +225,7 @@ function register_(p) {
     proofSaved=savePrivate_(folder_('SS26_PROOFS_FOLDER_ID'),proof,ref,'PAYMENT');
     const now=new Date();
     sh.appendRow([ref,'',now,name,parish,diocese,country,state,district,phone,'Individual / Single Entry',configuredFee,utr,
-      photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','',gender,dateOfBirth,ageInfo.age,ageInfo.category]);
+      photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','',gender,dateOfBirth,ageInfo.age,ageInfo.category]);
     const row=sh.getLastRow();
     // Preserve the complete international number as text (including leading + and country code).
     sh.getRange(row,10).setNumberFormat('@').setValue(phone);
