@@ -867,3 +867,15 @@ This is a repository/source and CI audit. GitHub Actions can verify syntax, stat
 ### Change control and verification boundary
 
 This register records the role-allocation framework and the current five assignments. It does not claim that the 20 future people have been identified, that their biographies have been received, or that the remaining public profile cards already exist. Every future update must refresh this register and `README.md.backup` in the same maintenance session, following Section 19.
+
+
+## 28. Registration form — gender, DOB and automatic age category — 2026-11-22
+
+- Preserved the existing single Registration Form and all existing fields, upload controls, payment consent, UTR validation, photo crop/compression, submission flow, duplicate rule, payment verification and approval workflow.
+- Added required Gender (Male/Female) and Date of Birth fields inside the existing Participant Details section. Added read-only calculated Age and Automatic Category display fields.
+- Official Age Cut-off Date: **31 December 2026**. Age bands: Junior 5–17; Senior 18–39; Super Senior 40+. Age is calculated as completed years on the cut-off date; age below 5 is ineligible. Boundaries are inclusive.
+- Frontend displays the result for the participant; Apps Script independently validates DOB, gender and eligibility and calculates the category again. Browser-supplied age/category are not trusted.
+- Added four trailing columns to the existing Registrations sheet: Gender, Date of Birth, Age at 31-Dec-2026, Age Category. Existing columns and rows are preserved; missing trailing headers are added lazily by the existing backend. The installer is not to be rerun.
+- Admin record detail and CSV/PDF export fields now include gender, DOB, age and category. DOB is private admin data; do not publish it in public participant lists.
+- Files changed: index.html, backend-client.js, Code.gs, admin.html, README.md and README.md.backup.
+- Verification: source-level targeted replacements only. No Apps Script deployment, live form submission, browser/device test or live Google Sheet migration was performed. The Apps Script owner must deploy updated Code.gs to the existing Web App using Manage deployments → Edit → New version; do not run the installer.
