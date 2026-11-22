@@ -279,18 +279,17 @@ The six category combinations are:
 
 ### Age cut-off and age bands — decisions still required
 
-The Age Cut-off Date is the common reference date used to calculate every participant's age. It is not automatically the registration closing date.
+The official Age Cut-off Date is **31 December 2026**. This is the reference date for calculating every participant's completed age; it is not the registration closing date.
 
-The exact cut-off date and exact category boundaries have **not** been confirmed in the reviewed source/code. Example bands previously discussed (5–17, 18–39, 40+) were examples only, not approved final rules.
+Confirmed inclusive age bands:
+- **Junior:** 5–17 years
+- **Senior:** 18–39 years
+- **Super Senior:** 40 years and above
+- **Under 5:** Not eligible
 
-Before implementation, the organiser must confirm:
-- Official Age Cut-off Date
-- Junior minimum and maximum age
-- Senior minimum and maximum age
-- Super Senior minimum age and whether a maximum applies
-- Whether boundary ages are inclusive
+Gender options are **Male** and **Female**. Combining Gender with the three age bands produces six categories: Male Junior, Male Senior, Male Super Senior, Female Junior, Female Senior and Female Super Senior.
 
-The configuration must avoid gaps and overlaps. The backend must reject invalid DOBs and any participant outside all configured bands. Category limits should be centrally configurable for Admin use, not duplicated as hard-coded browser-only rules.
+The participant enters Date of Birth and Gender. The website calculates and displays the age/category; the Apps Script backend independently validates the values and calculates the category again. The participant cannot manually choose a category. Invalid, future or under-five DOB values are rejected.
 
 ### Individual identity and Participant ID
 
@@ -424,7 +423,7 @@ Before deleting demo records or resetting IDs:
 ## 14. Known limitations and verification boundaries
 
 - Gender/DOB age categories are implemented in the current source. Six category-specific Admin search and export filters are implemented; the full multi-sheet Master workbook remains a separate enhancement.
-- A backed-up Admin repair workflow is available for legacy DOB-derived Age/Category columns. Invalid Gender values are not guessed; they are cleared for organiser confirmation.
+- Admin provides a read-only Registration Data Audit. No repair or data-modification button is exposed in the Admin Panel; legacy data corrections require a separately reviewed and authorised maintenance procedure.
 - The current export is CSV plus browser print-to-PDF, not native XLSX/PDF generation on the server.
 - Current Participant ID prefix is `JKJ-CC26-M-`, not the proposed `SS2026-`.
 - The current website has a single registration form with Gender, DOB, calculated Age and automatic Category fields.
@@ -885,7 +884,18 @@ This register records the role-allocation framework and the current five assignm
 - Confirmed category rules: age is completed age on 31-Dec-2026; Junior 5–17, Senior 18–39, Super Senior 40+; under-5 and invalid/future DOB values are rejected. Gender values are Male or Female. Gender is never inferred from DOB or any other field.
 - The registration row writer keeps the original 24 registration columns in their existing order and writes the four category columns by their fixed trailing positions: Gender (Y/25), Date of Birth (Z/26), Age (AA/27), Age Category (AB/28).
 - rowObject_ normalises legacy Date-valued DOB cells using the Apps Script project timezone and derives Age/Category from DOB rather than trusting possibly shifted legacy values. Invalid Gender is exposed to Admin as requiring verification.
-- Admin includes a read-only category-data audit and an explicit repair action. Repair creates a hidden Registrations_Backup_Category_Repair sheet before changing Y:AB. It recalculates Age and Category from valid DOB; invalid Gender is cleared and marked for organiser confirmation. Rows with invalid/missing DOB are left untouched and reported as unrepairable. The repair action must be reviewed before use.
+- Admin includes only a read-only category-data audit. The repair button and repair API action have been removed; no registration data is changed by the audit.
 - Admin search and export include all six combined categories. Existing common Participant ID generation, payment verification, approval flow, fee, UTR validation, file storage and original columns remain unchanged.
-- Files updated on the audit branch: Code.gs, admin.html, BACKEND_SETUP.md, README.md, README.md.backup, quality.yml, test-category-rules.js and check-registration-contract.py. This branch is not yet merged to main and is not deployed to Apps Script.
+- Files updated on the audit branch: Code.gs, admin.html, BACKEND_SETUP.md, README.md, README.md.backup, quality.yml, test-category-rules.js and check-registration-contract.py. The audit hardening was merged to main; the latest public website alignment is recorded below and requires GitHub Pages deployment.
 - Verification boundary: source-level checks and GitHub Actions must pass before merge. Live spreadsheet values, Drive permissions, Apps Script deployment, real registrations, payment verification and mobile/desktop end-to-end behaviour still require authorised owner testing. Never claim these have passed until performed.
+
+
+## 30. Public website alignment — six categories, prize structure, rules and FAQ — 2026-11-22
+
+- Public Categories section now displays all six Gender × Age combinations using the confirmed cut-off date of 31 December 2026.
+- Eligibility is stated consistently: Junior 5–17, Senior 18–39, Super Senior 40+, under-five participants are ineligible. Category is automatically calculated from DOB and Gender.
+- Competition Rules and FAQ now use the same age bands, solo-entry requirement, Christmas Carol requirement, landscape recording, no-editing rule, ₹300 entry fee and payment-verification process.
+- Prize section now shows First, Second and Third placements in each of the six categories (18 category-wise placement awards). Ten separate audience-engagement Encouragement Prizes remain additional awards. Prize amounts and sponsors remain unannounced; no values are invented.
+- Admin retains the read-only Registration Data Audit only. The repair button and backend repair action are removed. Audit does not delete or modify registration records.
+- Existing registration form, category calculation, participant IDs, payment flow, sponsor and coordinator sections are preserved.
+- Website source update is on branch `website/category-prize-rules-faq-alignment-2026-11-22`; GitHub Pages deployment and live browser verification must be checked separately. Apps Script code update requires a new Web App version deployment.
