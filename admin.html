@@ -191,20 +191,30 @@ function drawEntryCard(r,photo,logo){
  ctx.beginPath();rr(ctx,px,py,pw,ph,21);ctx.clip();
  const scale=Math.max(pw/photo.width,ph/photo.height),sw=pw/scale,sh=ph/scale,sx=(photo.width-sw)/2,sy=(photo.height-sh)/2;
  ctx.drawImage(photo,sx,sy,sw,sh,px,py,pw,ph);ctx.restore();
- // Name: one clean, centred plate. Font scales down for long names instead of clipping.
- ctx.fillStyle='#fff0c5';rr(ctx,105,966,W-210,100,22);ctx.fill();
- ctx.strokeStyle='#d5a844';ctx.lineWidth=5;rr(ctx,105,966,W-210,100,22);ctx.stroke();
- let nameFont=48;ctx.font='bold '+nameFont+'px Arial';while(nameFont>30&&ctx.measureText(String(r.participantName||'PARTICIPANT')).width>W-270){nameFont-=2;ctx.font='bold '+nameFont+'px Arial';}
- ctx.fillStyle='#6f151c';ctx.fillText(String(r.participantName||'PARTICIPANT'),W/2,1030);
- // Participant ID is visually subordinate to the name, but remains easy to read.
- ctx.fillStyle='#f7d78d';ctx.font='bold 25px Arial';ctx.fillText('PARTICIPANT ID',W/2,1114);
- ctx.fillStyle='#0b382b';rr(ctx,155,1135,W-310,82,18);ctx.fill();
- ctx.strokeStyle='#d7b45c';ctx.lineWidth=4;rr(ctx,155,1135,W-310,82,18);ctx.stroke();
- let idFont=37;ctx.font='bold '+idFont+'px Arial';while(idFont>25&&ctx.measureText(String(r.registrationId||'')).width>W-370){idFont-=2;ctx.font='bold '+idFont+'px Arial';}
- ctx.fillStyle='#fff6d8';ctx.fillText(String(r.registrationId||''),W/2,1188);
- // Restrained footer anchors the composition and balances the lower margin.
- ctx.fillStyle='rgba(255,239,196,.9)';ctx.font='bold 19px Arial';ctx.fillText('JKJ CREATIONS  •  OFFICIAL PARTICIPANT',W/2,1282);
- ctx.fillStyle='rgba(255,239,196,.75)';ctx.font='17px Arial';ctx.fillText('Keep this Entry Card safe',W/2,1312);
+ // Name plate.
+ ctx.fillStyle='#fff0c5';rr(ctx,105,944,W-210,88,22);ctx.fill();
+ ctx.strokeStyle='#d5a844';ctx.lineWidth=5;rr(ctx,105,944,W-210,88,22);ctx.stroke();
+ let nameFont=46;ctx.font='bold '+nameFont+'px Arial';while(nameFont>28&&ctx.measureText(String(r.participantName||'PARTICIPANT')).width>W-270){nameFont-=2;ctx.font='bold '+nameFont+'px Arial';}
+ ctx.fillStyle='#6f151c';ctx.fillText(String(r.participantName||'PARTICIPANT'),W/2,1000);
+ // Prominent official age-category ribbon.
+ const category=String(r.ageCategory||'Needs verification').toUpperCase();
+ const catGradient=ctx.createLinearGradient(130,0,W-130,0);catGradient.addColorStop(0,'#f1c96e');catGradient.addColorStop(.5,'#fff4c9');catGradient.addColorStop(1,'#f1c96e');
+ ctx.fillStyle=catGradient;rr(ctx,125,1045,W-250,78,18);ctx.fill();
+ ctx.strokeStyle='#8a5b17';ctx.lineWidth=3;rr(ctx,125,1045,W-250,78,18);ctx.stroke();
+ ctx.fillStyle='#5f171b';ctx.font='bold 31px Arial';ctx.fillText(category+' CATEGORY',W/2,1094);
+ // Date of birth.
+ const dobParts=String(r.dateOfBirth||'').split('-');
+ const dobLabel=dobParts.length===3?dobParts[2]+'-'+dobParts[1]+'-'+dobParts[0]:'Not available';
+ ctx.fillStyle='#fff0c5';ctx.font='bold 22px Arial';ctx.fillText('DATE OF BIRTH  •  '+dobLabel,W/2,1160);
+ // Participant ID.
+ ctx.fillStyle='#f7d78d';ctx.font='bold 23px Arial';ctx.fillText('PARTICIPANT ID',W/2,1200);
+ ctx.fillStyle='#0b382b';rr(ctx,155,1212,W-310,68,16);ctx.fill();
+ ctx.strokeStyle='#d7b45c';ctx.lineWidth=4;rr(ctx,155,1212,W-310,68,16);ctx.stroke();
+ let idFont=34;ctx.font='bold '+idFont+'px Arial';while(idFont>24&&ctx.measureText(String(r.registrationId||'')).width>W-370){idFont-=2;ctx.font='bold '+idFont+'px Arial';}
+ ctx.fillStyle='#fff6d8';ctx.fillText(String(r.registrationId||''),W/2,1257);
+ // Official footer.
+ ctx.fillStyle='rgba(255,239,196,.9)';ctx.font='bold 19px Arial';ctx.fillText('JKJ CREATIONS  •  OFFICIAL PARTICIPANT',W/2,1320);
+ ctx.fillStyle='rgba(255,239,196,.75)';ctx.font='17px Arial';ctx.fillText('Keep this Entry Card safe',W/2,1348);
 }
 function whatsappHeader(){
  return '🌟 JKJ Creations International – USA Edition Presents 🇺🇸\n🎤 Nakshathra Gayakar – Star Singers 2026';
@@ -219,7 +229,8 @@ function entryMessage(r){
  '\n\n🆔 Participant Details'+
  '\n\nParticipant ID: '+String(r.registrationId||'')+
  '\nName: '+String(r.participantName||'')+
- '\nAge Category: '+String(r.ageCategory||'Needs verification')+
+ '\nDate of Birth: '+String(r.dateOfBirth||'Not available')+
+ '\n🏅 ⭐ OFFICIAL AGE CATEGORY: '+String(r.ageCategory||'Needs verification').toUpperCase()+' ⭐'+
  '\nParish: '+String(r.parishName||'')+
  '\nDiocese: '+String(r.diocese||'')+
  '\nResidence: '+residence+
@@ -276,7 +287,8 @@ $('records').addEventListener('click',e=>{
    const text=whatsappHeader()+'\n\n🎉 WELCOME TO THE STAR SINGERS FAMILY!\n\nDear '+String(r.participantName||'Participant')+',\n\n💐 Your registration has been officially approved. We are delighted to have you with us!\n\n━━━━━━━━━━━━━━━━\n🆔 OFFICIAL PARTICIPANT DETAILS\n━━━━━━━━━━━━━━━━\n'+
     detail('🆔 Participant ID',r.registrationId)+
     detail('👤 Name',r.participantName)+
-    detail('🏅 Age Category',r.ageCategory||'Needs verification')+
+    detail('🎂 Date of Birth',r.dateOfBirth)+
+    detail('🏅 ⭐ OFFICIAL AGE CATEGORY',String(r.ageCategory||'Needs verification').toUpperCase())+
     detail('⛪ Parish',r.parishName)+
     detail('✝️ Diocese',r.diocese)+
     detail('🌍 Residence',residence)+
