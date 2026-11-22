@@ -226,8 +226,19 @@ function register_(p) {
     originalSaved=savePrivate_(folder_('SS26_ORIGINALS_FOLDER_ID'),originalPhoto,ref,'ORIGINAL');
     proofSaved=savePrivate_(folder_('SS26_PROOFS_FOLDER_ID'),proof,ref,'PAYMENT');
     const now=new Date();
-    sh.appendRow([ref,'',now,name,parish,diocese,country,state,district,phone,'Individual / Single Entry',configuredFee,utr,
-      photoSaved.id,photoSaved.url,originalSaved.id,originalSaved.url,proofSaved.id,proofSaved.url,'Pending Verification','Pending Review','','','',gender,dateOfBirth,ageInfo.age,ageInfo.category]);
+    const rowValues=registrationRow_({
+      'Tracking Ref':ref,'Participant ID':'','Submitted At':now,'Participant Name':name,
+      'Own Parish':parish,'Own Diocese':diocese,'Residence Country':country,
+      'State / Province':state,'District / Region':district,'WhatsApp Number':phone,
+      'Entry Type':'Individual / Single Entry','Registration Fee':configuredFee,'UTR / Transaction ID':utr,
+      'Participant Photo Drive ID':photoSaved.id,'Participant Photo Drive URL':photoSaved.url,
+      'Original Photo Drive ID':originalSaved.id,'Original Photo Drive URL':originalSaved.url,
+      'Payment Proof Drive ID':proofSaved.id,'Payment Proof Drive URL':proofSaved.url,
+      'Payment Status':'Pending Verification','Registration Status':'Pending Review',
+      'Admin Note':'','Reviewed At':'','Reviewed By':'','Gender':gender,
+      'Date of Birth':dateOfBirth,'Age at 31-Dec-2026':ageInfo.age,'Age Category':ageInfo.category
+    });
+    sh.appendRow(rowValues);
     const row=sh.getLastRow();
     // Preserve the complete international number as text (including leading + and country code).
     sh.getRange(row,10).setNumberFormat('@').setValue(phone);
@@ -243,6 +254,14 @@ function register_(p) {
     if(proofSaved)try{DriveApp.getFileById(proofSaved.id).setTrashed(true);}catch(ignore){}
     throw err;
   } finally {lock.releaseLock();}
+}
+function registrationRow_(record) {
+  const values=REG_HEADERS.map(header=>Object.prototype.hasOwnProperty.call(record,header)?record[header]:'');
+  if(values.length!==REG_HEADERS.length)throw new Error('Registration column mapping is inconsistent. No row was written.');
+  const required=['Tracking Ref','Submitted At','Participant Name','Gender','Date of Birth','Age at 31-Dec-2026','Age Category'];
+  const missing=required.filter(header=>!Object.prototype.hasOwnProperty.call(record,header));
+  if(missing.length)throw new Error('Registration mapping is missing required fields: '+missing.join(', '));
+  return values;
 }
 function calculateAgeCategory_(dobText){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(dobText))throw new Error('Enter a valid Date of Birth.');
