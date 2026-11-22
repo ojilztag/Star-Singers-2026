@@ -13,7 +13,7 @@ checks = {
     "28-column registration schema": "Age Category'" in code and "Gender','Date of Birth','Age at 31-Dec-2026','Age Category'" in code,
     "registration payload carries gender and DOB": "gender:form.elements.gender.value,dateOfBirth:form.elements.dateOfBirth.value" in client,
     "DOB and gender fields exist in public form": 'name="gender"' in index and 'name="dateOfBirth"' in index,
-    "DOB has a visible placeholder and category-purpose note": "date-input-placeholder" in index and "ശരിയായ പ്രായവിഭാഗമായ" in index,
+    "DOB has a visible placeholder and category-purpose note": "date-input-placeholder" in index and "Date of Birth നൽകുക" in index,
     "calculated age and category are not displayed in the form": 'id="calculatedAge"' not in index and 'id="calculatedCategory"' not in index,
     "backend row mapping reads category columns 25–28": "gender:gender,dateOfBirth:dob,age:ageInfo?ageInfo.age:'',ageCategory:ageInfo?ageInfo.category:''" in code,
     "registration row uses named headers instead of fragile positional indexes": "function registrationRow_(record)" in code and "REG_HEADERS.map(header=>" in code and "'Gender':gender" in code and "'Age Category':ageInfo.category" in code,
@@ -23,7 +23,7 @@ checks = {
     "six category filters exist in backend and admin": all(x in code and x in admin for x in ["male-junior","male-senior","male-super-senior","female-junior","female-senior","female-super-senior"]),
     "read-only audit retained and repair action removed": "auditcategorydata" in code and 'id="auditCategoryData"' in admin and "repaircategorydata" not in code and "repairCategoryData" not in admin,
     "public page has six categories and 18 placement awards": all(x in index for x in ["Male · Junior","Male · Senior","Male · Super Senior","Female · Junior","Female · Senior","Female · Super Senior"]) and "18 Category-wise Awards" in index,
-    "public age eligibility is participant-friendly": "5 വയസ്സിൽ താഴെയുള്ളവർക്ക് പങ്കെടുക്കാനാവില്ല" in index and "2026 ഡിസംബർ 31" not in index,
+    "public age eligibility states the cut-off and minimum age": "31 December 2026" in index and "Under-5 participants are not eligible" in index,
     "README backup exactly matches": readme == backup,
 }
 failed = [name for name, ok in checks.items() if not ok]
