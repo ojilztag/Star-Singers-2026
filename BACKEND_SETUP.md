@@ -67,11 +67,30 @@ The Admin Panel includes an **Important Event Information · Website Content** e
 - Verify payments against the actual bank/UPI account before approval.
 - Define and publish an appropriate privacy, retention and contact policy before collecting real participant data.
 
+## Legacy age-category data audit and repair
+
+The Registration sheet may contain legacy rows created before the Gender/DOB columns were correctly aligned. Do not edit these cells manually and do not rerun the one-time installer.
+
+1. Deploy the reviewed Code.gs version to the existing Web App only after the source branch has been approved and merged.
+2. Publish the matching Admin Panel version so its data-integrity controls are available.
+3. Sign in as an authorised Admin and run **Registration Data Integrity → Audit Category Data**. This action is read-only.
+4. Review every issue. DOB-derived Age and Category can be recomputed from a valid DOB. Gender cannot be recovered from DOB; any invalid Gender is intentionally flagged for organiser confirmation.
+5. Only after reviewing the audit, use **Repair Category Data** if appropriate. The backend creates a hidden sheet named Registrations_Backup_Category_Repair before changing any category cells. If that backup sheet already exists, repair stops rather than overwriting it.
+6. Repair recalculates Age and Category from valid DOB, clears invalid Gender values for manual confirmation, and leaves rows with missing/invalid DOB unchanged. It does not change participant IDs, payment fields, photos, proofs, contact details or the original 24 registration columns.
+7. Run the audit again. Resolve Gender confirmation and invalid DOB issues manually from authoritative registration evidence before approving affected participants.
+
+Do not treat a successful repair response as proof that every record is correct. Review the backup and the post-repair audit output.
+
 ## Pre-launch acceptance tests
 
 Complete these tests on a test record before announcing the registration system as live:
 
 - [ ] Health endpoint responds.
+- [ ] DOB boundary rules: 5, 17, 18, 39 and 40 years on 31-Dec-2026 map to the correct category; under-5, invalid and future DOBs are rejected.
+- [ ] Registration Sheet writes exactly 28 columns with Gender in Y, DOB in Z, Age in AA and Age Category in AB.
+- [ ] Legacy category audit is read-only and reports invalid Gender without guessing it.
+- [ ] Legacy repair creates a hidden backup before changes; it recalculates DOB-derived Age/Category and leaves invalid DOB rows untouched.
+- [ ] All six gender/age categories return the correct Admin search and export records.
 - [ ] Registration submission creates exactly one spreadsheet row.
 - [ ] Duplicate name + WhatsApp submission is blocked without blocking different participants who share a family phone.
 - [ ] Cropped photo, original photo and payment proof are stored in the intended private folders.
