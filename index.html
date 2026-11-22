@@ -1253,6 +1253,29 @@ body.example-preview-open{overflow:hidden}
 }
 </style>
 
+
+<style id="jkj-category-bilingual-detail">
+.category-detail-stack{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.category-detail-block{padding:17px 19px;border:1px solid #ffffff35;border-left:3px solid var(--gold);border-radius:13px;background:#ffffff09}
+.category-detail-block h4{margin:0 0 7px;color:#ffe6b2;font:700 16px var(--serif)}
+.category-detail-block p{margin:0;color:#e0e8e3;font-size:13px;line-height:1.8}
+.category-detail-block p+p{margin-top:7px}
+.category-detail-block .ml-copy{color:#f3dca9}
+.common-detail-stack{display:flex;flex-direction:column;gap:12px;margin-top:17px}
+.common-detail-item{display:grid;grid-template-columns:38px minmax(0,1fr);gap:12px;align-items:start;padding:17px;border:1px solid #d9bd7860;border-radius:13px;background:#ffffff09}
+.common-detail-number{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:bold;font-size:12px}
+.common-detail-item h4{margin:0 0 6px;color:#ffe6b2;font:700 16px var(--serif)}
+.common-detail-item p{margin:0;color:#dce5e0;font-size:13px;line-height:1.8}
+.common-detail-item p+p{margin-top:6px;color:#f3dca9}
+@media(max-width:650px){
+ .category-detail-block,.common-detail-item{padding:14px}
+ .category-detail-block h4,.common-detail-item h4{font-size:15px}
+ .category-detail-block p,.common-detail-item p{font-size:12px;line-height:1.75}
+ .common-detail-item{grid-template-columns:32px minmax(0,1fr);gap:9px}
+ .common-detail-number{width:30px;height:30px}
+}
+</style>
+
 </head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 <header class="top"><div class="head">
@@ -1316,6 +1339,12 @@ body.example-preview-open{overflow:hidden}
 <article class="age-band"><span>02</span><h4>Female · Senior</h4><strong>18–39 years</strong></article>
 <article class="age-band"><span>03</span><h4>Female · Super Senior</h4><strong>40+ years</strong></article>
 </div>
+<div class="category-detail-stack">
+<div class="category-detail-block"><h4>01 · Female Junior (5–17 Years)</h4><p>This category is for eligible female participants aged 5 to 17 years on 31 December 2026. Registration സമയത്ത് നൽകുന്ന Date of Birth അനുസരിച്ചായിരിക്കും ഈ വിഭാഗം നിശ്ചയിക്കുന്നത്.</p><p class="ml-copy">കുട്ടികൾക്കും കൗമാരപ്രായത്തിലുള്ള പെൺകുട്ടികൾക്കും അവരുടെ പ്രായപരിധിക്കനുസരിച്ച് പങ്കെടുക്കാനുള്ള വിഭാഗമാണിത്. ശരിയായ DOB നൽകുക എന്നത് വളരെ പ്രധാനമാണ്.</p></div>
+<div class="category-detail-block"><h4>02 · Female Senior (18–39 Years)</h4><p>This category is for female participants aged 18 to 39 years on the official age cut-off date. Your submitted DOB will be used to verify eligibility and assign the category.</p><p class="ml-copy">18 മുതൽ 39 വയസ്സുവരെയുള്ള വനിതാ മത്സരാർത്ഥികൾക്ക് ഈ വിഭാഗത്തിൽ രജിസ്റ്റർ ചെയ്യാം. Registration form-ൽ സ്വന്തം വിവരങ്ങൾ കൃത്യമായി നൽകണം.</p></div>
+<div class="category-detail-block"><h4>03 · Female Super Senior (40+ Years)</h4><p>This category is for female participants who are 40 years or older on 31 December 2026. Participants aged 40 and above are placed in this category automatically.</p><p class="ml-copy">40 വയസ്സ് പൂർത്തിയായ വനിതകൾക്ക് Super Senior വിഭാഗത്തിൽ പങ്കെടുക്കാം. പ്രായം DOB verification വഴിയാണ് ഉറപ്പാക്കുന്നത്.</p></div>
+<div class="category-detail-block"><h4>Category Assignment · എങ്ങനെ നിശ്ചയിക്കും?</h4><p>Select the correct Gender and enter the participant’s actual Date of Birth. The system calculates the age as on 31 December 2026 and assigns the matching Female category automatically.</p><p class="ml-copy">Category സ്വയം തിരഞ്ഞെടുക്കേണ്ടതില്ല. തെറ്റായ DOB അല്ലെങ്കിൽ Gender നൽകിയാൽ verification സമയത്ത് പ്രശ്നങ്ങൾ ഉണ്ടാകാം.</p></div>
+</div>
 </section>
 <section class="category-group male-group" aria-labelledby="male-category-title">
 <div class="category-group-heading">
@@ -1327,6 +1356,12 @@ body.example-preview-open{overflow:hidden}
 <article class="age-band"><span>02</span><h4>Male · Senior</h4><strong>18–39 years</strong></article>
 <article class="age-band"><span>03</span><h4>Male · Super Senior</h4><strong>40+ years</strong></article>
 </div>
+<div class="category-detail-stack">
+<div class="category-detail-block"><h4>01 · Male Junior (5–17 Years)</h4><p>This category is for eligible male participants aged 5 to 17 years on 31 December 2026. The category is assigned using the participant’s Date of Birth.</p><p class="ml-copy">5 മുതൽ 17 വയസ്സുവരെയുള്ള ആൺകുട്ടികൾക്കും കൗമാരപ്രായത്തിലുള്ള ആൺകുട്ടികൾക്കും ഈ വിഭാഗത്തിൽ പങ്കെടുക്കാം. DOB കൃത്യമായി നൽകണം.</p></div>
+<div class="category-detail-block"><h4>02 · Male Senior (18–39 Years)</h4><p>This category is for male participants aged 18 to 39 years on the official age cut-off date. The submitted DOB is used for eligibility verification.</p><p class="ml-copy">18 മുതൽ 39 വയസ്സുവരെയുള്ള പുരുഷ മത്സരാർത്ഥികൾക്കുള്ള വിഭാഗമാണിത്. Registration വിവരങ്ങൾ യഥാർത്ഥവും ശരിയായതുമായിരിക്കണം.</p></div>
+<div class="category-detail-block"><h4>03 · Male Super Senior (40+ Years)</h4><p>This category is for male participants who are 40 years or older on 31 December 2026. The system assigns this category automatically after checking DOB and Gender.</p><p class="ml-copy">40 വയസ്സ് പൂർത്തിയായ പുരുഷന്മാർക്ക് Super Senior വിഭാഗത്തിൽ പങ്കെടുക്കാം. പ്രായപരിശോധന DOB അടിസ്ഥാനമാക്കിയാണ്.</p></div>
+<div class="category-detail-block"><h4>Category Assignment · എങ്ങനെ നിശ്ചയിക്കും?</h4><p>Enter the participant’s correct Gender and Date of Birth. Age is calculated as on 31 December 2026, and the matching Male category is assigned automatically.</p><p class="ml-copy">Category manually തിരഞ്ഞെടുക്കാൻ കഴിയില്ല. DOB + Gender അടിസ്ഥാനമാക്കിയാണ് system category നിർണ്ണയിക്കുന്നത്.</p></div>
+</div>
 </section>
 <section class="category-group common-group" aria-labelledby="common-category-title">
 <div class="category-group-heading">
@@ -1337,6 +1372,17 @@ body.example-preview-open{overflow:hidden}
 <div><b>Junior</b><span>5–17 years</span></div><div><b>Senior</b><span>18–39 years</span></div><div><b>Super Senior</b><span>40+ years</span></div>
 </div>
 <div class="notice category-notice"><b>Age Eligibility:</b> Minimum age is 5 years. Under-5 participants are not eligible. Age is calculated on 31 December 2026. DOB and Gender are required; the correct category is assigned automatically and cannot be manually selected.</div>
+<div class="common-detail-stack">
+<div class="common-detail-item"><span class="common-detail-number">01</span><div><h4>Age Calculation · പ്രായം കണക്കാക്കുന്നത്</h4><p>Age is calculated on 31 December 2026, not on the date you submit the registration form. The same cut-off date applies to every participant.</p><p>എല്ലാവരുടെയും പ്രായം 2026 ഡിസംബർ 31 അടിസ്ഥാനമാക്കിയാണ് കണക്കാക്കുന്നത്. Registration ചെയ്യുന്ന ദിവസത്തെ പ്രായമല്ല പരിഗണിക്കുന്നത്.</p></div></div>
+<div class="common-detail-item"><span class="common-detail-number">02</span><div><h4>Minimum Age · കുറഞ്ഞ പ്രായം</h4><p>Participants must be at least 5 years old on the official cut-off date. Children under 5 years are not eligible for this competition.</p><p>കുറഞ്ഞ പ്രായം 5 വയസ്സാണ്. 5 വയസ്സിൽ താഴെയുള്ള കുട്ടികൾക്ക് മത്സരത്തിൽ പങ്കെടുക്കാൻ കഴിയില്ല.</p></div></div>
+<div class="common-detail-item"><span class="common-detail-number">03</span><div><h4>DOB & Gender Verification</h4><p>Enter the participant’s own Date of Birth and correct Gender. These details determine the eligible category and may be checked by the organisers.</p><p>മത്സരാർത്ഥിയുടെ യഥാർത്ഥ Date of Birth, Gender എന്നിവ നൽകണം. തെറ്റായ വിവരങ്ങൾ നൽകിയാൽ verification-ൽ തടസ്സമുണ്ടാകാം.</p></div></div>
+<div class="common-detail-item"><span class="common-detail-number">04</span><div><h4>Automatic Category Allocation</h4><p>The website assigns one of the six categories based on Gender and age. Participants cannot manually choose or change their category.</p><p>Junior / Senior / Super Senior category website സ്വയം നിശ്ചയിക്കും. സ്വയം category select ചെയ്യേണ്ടതില്ല.</p></div></div>
+<div class="common-detail-item"><span class="common-detail-number">05</span><div><h4>Individual Performance Only</h4><p>Each entry must be performed by one participant. Duo, group and team performances are not accepted under the individual solo entry format.</p><p>ഒരു entry-യിൽ ഒരാൾ മാത്രം പാടണം. Duo, group, team singing entries അനുവദനീയമല്ല.</p></div></div>
+<div class="common-detail-item"><span class="common-detail-number">06</span><div><h4>One Participant · One Registration</h4><p>Duplicate checking applies to the same participant name and WhatsApp number. Different participants in one family may use a shared family WhatsApp number.</p><p>ഒരേ മത്സരാർത്ഥിയുടെ duplicate registration ഒഴിവാക്കണം. ഒരേ കുടുംബത്തിലെ വ്യത്യസ്ത മത്സരാർത്ഥികൾക്ക് family WhatsApp number share ചെയ്യാം.</p></div></div>
+<div class="common-detail-item"><span class="common-detail-number">07</span><div><h4>Entry Fee · ₹300</h4><p>The registration fee is ₹300. Submit the required payment details and proof; payment is subject to organiser verification and approval.</p><p>Registration fee ₹300 ആണ്. Payment proof സമർപ്പിച്ചാൽ മാത്രം registration approved ആകില്ല; organiser verification, approval ആവശ്യമാണ്.</p></div></div>
+<div class="common-detail-item"><span class="common-detail-number">08</span><div><h4>Christmas Carol Song · കരോൾ ഗാനം</h4><p>Only Christmas Carol songs are eligible for this competition. Please choose a suitable Carol song for your individual performance.</p><p>ഈ മത്സരത്തിൽ Christmas Carol ഗാനങ്ങൾക്കാണ് അനുമതി. നിങ്ങളുടെ individual performance-നായി ഒരു Carol song തിരഞ്ഞെടുക്കുക.</p></div></div>
+<div class="common-detail-item"><span class="common-detail-number">09</span><div><h4>Recording Quality · വീഡിയോ നിർദ്ദേശങ്ങൾ</h4><p>Record in Landscape mode with clear audio and video. Karaoke accompaniment is allowed, but the participant must perform the singing. Editing, mixing, enhancement and filters are not allowed.</p><p>വീഡിയോ Landscape Mode-ൽ റെക്കോർഡ് ചെയ്യുക. ശബ്ദവും ചിത്രവും വ്യക്തമായിരിക്കണം. Karaoke അനുവദനീയമാണ്; എന്നാൽ പാടേണ്ടത് മത്സരാർത്ഥി തന്നെയായിരിക്കണം. Editing / filters അനുവദനീയമല്ല.</p></div></div>
+</div>
 <div class="common-rules">
 <article><b>Individual / Solo Singing</b><span>One participant per entry. Duo, group and team entries are not accepted.</span></article>
 <article><b>One Participant · One Registration</b><span>Duplicate check applies to the same participant name and WhatsApp number. Different participants may share a family number.</span></article>
