@@ -13,7 +13,7 @@ checks = {
     "28-column registration schema": "Age Category'" in code and "Gender','Date of Birth','Age at 31-Dec-2026','Age Category'" in code,
     "registration payload carries gender and DOB": "gender:form.elements.gender.value,dateOfBirth:form.elements.dateOfBirth.value" in client,
     "DOB and gender fields exist in public form": 'name="gender"' in index and 'name="dateOfBirth"' in index,
-    "DOB has a visible placeholder and category-purpose note": "date-input-placeholder" in index and "correct age group" in index,
+    "DOB has a visible placeholder and category-purpose note": "date-input-placeholder" in index and "ശരിയായ പ്രായവിഭാഗമായ" in index,
     "calculated age and category are not displayed in the form": 'id="calculatedAge"' not in index and 'id="calculatedCategory"' not in index,
     "backend row mapping reads category columns 25–28": "gender:gender,dateOfBirth:dob,age:ageInfo?ageInfo.age:'',ageCategory:ageInfo?ageInfo.category:''" in code,
     "registration row uses named headers instead of fragile positional indexes": "function registrationRow_(record)" in code and "REG_HEADERS.map(header=>" in code and "'Gender':gender" in code and "'Age Category':ageInfo.category" in code,
