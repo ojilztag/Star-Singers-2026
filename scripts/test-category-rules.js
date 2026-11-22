@@ -22,7 +22,8 @@ for (const [dob, age, category] of cases) {
   assert.equal(result.age, age, 'age mismatch for ' + dob);
   assert.equal(result.category, category, 'category mismatch for ' + dob);
 }
-for (const dob of ['2022-01-01', '2027-01-01', '2001-02-29', 'not-a-date', '']) {
+assert.equal(calc('2022-01-01').age, 4, 'under-five DOB should calculate age but is not eligible for registration');
+for (const dob of ['2027-01-01', '2001-02-29', 'not-a-date', '']) {
   assert.throws(() => calc(dob), undefined, 'invalid DOB must be rejected: ' + dob);
 }
 console.log('Age-category boundary tests passed: ' + cases.length + ' valid DOBs and 5 invalid DOBs.');
