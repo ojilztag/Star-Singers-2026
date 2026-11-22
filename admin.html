@@ -219,7 +219,7 @@ function entryMessage(r){
  '\n\n🆔 Participant Details'+
  '\n\nParticipant ID: '+String(r.registrationId||'')+
  '\nName: '+String(r.participantName||'')+
- '\nAge Category: '+String(r.ageCategory||'Needs verification')+
+ '\nDate of Birth: '+String(r.dateOfBirth||'Not available')+\n '🏅 ⭐ OFFICIAL AGE CATEGORY: '+String(r.ageCategory||'Needs verification').toUpperCase()+' ⭐'+
  '\nParish: '+String(r.parishName||'')+
  '\nDiocese: '+String(r.diocese||'')+
  '\nResidence: '+residence+
@@ -276,7 +276,7 @@ $('records').addEventListener('click',e=>{
    const text=whatsappHeader()+'\n\n🎉 WELCOME TO THE STAR SINGERS FAMILY!\n\nDear '+String(r.participantName||'Participant')+',\n\n💐 Your registration has been officially approved. We are delighted to have you with us!\n\n━━━━━━━━━━━━━━━━\n🆔 OFFICIAL PARTICIPANT DETAILS\n━━━━━━━━━━━━━━━━\n'+
     detail('🆔 Participant ID',r.registrationId)+
     detail('👤 Name',r.participantName)+
-    detail('🏅 Age Category',r.ageCategory||'Needs verification')+
+    detail('🎂 Date of Birth',r.dateOfBirth)+\n    detail('🏅 ⭐ OFFICIAL AGE CATEGORY',String(r.ageCategory||'Needs verification').toUpperCase())+
     detail('⛪ Parish',r.parishName)+
     detail('✝️ Diocese',r.diocese)+
     detail('🌍 Residence',residence)+
