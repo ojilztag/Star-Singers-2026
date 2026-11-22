@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const source = fs.readFileSync('Code.gs', 'utf8');
-const match = source.match(/function calculateAgeCategory_\\(dobText\\)\\s*\\{[\\s\\S]*?\\n\\}/);
+const match = source.match(/function calculateAgeCategory_\(dobText\)\s*\{[\s\S]*?\n\}/);
 assert.ok(match, 'calculateAgeCategory_ must exist in Code.gs');
 const context = {};
 vm.runInNewContext(match[0], context);
