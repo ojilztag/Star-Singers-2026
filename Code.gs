@@ -147,6 +147,8 @@ function doPost(e) {
       case 'adminsearch': out=search_(p); break;
       case 'getentryphoto': out=getEntryPhoto_(p); break;
       case 'exportregistrations': out=exportRegistrations_(p); break;
+      case 'auditcategorydata': out=auditCategoryData_(p); break;
+      case 'repaircategorydata': out=repairCategoryData_(p); break;
       case 'verifypayment': out=verifyPayment_(p); break;
       case 'reviewregistration': out=review_(p); break;
       case 'adminsettings': out=manageSiteSettings_(p); break;
@@ -388,11 +390,71 @@ function uniqueId_(sh) {
   props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE',String(next));
   return CFG.PREFIX+String(next).padStart(3,'0');
 }
+function normalizeDobValue_(value) {
+  if (value instanceof Date && !isNaN(value.getTime())) return Utilities.formatDate(value, 'UTC', 'yyyy-MM-dd');
+  const s=String(value==null?'':value).trim();
+  if (/^\\d{4}-\\d{2}-\\d{2}$/.test(s)) {
+    try { calculateAgeCategory_(s); return s; } catch (ignore) { return ''; }
+  }
+  return '';
+}
 function rowObject_(r) {
   const d=r[2] instanceof Date?r[2]:new Date(r[2]);
+  const dob=normalizeDobValue_(r[25]);
+  let ageInfo=null;
+  if(dob)try{ageInfo=calculateAgeCategory_(dob);}catch(ignore){}
+  const gender=['Male','Female'].includes(String(r[24]||'').trim())?String(r[24]).trim():'Needs verification';
   return {trackingRef:String(r[0]||''),registrationId:String(r[1]||''),submittedAt:isNaN(d.getTime())?'':Utilities.formatDate(d,Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'),
     participantName:String(r[3]||''),parishName:String(r[4]||''),diocese:String(r[5]||''),country:String(r[6]||''),state:String(r[7]||''),district:String(r[8]||''),phone:String(r[9]||''),entryType:String(r[10]||''),fee:r[11],utr:String(r[12]||''),
-    photoUrl:String(r[14]||''),originalPhotoUrl:String(r[16]||''),paymentProofUrl:String(r[18]||''),paymentStatus:String(r[19]||''),status:String(r[20]||''),adminNote:String(r[21]||''),gender:String(r[24]||''),dateOfBirth:String(r[25]||''),age:String(r[26]||''),ageCategory:String(r[27]||'')};
+    photoUrl:String(r[14]||''),originalPhotoUrl:String(r[16]||''),paymentProofUrl:String(r[18]||''),paymentStatus:String(r[19]||''),status:String(r[20]||''),adminNote:String(r[21]||''),gender:gender,dateOfBirth:dob,age:ageInfo?ageInfo.age:'',ageCategory:ageInfo?ageInfo.category:''};
+}
+function auditCategoryData_(p) {
+  requireAdmin_(p.sessionToken);
+  const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+  const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
+  const issues=[];
+  rows.forEach((r,i)=>{
+    const row=i+2,dob=normalizeDobValue_(r[25]),gender=String(r[24]||'').trim();
+    let info=null;if(dob)try{info=calculateAgeCategory_(dob);}catch(ignore){}
+    const reasons=[];
+    if(!['Male','Female'].includes(gender))reasons.push('Gender requires manual confirmation');
+    if(!dob)reasons.push('Date of Birth is invalid or missing');
+    if(info&&Number(r[26])!==info.age)reasons.push('Stored age does not match DOB');
+    if(info&&String(r[27]||'')!==info.category)reasons.push('Stored category does not match DOB');
+    if(reasons.length)issues.push({row:row,trackingRef:String(r[0]||''),participantName:String(r[3]||''),genderValid:['Male','Female'].includes(gender),dateOfBirth:dob,calculatedAge:info?info.age:'',calculatedCategory:info?info.category:'',reasons:reasons});
+  });
+  return {success:true,total:rows.length,issueCount:issues.length,issues:issues.slice(0,200),truncated:issues.length>200};
+}
+function repairCategoryData_(p) {
+  const admin=requireAdmin_(p.sessionToken);
+  if(String(p.confirm||'')!=='true')throw new Error('Explicit confirmation is required before repairing registration category columns.');
+  const lock=LockService.getScriptLock();lock.waitLock(20000);
+  try {
+    const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
+    if(last<2)return {success:true,repaired:0,genderNeedsConfirmation:0,message:'No registration rows to repair.'};
+    const backupName='Registrations_Backup_Category_Repair';
+    if(db_().getSheetByName(backupName))throw new Error('A category-repair backup already exists. Review it before another repair.');
+    const backup=sh.copyTo(db_()).setName(backupName);
+    backup.hideSheet();
+    const rows=sh.getRange(2,1,last-1,REG_HEADERS.length).getValues();
+    let repaired=0,genderNeedsConfirmation=0,unrepairable=0;
+    rows.forEach((r,i)=>{
+      const row=i+2,dob=normalizeDobValue_(r[25]);
+      if(!dob){unrepairable++;return;}
+      let info;try{info=calculateAgeCategory_(dob);}catch(ignore){unrepairable++;return;}
+      const rawGender=String(r[24]||'').trim(),gender=['Male','Female'].includes(rawGender)?rawGender:'';
+      if(!gender)genderNeedsConfirmation++;
+      const note=String(r[21]||'').trim();
+      const repairNote=!gender?'Data repair: Gender could not be recovered from the stored value; organiser confirmation required.':'Data repair: Age and category recalculated from Date of Birth.';
+      const newNote=note.includes(repairNote)?note:(note?note+' | ':'')+repairNote;
+      sh.getRange(row,22).setValue(newNote.slice(0,500));
+      sh.getRange(row,25,1,4).setValues([[gender,dob,info.age,info.category]]);
+      sh.getRange(row,26).setNumberFormat('@');
+      repaired++;
+    });
+    audit_(admin.user,'CATEGORY_DATA_REPAIR',backupName,'Backup sheet created; repaired '+repaired+' rows; gender confirmation needed for '+genderNeedsConfirmation+' rows; unrepairable DOB rows '+unrepairable+'.');
+    return {success:true,repaired:repaired,genderNeedsConfirmation:genderNeedsConfirmation,unrepairable:unrepairable,backupSheet:backupName,message:'Repair complete. Review gender-confirmation records before approving participants.'};
+  } finally {lock.releaseLock();}
 }
 function getEntryPhoto_(p) {
   const admin=requireAdmin_(p.sessionToken);
