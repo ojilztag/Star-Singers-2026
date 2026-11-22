@@ -22,7 +22,7 @@ checks = {
     "invalid gender is not inferred": "Needs verification" in code,
     "six category filters exist in backend and admin": all(x in code and x in admin for x in ["male-junior","male-senior","male-super-senior","female-junior","female-senior","female-super-senior"]),
     "read-only audit retained and repair action removed": "auditcategorydata" in code and 'id="auditCategoryData"' in admin and "repaircategorydata" not in code and "repairCategoryData" not in admin,
-    "public page has six categories and 18 placement awards": all(x in index for x in ["Male · Junior","Male · Senior","Male · Super Senior","Female · Junior","Female · Senior","Female · Super Senior"]) and "18 category-wise placement awards" in index,
+    "public page groups six categories in female, male and common SVG sections": all(x in index for x in ["Female · Junior","Female · Senior","Female · Super Senior","Male · Junior","Male · Senior","Male · Super Senior","Female Categories","Male Categories","Common Category Guidelines","female-svg-title","male-svg-title","common-svg-title"]) and "18 category-wise placement awards" in index,
     "public rules and FAQ use confirmed age eligibility": "31 December 2026" in index and "Under-5 participants are not eligible" in index and "18 category-wise placement awards" in index,
     "README backup exactly matches": readme == backup,
 }
