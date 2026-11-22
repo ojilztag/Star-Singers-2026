@@ -1563,6 +1563,10 @@ body.example-preview-open{overflow:hidden}
 <div class="form-heading"><h3>01 · Participant Details</h3><p>പങ്കെടുക്കുന്നയാളുടെ വിവരങ്ങൾ</p></div>
 <div class="form-grid">
 <label>Participant Name *<input name="participantName" type="text" autocomplete="name" required maxlength="120" placeholder="Full name"></label>
+<label>Gender *<select name="gender" id="participantGender" required><option value="">Select gender</option><option value="Male">Male</option><option value="Female">Female</option></select></label>
+<label>Date of Birth *<input name="dateOfBirth" id="participantDob" type="date" max="2026-12-31" required><small>Age is calculated as on 31 December 2026.</small></label>
+<label>Calculated Age<input id="calculatedAge" type="text" readonly placeholder="Enter date of birth"></label>
+<label>Automatic Category<input id="calculatedCategory" type="text" readonly placeholder="Automatically assigned"></label>
 <label>Your Own Parish Name *<input name="parishName" type="text" required maxlength="160" placeholder="Your own parish"></label>
 <label>Your Own Diocese *<input name="diocese" type="text" required maxlength="160" placeholder="Your own diocese"></label>
 <label>Current Country of Residence *<input name="country" id="residenceCountry" type="text" required maxlength="100" autocomplete="country-name" placeholder="Type your country name"></label>
@@ -1871,6 +1875,9 @@ const backTop=document.querySelector('.backtop');const updateBackTop=()=>{if(bac
  
 const registrationForm=document.getElementById('participantRegistration');
 if(registrationForm){
+ const dobField=registrationForm.elements.dateOfBirth,ageOutput=document.getElementById('calculatedAge'),categoryOutput=document.getElementById('calculatedCategory');
+ const updateAgeCategory=()=>{ageOutput.value='';categoryOutput.value='';if(!dobField.value)return;const p=dobField.value.split('-').map(Number),birth=new Date(Date.UTC(p[0],p[1]-1,p[2])),cutoff=new Date(Date.UTC(2026,11,31));if(birth.getUTCFullYear()!==p[0]||birth.getUTCMonth()!==p[1]-1||birth.getUTCDate()!==p[2]||birth>cutoff){dobField.setCustomValidity('Enter a valid Date of Birth on or before 31 December 2026.');return;}const age=2026-p[0];dobField.setCustomValidity(age<5?'Participant must be at least 5 years old on 31 December 2026.':'');ageOutput.value=age+' years';categoryOutput.value=age<5?'Not eligible (minimum 5 years)':age<=17?'Junior':age<=39?'Senior':'Super Senior';};
+ dobField.addEventListener('change',updateAgeCategory);dobField.addEventListener('input',updateAgeCategory);
  const dialCodeInput=document.getElementById('countryDialCode');
  const localPhoneInput=document.getElementById('phoneLocal');
  const phoneInput=document.getElementById('phone');
