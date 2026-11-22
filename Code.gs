@@ -300,6 +300,7 @@ function search_(p) {
   else if(filter==='pending-review')found=found.filter(r=>r[20]==='Pending Review'&&r[19]==='Verified');
   else if(filter==='approved')found=found.filter(r=>r[20]==='Approved');
   else if(filter==='rejected')found=found.filter(r=>r[20]==='Rejected');
+  else if(['male-junior','male-senior','male-super-senior','female-junior','female-senior','female-super-senior'].includes(filter))found=found.filter(r=>matchesCategoryFilter_(r,filter));
   else if(filter&&filter!=='all')throw new Error('Unsupported registration filter.');
   if(q)found=found.filter(r=>r.join(' ').toLowerCase().includes(q));
   found=found.reverse().slice(0,100);
@@ -310,14 +311,16 @@ function search_(p) {
 function exportRegistrations_(p) {
   const admin=requireAdmin_(p.sessionToken);
   const filter=String(p.filter||'all').toLowerCase();
-  if(!['all','approved','pending-payment','pending-review','rejected'].includes(filter))throw new Error('Invalid export filter.');
+  const categoryFilters=['male-junior','male-senior','male-super-senior','female-junior','female-senior','female-super-senior'];
+  if(!['all','approved','pending-payment','pending-review','rejected'].concat(categoryFilters).includes(filter))throw new Error('Invalid export filter.');
   const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
   const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
-  const data=rows.map(rowObject_).filter(r=>{
+  const data=rows.map(rowObject_).filter((r,i)=>{
     if(filter==='approved')return r.status==='Approved';
     if(filter==='pending-payment')return r.paymentStatus==='Pending Verification';
     if(filter==='pending-review')return r.status==='Pending Review'&&r.paymentStatus==='Verified';
     if(filter==='rejected')return r.status==='Rejected'||r.paymentStatus==='Rejected';
+    if(categoryFilters.includes(filter))return matchesCategoryFilter_(rows[i],filter);
     return true;
   }).map(r=>({
     submittedAt:r.submittedAt,participantId:r.registrationId,participantName:r.participantName,
@@ -389,6 +392,12 @@ function uniqueId_(sh) {
   if(!Number.isSafeInteger(next)||next<1)throw new Error('Participant ID sequence is invalid.');
   props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE',String(next));
   return CFG.PREFIX+String(next).padStart(3,'0');
+}
+function matchesCategoryFilter_(row,filter) {
+  const gender=String(row[24]||'').trim(),dob=normalizeDobValue_(row[25]);
+  if(!['Male','Female'].includes(gender)||!dob)return false;
+  let info;try{info=calculateAgeCategory_(dob);}catch(ignore){return false;}
+  return (gender+'-'+info.category.toLowerCase().replace(/\\s+/g,'-'))===filter;
 }
 function normalizeDobValue_(value) {
   if (value instanceof Date && !isNaN(value.getTime())) return Utilities.formatDate(value, Session.getScriptTimeZone(), 'yyyy-MM-dd');
