@@ -16,6 +16,8 @@ checks = {
     "backend row mapping reads category columns 25–28": "gender:gender,dateOfBirth:dob,age:ageInfo?ageInfo.age:'',ageCategory:ageInfo?ageInfo.category:''" in code,
     "registration row uses named headers instead of fragile positional indexes": "function registrationRow_(record)" in code and "REG_HEADERS.map(header=>" in code and "'Gender':gender" in code and "'Age Category':ageInfo.category" in code,
     "legacy repair makes backup before editing": code.index("copyTo(db_())") < code.index("sh.getRange(row,25,1,4).setValues"),
+    "DOB normalizer uses a digit regex": r"/^\\d{4}-\\d{2}-\\d{2}$/" in code,
+    "category filter normalizes whitespace correctly": r"replace(/\\s+/g,'-')" in code,
     "invalid gender is not inferred": "Gender could not be recovered from the stored value" in code,
     "six category filters exist in backend and admin": all(x in code and x in admin for x in ["male-junior","male-senior","male-super-senior","female-junior","female-senior","female-super-senior"]),
     "admin audit and repair controls are wired": "auditcategorydata" in code and "repaircategorydata" in code and 'id="auditCategoryData"' in admin and 'id="repairCategoryData"' in admin,
