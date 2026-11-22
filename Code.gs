@@ -148,7 +148,6 @@ function doPost(e) {
       case 'getentryphoto': out=getEntryPhoto_(p); break;
       case 'exportregistrations': out=exportRegistrations_(p); break;
       case 'auditcategorydata': out=auditCategoryData_(p); break;
-      case 'repaircategorydata': out=repairCategoryData_(p); break;
       case 'verifypayment': out=verifyPayment_(p); break;
       case 'reviewregistration': out=review_(p); break;
       case 'adminsettings': out=manageSiteSettings_(p); break;
@@ -452,37 +451,6 @@ function auditCategoryData_(p) {
     if(reasons.length)issues.push({row:row,trackingRef:String(r[0]||''),participantName:String(r[3]||''),genderValid:['Male','Female'].includes(gender),dateOfBirth:dob,calculatedAge:info?info.age:'',calculatedCategory:info?info.category:'',reasons:reasons});
   });
   return {success:true,total:rows.length,issueCount:issues.length,issues:issues.slice(0,200),truncated:issues.length>200};
-}
-function repairCategoryData_(p) {
-  const admin=requireAdmin_(p.sessionToken);
-  if(String(p.confirm||'')!=='true')throw new Error('Explicit confirmation is required before repairing registration category columns.');
-  const lock=LockService.getScriptLock();lock.waitLock(20000);
-  try {
-    const sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
-    if(last<2)return {success:true,repaired:0,genderNeedsConfirmation:0,message:'No registration rows to repair.'};
-    const backupName='Registrations_Backup_Category_Repair';
-    if(db_().getSheetByName(backupName))throw new Error('A category-repair backup already exists. Review it before another repair.');
-    const backup=sh.copyTo(db_()).setName(backupName);
-    backup.hideSheet();
-    const rows=sh.getRange(2,1,last-1,REG_HEADERS.length).getValues();
-    let repaired=0,genderNeedsConfirmation=0,unrepairable=0;
-    rows.forEach((r,i)=>{
-      const row=i+2,dob=normalizeDobValue_(r[25]);
-      if(!dob){unrepairable++;return;}
-      let info;try{info=calculateAgeCategory_(dob);}catch(ignore){unrepairable++;return;}
-      const rawGender=String(r[24]||'').trim(),gender=['Male','Female'].includes(rawGender)?rawGender:'';
-      if(!gender)genderNeedsConfirmation++;
-      const note=String(r[21]||'').trim();
-      const repairNote=!gender?'Data repair: Gender could not be recovered from the stored value; organiser confirmation required.':'Data repair: Age and category recalculated from Date of Birth.';
-      const newNote=note.includes(repairNote)?note:(note?note+' | ':'')+repairNote;
-      sh.getRange(row,22).setValue(newNote.slice(0,500));
-      sh.getRange(row,25,1,4).setValues([[gender,dob,info.age,info.category]]);
-      sh.getRange(row,26).setNumberFormat('@');
-      repaired++;
-    });
-    audit_(admin.user,'CATEGORY_DATA_REPAIR',backupName,'Backup sheet created; repaired '+repaired+' rows; gender confirmation needed for '+genderNeedsConfirmation+' rows; unrepairable DOB rows '+unrepairable+'.');
-    return {success:true,repaired:repaired,genderNeedsConfirmation:genderNeedsConfirmation,unrepairable:unrepairable,backupSheet:backupName,message:'Repair complete. Review gender-confirmation records before approving participants.'};
-  } finally {lock.releaseLock();}
 }
 function getEntryPhoto_(p) {
   const admin=requireAdmin_(p.sessionToken);
