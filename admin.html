@@ -202,26 +202,15 @@ function drawEntryCard(r,photo,logo){
  ctx.fillStyle=catGradient;rr(ctx,125,1045,W-250,78,18);ctx.fill();
  ctx.strokeStyle='#8a5b17';ctx.lineWidth=3;rr(ctx,125,1045,W-250,78,18);ctx.stroke();
  ctx.fillStyle='#5f171b';ctx.font='bold 31px Arial';ctx.fillText(category+' CATEGORY',W/2,1094);
- // Date of birth.
- const dobParts=String(r.dateOfBirth||'').split('-');
- const dobLabel=dobParts.length===3?dobParts[2]+'-'+dobParts[1]+'-'+dobParts[0]:'Not available';
- ctx.fillStyle='#fff0c5';ctx.font='bold 22px Arial';ctx.fillText('DATE OF BIRTH  •  '+dobLabel,W/2,1160);
+ // Private DOB is not printed; show a concise eligibility confirmation instead.
+ ctx.fillStyle='#fff0c5';ctx.font='bold 21px Arial';ctx.fillText('AGE ELIGIBILITY VERIFIED',W/2,1160);
  // Participant ID.
  ctx.fillStyle='#f7d78d';ctx.font='bold 23px Arial';ctx.fillText('PARTICIPANT ID',W/2,1200);
  ctx.fillStyle='#0b382b';rr(ctx,155,1212,W-310,68,16);ctx.fill();
  ctx.strokeStyle='#d7b45c';ctx.lineWidth=4;rr(ctx,155,1212,W-310,68,16);ctx.stroke();
  let idFont=34;ctx.font='bold '+idFont+'px Arial';while(idFont>24&&ctx.measureText(String(r.registrationId||'')).width>W-370){idFont-=2;ctx.font='bold '+idFont+'px Arial';}
  ctx.fillStyle='#fff6d8';ctx.fillText(String(r.registrationId||''),W/2,1257);
- // Compact DOB-based category confirmation card; backend ageCategory is derived from the participant DOB.
- const knownCategory=['junior','senior','super senior'].includes(String(r.ageCategory||'').trim().toLowerCase());
- const confirmationLabel=knownCategory?'DOB VERIFIED  •  '+String(r.ageCategory).toUpperCase()+' CATEGORY':'DOB / CATEGORY NEEDS VERIFICATION';
- const confirmGradient=ctx.createLinearGradient(220,0,W-220,0);confirmGradient.addColorStop(0,'#8b641f');confirmGradient.addColorStop(.5,'#fff0b8');confirmGradient.addColorStop(1,'#8b641f');
- ctx.fillStyle=confirmGradient;rr(ctx,220,1300,W-440,52,14);ctx.fill();
- ctx.strokeStyle='#d7b45c';ctx.lineWidth=3;rr(ctx,220,1300,W-440,52,14);ctx.stroke();
- ctx.fillStyle='#68121a';ctx.font='bold 20px Arial';ctx.fillText(confirmationLabel,W/2,1333);
-}
-function whatsappHeader(){
- return '🌟 JKJ Creations International – USA Edition Presents 🇺🇸\n🎤 Nakshathra Gayakar – Star Singers 2026';
+ // Compact DOB-based category confirmation card; backend ageCategory is derived from the pa 🇺🇸\n🎤 Nakshathra Gayakar – Star Singers 2026';
 }
 function entryMessage(r){
  const name=String(r.participantName||'').trim();
