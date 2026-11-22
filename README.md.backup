@@ -60,7 +60,7 @@ The current form is a single form with the element ID `participantRegistration`.
 
 The current backend requires the participant name, parish, diocese, country, state, district, WhatsApp number and UTR. It requires an uploaded participant photo and payment proof. The browser also validates the phone bridge and exactly 12 numeric UTR digits before submission.
 
-**Important:** The current registration form/backend does not yet implement the planned Gender, Date of Birth, calculated Age, or automatic Junior / Senior / Super Senior category assignment. Those are future requirements in Section 10.
+The current registration form/backend includes Gender, Date of Birth, calculated Age and server-side Junior / Senior / Super Senior assignment. The six combined Gender × Age categories are used for Admin filtering and export. See Sections 28–29 for the current implementation and verification boundary.
 
 ## 4. Current registration, payment and approval workflow
 
@@ -423,11 +423,11 @@ Before deleting demo records or resetting IDs:
 
 ## 14. Known limitations and verification boundaries
 
-- The current code does not implement Gender/DOB age categories.
-- The current code does not implement six category-specific lists or the planned Master workbook.
+- Gender/DOB age categories are implemented in the current source. Six category-specific Admin search and export filters are implemented; the full multi-sheet Master workbook remains a separate enhancement.
+- A backed-up Admin repair workflow is available for legacy DOB-derived Age/Category columns. Invalid Gender values are not guessed; they are cleared for organiser confirmation.
 - The current export is CSV plus browser print-to-PDF, not native XLSX/PDF generation on the server.
 - Current Participant ID prefix is `JKJ-CC26-M-`, not the proposed `SS2026-`.
-- The current website has a single registration form, but its current field set is not yet the planned Gender/DOB form.
+- The current website has a single registration form with Gender, DOB, calculated Age and automatic Category fields.
 - WhatsApp is a manual hand-off: the Admin Panel opens a pre-filled message and the admin attaches/sends the Entry Card. This does not establish an automated WhatsApp API integration.
 - GitHub source inspection cannot prove the live Apps Script deployment is current, the connected spreadsheet is correct, Drive permissions are safe, or a real payment was credited.
 - Complete the acceptance tests in [BACKEND_SETUP.md](BACKEND_SETUP.md) after any implementation or deployment.
@@ -482,11 +482,11 @@ For every future request:
 
 **Current live implementation:** one public registration form; current parish/diocese/residence fields; photo and payment-proof upload; ₹300 fee; 12-digit UTR; private Sheets/Drive storage; admin login; manual payment verification; separate approval; sequential `JKJ-CC26-M-` Participant ID; Entry Card PNG; manual WhatsApp hand-off; CSV and print-to-PDF exports.
 
-**Next agreed product direction:** keep one registration page and one Admin Panel; add Gender + DOB; calculate age using one confirmed cut-off date; assign one of six gender/age categories automatically on the server; maintain one common unique Participant ID sequence; provide individual category reports and aggregate Master reports with privacy-safe public/admin variants.
+**Current implementation direction:** preserve one registration page and one Admin Panel; use 31 December 2026 as the age cut-off; assign Junior (5–17), Senior (18–39), Super Senior (40+) from DOB on the server; combine with Male/Female for six categories; maintain the existing common Participant ID sequence; provide category-specific Admin filters and exports. The multi-sheet Master workbook remains future work.
 
-**Still awaiting organiser confirmation:** official age cut-off date; exact inclusive age boundaries for Junior/Senior/Super Senior; email requirement; participant photo requirement; final decision on ID prefix/migration and when the official ID is issued; the missing tenth export selection if ten are still desired.
+**Still awaiting organiser confirmation:** whether participant email is required; final decision on any Participant ID prefix migration (current prefix remains JKJ-CC26-M-); whether the proposed tenth report selection is required. The age cut-off and category boundaries are confirmed as 31-Dec-2026 and 5–17 / 18–39 / 40+.
 
-**No implementation of the future category system or report centre should begin until these open rules are confirmed and the actual existing spreadsheet/backend schema has been inspected.**
+The category system is implemented in source. Any live data repair must be preceded by the Admin audit and its automatic hidden backup. Do not run repair until the audit has been reviewed; do not infer missing Gender values.
 
 
 ---
@@ -879,3 +879,13 @@ This register records the role-allocation framework and the current five assignm
 - Admin record detail and CSV/PDF export fields now include gender, DOB, age and category. DOB is private admin data; do not publish it in public participant lists.
 - Files changed: index.html, backend-client.js, Code.gs, admin.html, README.md and README.md.backup.
 - Verification: source-level targeted replacements only. No Apps Script deployment, live form submission, browser/device test or live Google Sheet migration was performed. The Apps Script owner must deploy updated Code.gs to the existing Web App using Manage deployments → Edit → New version; do not run the installer.
+
+## 29. Full-system hardening and legacy category data integrity — 2026-11-22
+
+- Confirmed category rules: age is completed age on 31-Dec-2026; Junior 5–17, Senior 18–39, Super Senior 40+; under-5 and invalid/future DOB values are rejected. Gender values are Male or Female. Gender is never inferred from DOB or any other field.
+- The registration row writer keeps the original 24 registration columns in their existing order and writes the four category columns by their fixed trailing positions: Gender (Y/25), Date of Birth (Z/26), Age (AA/27), Age Category (AB/28).
+- rowObject_ normalises legacy Date-valued DOB cells using the Apps Script project timezone and derives Age/Category from DOB rather than trusting possibly shifted legacy values. Invalid Gender is exposed to Admin as requiring verification.
+- Admin includes a read-only category-data audit and an explicit repair action. Repair creates a hidden Registrations_Backup_Category_Repair sheet before changing Y:AB. It recalculates Age and Category from valid DOB; invalid Gender is cleared and marked for organiser confirmation. Rows with invalid/missing DOB are left untouched and reported as unrepairable. The repair action must be reviewed before use.
+- Admin search and export include all six combined categories. Existing common Participant ID generation, payment verification, approval flow, fee, UTR validation, file storage and original columns remain unchanged.
+- Files updated on the audit branch: Code.gs, admin.html, BACKEND_SETUP.md, README.md, README.md.backup, quality.yml, test-category-rules.js and check-registration-contract.py. This branch is not yet merged to main and is not deployed to Apps Script.
+- Verification boundary: source-level checks and GitHub Actions must pass before merge. Live spreadsheet values, Drive permissions, Apps Script deployment, real registrations, payment verification and mobile/desktop end-to-end behaviour still require authorised owner testing. Never claim these have passed until performed.

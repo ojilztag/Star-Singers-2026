@@ -19,3 +19,7 @@ jobs:
         run: python3 scripts/check-js.py
       - name: Check page structure, assets, CSS and photo-frame contract
         run: python3 scripts/check-site.py
+      - name: Check registration data contracts and safe repair rules
+        run: python3 scripts/check-registration-contract.py
+      - name: Test age-category boundaries
+        run: node scripts/test-category-rules.js
