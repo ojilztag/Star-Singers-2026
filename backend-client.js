@@ -131,7 +131,7 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
    status('Step 2 of 2 · Files തയ്യാറായി. Registration സുരക്ഷിതമായി അയയ്ക്കുന്നു. Confirmation ലഭിക്കുന്നതുവരെ ഈ page തുറന്നുവെക്കുക. / Sending securely; keep this page open.',false);setSubmitState('uploading');
    const payload={
     action:'register',clientToken:'SS26-'+Date.now()+'-'+Math.random().toString(16).slice(2),
-    participantName:form.elements.participantName.value,parishName:form.elements.parishName.value,
+    participantName:form.elements.participantName.value,gender:form.elements.gender.value,dateOfBirth:form.elements.dateOfBirth.value,parishName:form.elements.parishName.value,
     diocese:form.elements.diocese.value,country:form.elements.country.value,state:form.elements.state.value,
     district:form.elements.district.value,phone:phone,utr:utr,fee:Number(window.SS26_REGISTRATION_FEE||300),feeConsent:String(form.elements.feeConsent.checked),
     photo:photoData,originalPhoto:originalPhotoData,paymentProof:proofData
