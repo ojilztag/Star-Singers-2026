@@ -243,7 +243,7 @@ function register_(p) {
   } finally {lock.releaseLock();}
 }
 function calculateAgeCategory_(dobText){
-  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(dobText))throw new Error('Enter a valid Date of Birth.');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(dobText))throw new Error('Enter a valid Date of Birth.');
   const p=dobText.split('-').map(Number),birth=new Date(Date.UTC(p[0],p[1]-1,p[2])),cutoff=new Date(Date.UTC(2026,11,31));
   if(birth.getUTCFullYear()!==p[0]||birth.getUTCMonth()!==p[1]-1||birth.getUTCDate()!==p[2]||birth>cutoff)throw new Error('Date of Birth must be valid and on or before 31 December 2026.');
   const age=2026-p[0];return {age:age,category:age<=17?'Junior':age<=39?'Senior':'Super Senior'};
@@ -319,6 +319,7 @@ function exportRegistrations_(p) {
     return true;
   }).map(r=>({
     submittedAt:r.submittedAt,participantId:r.registrationId,participantName:r.participantName,
+    gender:r.gender,dateOfBirth:r.dateOfBirth,age:r.age,ageCategory:r.ageCategory,
     parish:r.parishName,diocese:r.diocese,country:r.country,state:r.state,district:r.district,
     whatsapp:r.phone,entryType:r.entryType,registrationFee:r.fee,utr:r.utr,
     paymentStatus:r.paymentStatus,registrationStatus:r.status,adminNote:r.adminNote
