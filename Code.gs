@@ -416,12 +416,12 @@ function matchesCategoryFilter_(row,filter) {
   const gender=String(row[24]||'').trim(),dob=normalizeDobValue_(row[25]);
   if(!['Male','Female'].includes(gender)||!dob)return false;
   let info;try{info=calculateAgeCategory_(dob);}catch(ignore){return false;}
-  return (gender+'-'+info.category.toLowerCase().replace(/\\s+/g,'-'))===filter;
+  return (gender+'-'+info.category.toLowerCase().replace(/\s+/g,'-'))===filter;
 }
 function normalizeDobValue_(value) {
   if (value instanceof Date && !isNaN(value.getTime())) return Utilities.formatDate(value, Session.getScriptTimeZone(), 'yyyy-MM-dd');
   const s=String(value==null?'':value).trim();
-  if (/^\\d{4}-\\d{2}-\\d{2}$/.test(s)) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
     try { calculateAgeCategory_(s); return s; } catch (ignore) { return ''; }
   }
   return '';
