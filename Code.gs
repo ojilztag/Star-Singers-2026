@@ -391,7 +391,7 @@ function uniqueId_(sh) {
   return CFG.PREFIX+String(next).padStart(3,'0');
 }
 function normalizeDobValue_(value) {
-  if (value instanceof Date && !isNaN(value.getTime())) return Utilities.formatDate(value, 'UTC', 'yyyy-MM-dd');
+  if (value instanceof Date && !isNaN(value.getTime())) return Utilities.formatDate(value, Session.getScriptTimeZone(), 'yyyy-MM-dd');
   const s=String(value==null?'':value).trim();
   if (/^\\d{4}-\\d{2}-\\d{2}$/.test(s)) {
     try { calculateAgeCategory_(s); return s; } catch (ignore) { return ''; }
