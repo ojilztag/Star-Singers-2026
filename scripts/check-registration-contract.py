@@ -15,12 +15,13 @@ checks = {
     "DOB and gender fields exist in public form": 'name="gender"' in index and 'name="dateOfBirth"' in index,
     "backend row mapping reads category columns 25–28": "gender:gender,dateOfBirth:dob,age:ageInfo?ageInfo.age:'',ageCategory:ageInfo?ageInfo.category:''" in code,
     "registration row uses named headers instead of fragile positional indexes": "function registrationRow_(record)" in code and "REG_HEADERS.map(header=>" in code and "'Gender':gender" in code and "'Age Category':ageInfo.category" in code,
-    "legacy repair makes backup before editing": code.index("copyTo(db_())") < code.index("sh.getRange(row,25,1,4).setValues"),
-    "DOB normalizer uses a digit regex": r"/^\\d{4}-\\d{2}-\\d{2}$/" in code,
-    "category filter normalizes whitespace correctly": r"replace(/\\s+/g,'-')" in code,
-    "invalid gender is not inferred": "Gender could not be recovered from the stored value" in code,
+    "DOB normalizer uses a digit regex": r"/^\d{4}-\d{2}-\d{2}$/" in code,
+    "category filter normalizes whitespace correctly": r"replace(/\s+/g,'-')" in code,
+    "invalid gender is not inferred": "Needs verification" in code,
     "six category filters exist in backend and admin": all(x in code and x in admin for x in ["male-junior","male-senior","male-super-senior","female-junior","female-senior","female-super-senior"]),
-    "admin audit and repair controls are wired": "auditcategorydata" in code and "repaircategorydata" in code and 'id="auditCategoryData"' in admin and 'id="repairCategoryData"' in admin,
+    "read-only audit retained and repair action removed": "auditcategorydata" in code and 'id="auditCategoryData"' in admin and "repaircategorydata" not in code and "repairCategoryData" not in admin,
+    "public page has six categories and 18 placement awards": all(x in index for x in ["Male · Junior","Male · Senior","Male · Super Senior","Female · Junior","Female · Senior","Female · Super Senior"]) and "18 category-wise placement awards" in index,
+    "public rules and FAQ use confirmed age eligibility": "31 December 2026" in index and "Under-5 participants are not eligible" in index and "18 category-wise placement awards" in index,
     "README backup exactly matches": readme == backup,
 }
 failed = [name for name, ok in checks.items() if not ok]
