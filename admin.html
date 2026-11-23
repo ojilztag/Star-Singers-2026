@@ -228,7 +228,7 @@ function drawEntryCard(r,photo,logo){
  ctx.fillStyle='#fff6d8';ctx.fillText(fitText(ctx,String(r.registrationId||''),W-370),W/2,1137);
  // The card displays the competition category only; DOB is never rendered.
  ctx.fillStyle='#fff0c5';ctx.font='bold 22px Arial';ctx.fillText('CATEGORY OF COMPETITION',W/2,1200);
- const category=String(r.ageCategory||'Needs verification').toUpperCase().replace(/\\s*CATEGORY$/,'');
+ const category=String(r.ageCategory||'Needs verification').toUpperCase().replace(/\s*CATEGORY$/,'');
  const catGradient=ctx.createLinearGradient(125,0,W-125,0);catGradient.addColorStop(0,'#a87527');catGradient.addColorStop(.2,'#e8c66f');catGradient.addColorStop(.5,'#fff1bd');catGradient.addColorStop(.8,'#e8c66f');catGradient.addColorStop(1,'#a87527');
  ctx.shadowColor='rgba(0,0,0,.22)';ctx.shadowBlur=12;ctx.shadowOffsetY=4;
  ctx.fillStyle=catGradient;rr(ctx,125,1220,W-250,70,18);ctx.fill();
