@@ -242,7 +242,7 @@ function drawEntryCard(r,photo,logo){
 function entryMessage(r){
  const value=v=>String(v||'').trim();
  const name=value(r.participantName);
- const category=value(r.ageCategory).toUpperCase().replace(/\\s*CATEGORY$/,'');
+ const category=value(r.ageCategory).toUpperCase().replace(/\s*CATEGORY$/,'');
  const lines=[
   '🌍 JKJCREATIONS.ORG',
   'INTERNATIONAL ORGANIZATION',
