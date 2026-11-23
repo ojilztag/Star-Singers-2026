@@ -302,7 +302,7 @@ function entryMessage(r){
   '',
   'OFFICIAL PARTICIPANT APPROVAL COMMUNICATION'
  ];
- return lines.filter((line,i)=>line!=='' || (i>0 && lines[i-1]!=='')).join('\\n').replace(/\\n{3,}/g,'\\n\\n');
+ return lines.filter((line,i)=>line!=='' || (i>0 && lines[i-1]!=='')).join('\n');
 }
 async function openEntryCard(r){
  activeEntryRecord=r;entryCaption=entryMessage(r);$('entryCardStatus').textContent='Preparing your card…';$('entryModal').classList.add('open');
