@@ -205,14 +205,15 @@ function drawEntryCard(r,photo,logo){
  ctx.strokeStyle='rgba(255,246,216,.42)';ctx.lineWidth=1.5;rr(ctx,112,1099,W-224,54,13);ctx.stroke();
  let idFont=34;ctx.font='bold '+idFont+'px Arial';while(idFont>24&&ctx.measureText(String(r.registrationId||'')).width>W-370){idFont-=2;ctx.font='bold '+idFont+'px Arial';}
  ctx.fillStyle='#fff6d8';ctx.fillText(String(r.registrationId||''),W/2,1137);
- // One prominent age-category ribbon only.
+ // DOB stays private; show the verification status first.
+ ctx.fillStyle='#fff0c5';ctx.font='bold 21px Arial';ctx.fillText('AGE ELIGIBILITY VERIFIED  ✓',W/2,1200);
+ // One prominent official age-category ribbon follows the verification status.
  const category=String(r.ageCategory||'Needs verification').toUpperCase();
- const catGradient=ctx.createLinearGradient(130,0,W-130,0);catGradient.addColorStop(0,'#f1c96e');catGradient.addColorStop(.5,'#fff4c9');catGradient.addColorStop(1,'#f1c96e');
- ctx.fillStyle=catGradient;rr(ctx,125,1185,W-250,78,18);ctx.fill();
- ctx.strokeStyle='#8a5b17';ctx.lineWidth=3;rr(ctx,125,1185,W-250,78,18);ctx.stroke();
- ctx.fillStyle='#5f171b';ctx.font='bold 31px Arial';ctx.fillText(category+' CATEGORY',W/2,1234);
- // DOB stays private; only the verification status is displayed.
- ctx.fillStyle='#fff0c5';ctx.font='bold 21px Arial';ctx.fillText('AGE ELIGIBILITY VERIFIED  ✓',W/2,1310);
+ ctx.fillStyle='rgba(255,240,197,.88)';ctx.font='bold 16px Arial';ctx.fillText('OFFICIAL AGE CATEGORY',W/2,1230);
+ const catGradient=ctx.createLinearGradient(125,0,W-125,0);catGradient.addColorStop(0,'#f1c96e');catGradient.addColorStop(.5,'#fff4c9');catGradient.addColorStop(1,'#f1c96e');
+ ctx.fillStyle=catGradient;rr(ctx,125,1242,W-250,70,18);ctx.fill();
+ ctx.strokeStyle='#8a5b17';ctx.lineWidth=3;rr(ctx,125,1242,W-250,70,18);ctx.stroke();
+ ctx.fillStyle='#5f171b';ctx.font='bold 30px Arial';ctx.fillText(category+' CATEGORY',W/2,1287);
  // Compact DOB-based category confirmation card; backend ageCategory is derived from the pa 🇺🇸\n🎤 Nakshathra Gayakar – Star Singers 2026';
 }
 function entryMessage(r){
