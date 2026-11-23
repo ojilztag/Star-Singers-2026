@@ -240,26 +240,69 @@ function drawEntryCard(r,photo,logo){
  ctx.fillStyle='#ffe9b5';ctx.font='bold 18px Arial';ctx.fillText('JKJCREATIONS.ORG  •  OFFICIAL PARTICIPANT',W/2,1340);
 }
 function entryMessage(r){
- const name=String(r.participantName||'').trim();
- const residence=[r.country,r.state,r.district].filter(Boolean).join(', ');
- return '🇺🇸 JKJ CREATIONS International Organization – USA Edition Presents 🎤 Nakshathra Gayakar 2026'+
- '\n\nDear '+name+', 👏'+
- '\n\n🎉 Congratulations & Welcome!'+
- '\n\nYour Participation In Nakshathra Gayakar 2026 Has Been Officially Approved. We Are Delighted To Welcome You To This Musical Journey. ❤️'+
- '\n\n🆔 Participant Details'+
- '\n\nParticipant ID: '+String(r.registrationId||'')+
- '\nName: '+String(r.participantName||'')+
- '\nDate of Birth: '+String(r.dateOfBirth||'Not available')+
- '\n🏅 ⭐ OFFICIAL AGE CATEGORY: '+String(r.ageCategory||'Needs verification').toUpperCase()+' ⭐'+
- '\nParish: '+String(r.parishName||'')+
- '\nDiocese: '+String(r.diocese||'')+
- '\nResidence: '+residence+
-  '\n\n🎫 Your Official Participant Entry Card Is Attached. Please Save It Safely For Future Reference.'+
- '\n\n📢 Share The Joy And Spread The Talent! Invite Your Friends And Family To Join This Musical Journey.'+
- '\n\n🌐 Official Website: JKJCREATIONS.ORG (https://jkjcreations.org)'+
- '\n\n✨ May Your Voice Shine And Your Talent Inspire! With Love And Best Wishes. 👏'+
- '\n\n❤️ JKJ CREATIONS'+
- '\nFaith • Creativity • Service';
+ const value=v=>String(v||'').trim();
+ const name=value(r.participantName);
+ const category=value(r.ageCategory).toUpperCase().replace(/\\s*CATEGORY$/,'');
+ const lines=[
+  '🌍 JKJCREATIONS.ORG',
+  'INTERNATIONAL ORGANIZATION',
+  'Proudly Presents',
+  '🎤 NAKSHATHRA GAYAKAR 2026',
+  '',
+  'Dear '+(name||'Participant')+', 👏',
+  '',
+  '🎉 CONGRATULATIONS & OFFICIAL WELCOME!',
+  '',
+  'We are delighted to inform you that your participation in Nakshathra Gayakar 2026 has been officially approved by JKJCREATIONS.ORG.',
+  '',
+  'Welcome to this wonderful international musical journey! ❤️',
+  '',
+  '🆔 OFFICIAL PARTICIPANT INFORMATION',
+  '',
+  'Participant ID: '+value(r.registrationId),
+  'Participant Name: '+name,
+  'Competition Category: '+(category?category+' CATEGORY':''),
+  value(r.country)?'Country: '+value(r.country).toUpperCase():'',
+  value(r.state)?'State / Province: '+value(r.state).toUpperCase():'',
+  value(r.district)?'City / District: '+value(r.district).toUpperCase():'',
+  value(r.parishName)?'Parish / Community: '+value(r.parishName).toUpperCase():'',
+  value(r.diocese)?'Diocese: '+value(r.diocese).toUpperCase():'',
+  '',
+  '🎫 OFFICIAL PARTICIPANT ENTRY CARD',
+  '',
+  'Your Official Participant Entry Card is attached to this WhatsApp message. It serves as your participant identification for official communication and verification.',
+  '',
+  '📢 IMPORTANT PARTICIPANT INFORMATION',
+  '',
+  '• Please keep your Participant ID available for future communication.',
+  '• Mention your Participant ID whenever you contact the organizing team.',
+  '• Follow official competition announcements and instructions.',
+  '• Visit the official website for important updates.',
+  '• Share your achievement with friends and family and invite them to support your musical journey.',
+  '',
+  '🌎 AN INTERNATIONAL MUSICAL JOURNEY',
+  '',
+  'Nakshathra Gayakar 2026 brings together talented participants from different countries and communities through music, creativity and a shared passion for singing.',
+  '',
+  'We are delighted to have you as part of this journey!',
+  '',
+  '🌐 OFFICIAL WEBSITE',
+  'https://jkjcreations.org',
+  '',
+  'Please refer to our official website for authorized announcements and competition updates.',
+  '',
+  '✨ YOUR VOICE. YOUR TALENT. YOUR JOURNEY.',
+  '',
+  'May your voice shine across the world and inspire others. We wish you every success!',
+  '',
+  'With love, prayers and best wishes,',
+  '',
+  '❤️ JKJCREATIONS.ORG',
+  'Faith • Creativity • Service',
+  '',
+  'OFFICIAL PARTICIPANT APPROVAL COMMUNICATION'
+ ];
+ return lines.filter((line,i)=>line!=='' || (i>0 && lines[i-1]!=='')).join('\\n').replace(/\\n{3,}/g,'\\n\\n');
 }
 async function openEntryCard(r){
  activeEntryRecord=r;entryCaption=entryMessage(r);$('entryCardStatus').textContent='Preparing your card…';$('entryModal').classList.add('open');
