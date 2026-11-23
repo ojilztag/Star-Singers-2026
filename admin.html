@@ -198,8 +198,11 @@ function drawEntryCard(r,photo,logo){
  ctx.fillStyle='#6f151c';ctx.fillText(String(r.participantName||'PARTICIPANT'),W/2,1000);
  // Participant ID — placed directly after the name.
  ctx.fillStyle='#f7d78d';ctx.font='bold 23px Arial';ctx.fillText('PARTICIPANT ID',W/2,1080);
- ctx.fillStyle='#0b382b';rr(ctx,155,1092,W-310,68,16);ctx.fill();
- ctx.strokeStyle='#d7b45c';ctx.lineWidth=4;rr(ctx,155,1092,W-310,68,16);ctx.stroke();
+ // Premium Participant ID panel — match the exact outer width of the name frame.
+ ctx.fillStyle='#0b382b';rr(ctx,105,1092,W-210,68,18);ctx.fill();
+ const idFrameGradient=ctx.createLinearGradient(105,1092,W-105,1160);idFrameGradient.addColorStop(0,'#f4d887');idFrameGradient.addColorStop(.5,'#d7b45c');idFrameGradient.addColorStop(1,'#f4d887');
+ ctx.strokeStyle=idFrameGradient;ctx.lineWidth=5;rr(ctx,105,1092,W-210,68,18);ctx.stroke();
+ ctx.strokeStyle='rgba(255,246,216,.42)';ctx.lineWidth=1.5;rr(ctx,112,1099,W-224,54,13);ctx.stroke();
  let idFont=34;ctx.font='bold '+idFont+'px Arial';while(idFont>24&&ctx.measureText(String(r.registrationId||'')).width>W-370){idFont-=2;ctx.font='bold '+idFont+'px Arial';}
  ctx.fillStyle='#fff6d8';ctx.fillText(String(r.registrationId||''),W/2,1137);
  // One prominent age-category ribbon only.
