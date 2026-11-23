@@ -227,18 +227,17 @@ function drawEntryCard(r,photo,logo){
  let idFont=34;ctx.font='bold '+idFont+'px Arial';while(idFont>24&&ctx.measureText(String(r.registrationId||'')).width>W-370){idFont-=2;ctx.font='bold '+idFont+'px Arial';}
  ctx.fillStyle='#fff6d8';ctx.fillText(fitText(ctx,String(r.registrationId||''),W-370),W/2,1137);
  // The card displays the competition category only; DOB is never rendered.
- ctx.fillStyle='#fff0c5';ctx.font='bold 22px Arial';ctx.fillText('CATEGORY OF COMPETITION',W/2,1200);
+ ctx.fillStyle='#fff0c5';ctx.font='bold 22px Arial';ctx.fillText('CATEGORY OF COMPETITION',W/2,1197);
  const category=String(r.ageCategory||'Needs verification').toUpperCase().replace(/\s*CATEGORY$/,'');
  const catGradient=ctx.createLinearGradient(125,0,W-125,0);catGradient.addColorStop(0,'#a87527');catGradient.addColorStop(.2,'#e8c66f');catGradient.addColorStop(.5,'#fff1bd');catGradient.addColorStop(.8,'#e8c66f');catGradient.addColorStop(1,'#a87527');
  ctx.shadowColor='rgba(0,0,0,.22)';ctx.shadowBlur=12;ctx.shadowOffsetY=4;
- ctx.fillStyle=catGradient;rr(ctx,125,1220,W-250,70,18);ctx.fill();
+ ctx.fillStyle=catGradient;rr(ctx,125,1218,W-250,70,18);ctx.fill();
  ctx.shadowColor='transparent';ctx.shadowBlur=0;ctx.shadowOffsetY=0;
- ctx.strokeStyle='#80551d';ctx.lineWidth=2.5;rr(ctx,125,1220,W-250,70,18);ctx.stroke();
- ctx.fillStyle='#5f171b';ctx.font='bold 30px Arial';ctx.fillText(fitText(ctx,category+' CATEGORY',W-300),W/2,1265);
- // Restored official footer, with clear separation and comfortable spacing.
- ctx.strokeStyle='rgba(247,218,151,.55)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(170,1300);ctx.lineTo(W-170,1300);ctx.stroke();
- ctx.fillStyle='#ffe9b5';ctx.font='bold 19px Arial';ctx.fillText('JKJCREATIONS.ORG  •  OFFICIAL PARTICIPANT',W/2,1330);
- ctx.fillStyle='rgba(255,239,196,.82)';ctx.font='17px Arial';ctx.fillText('Keep this Entry Card safe',W/2,1358);
+ ctx.strokeStyle='#80551d';ctx.lineWidth=2.5;rr(ctx,125,1218,W-250,70,18);ctx.stroke();
+ ctx.fillStyle='#5f171b';ctx.font='bold 30px Arial';ctx.fillText(fitText(ctx,category+' CATEGORY',W-300),W/2,1263);
+ // Official footer only. Keep the lower area clean, balanced and uncluttered.
+ ctx.strokeStyle='rgba(247,218,151,.62)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(190,1308);ctx.lineTo(W-190,1308);ctx.stroke();
+ ctx.fillStyle='#ffe9b5';ctx.font='bold 18px Arial';ctx.fillText('JKJCREATIONS.ORG  •  OFFICIAL PARTICIPANT',W/2,1340);
 }
 function entryMessage(r){
  const name=String(r.participantName||'').trim();
