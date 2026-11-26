@@ -24,6 +24,10 @@ checks = {
     "read-only audit retained and repair action removed": "auditcategorydata" in code and 'id="auditCategoryData"' in admin and "repaircategorydata" not in code and "repairCategoryData" not in admin,
     "public page groups six categories in female, male and common SVG sections": all(x in index for x in ["Junior Ladies","Senior Ladies","Super Senior Ladies","Junior Gentlemen","Senior Gentlemen","Super Senior Gentlemen","female-category-title","male-category-title","Common Category Guidelines"]) and "18 category-wise placement awards" in index,
     "public rules and FAQ distinguish eligibility date from category date": "Age Eligibility &amp; Calculation" in index and "completed 10 years of age on or before this date" in index and "age on 31 December 2026" in index and "18 category-wise placement awards" in index,
+    "dashboard and category search share one canonical category-key function": "categoryFilterKey_(r)" in code and "categoryFilterKey_(row)" in code,
+    "category filters normalize gender case without guessing invalid values": "function normalizeGender_(value)" in code and "gender==='female'" in code and "return '';" in code,
+    "all six dashboard divisions use consistent normalized keys": all(x in code and x in admin for x in ["female-junior","male-junior","female-senior","male-senior","female-super-senior","male-super-senior"]),
+    "dashboard uses canonical category keys instead of duplicate regex logic": "replace(/\\\\s+/g,'-')" not in code,
     "README backup exactly matches": readme == backup,
 }
 failed = [name for name, ok in checks.items() if not ok]
