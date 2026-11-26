@@ -304,6 +304,8 @@ function requireAdmin_(token) {
 function dashboard_(p) {
   const admin=requireAdmin_(p.sessionToken),sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
   const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
+  const divisionCounts={'female-junior':0,'male-junior':0,'female-senior':0,'male-senior':0,'female-super-senior':0,'male-super-senior':0};
+  rows.forEach(r=>{const gender=String(r[24]||'').trim(),dob=normalizeDobValue_(r[25]);if(!dob||!['Male','Female'].includes(gender))return;try{const info=calculateAgeCategory_(dob,gender);const key=gender.toLowerCase()+'-'+info.category.toLowerCase().replace(/\\s+/g,'-');if(Object.prototype.hasOwnProperty.call(divisionCounts,key))divisionCounts[key]++;}catch(ignore){}});
   const newest=rows.slice().reverse();
   const pendingPayment=rows.filter(r=>r[19]==='Pending Verification');
   const pendingReview=rows.filter(r=>r[20]==='Pending Review'&&r[19]==='Verified');
@@ -318,7 +320,7 @@ function dashboard_(p) {
   const auditRows=auditLast>1?auditSh.getRange(Math.max(2,auditLast-49),1,Math.min(50,auditLast-1),5).getValues().reverse():[];
   const auditLogs=auditRows.map(r=>({timestamp:r[0] instanceof Date?Utilities.formatDate(r[0],Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'):String(r[0]||''),admin:String(r[1]||''),action:String(r[2]||''),recordId:String(r[3]||''),details:String(r[4]||'')}));
   return {success:true,total:rows.length,pending:pendingReview.length,pendingPayment:pendingPayment.length,approved:approved.length,rejected:rejected.length,
-    collectedAmount:collected,pendingAmount:pendingAmount,last7DaysCount:last7.length,last7Days:last7.slice().reverse().map(rowObject_),
+    divisionCounts:divisionCounts,collectedAmount:collected,pendingAmount:pendingAmount,last7DaysCount:last7.length,last7Days:last7.slice().reverse().map(rowObject_),
     registrations:newest.slice(0,100).map(rowObject_),auditLogs:auditLogs};
 }
 function search_(p) {
