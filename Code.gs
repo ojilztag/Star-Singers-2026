@@ -194,8 +194,8 @@ function register_(p) {
   const name=clean_(p.participantName,120),parish=clean_(p.parishName,160),diocese=clean_(p.diocese,160);
   const country=clean_(p.country,100),state=clean_(p.state,100),district=clean_(p.district,100);
   const phone=String(p.phone||'').trim(),utr=String(p.utr||'').trim();
-  const gender=String(p.gender||'').trim(),dateOfBirth=String(p.dateOfBirth||'').trim(),ageInfo=calculateAgeCategory_(dateOfBirth,gender);
-  if(!['Male','Female'].includes(gender))throw new Error('Select Male or Female.');
+  const gender=normalizeGender_(p.gender),dateOfBirth=String(p.dateOfBirth||'').trim(),ageInfo=calculateAgeCategory_(dateOfBirth,gender);
+  if(!gender)throw new Error('Select Male or Female.');
   if(!name||!parish||!diocese||!country||!state||!district||!phone||!utr)throw new Error('Complete all required fields, including UTR / Transaction ID.');
   if(!/^\d{12}$/.test(utr))throw new Error('UTR / Transaction ID must contain exactly 12 digits.');
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
@@ -305,7 +305,7 @@ function dashboard_(p) {
   const admin=requireAdmin_(p.sessionToken),sh=sheet_(CFG.REG_SHEET,REG_HEADERS),last=sh.getLastRow();
   const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
   const divisionCounts={'female-junior':0,'male-junior':0,'female-senior':0,'male-senior':0,'female-super-senior':0,'male-super-senior':0};
-  rows.forEach(r=>{const gender=String(r[24]||'').trim(),dob=normalizeDobValue_(r[25]);if(!dob||!['Male','Female'].includes(gender))return;try{const info=calculateAgeCategory_(dob,gender);const key=gender.toLowerCase()+'-'+info.category.toLowerCase().replace(/\\s+/g,'-');if(Object.prototype.hasOwnProperty.call(divisionCounts,key))divisionCounts[key]++;}catch(ignore){}});
+  rows.forEach(r=>{const key=categoryFilterKey_(r);if(key&&Object.prototype.hasOwnProperty.call(divisionCounts,key))divisionCounts[key]++;});
   const newest=rows.slice().reverse();
   const pendingPayment=rows.filter(r=>r[19]==='Pending Verification');
   const pendingReview=rows.filter(r=>r[20]==='Pending Review'&&r[19]==='Verified');
@@ -427,11 +427,22 @@ function uniqueId_(sh) {
   props.setProperty('SS26_LAST_PARTICIPANT_SEQUENCE',String(next));
   return CFG.PREFIX+String(next).padStart(3,'0');
 }
+function normalizeGender_(value) {
+  const gender=String(value==null?'':value).trim().toLowerCase();
+  if(gender==='male')return 'Male';
+  if(gender==='female')return 'Female';
+  return '';
+}
+function categoryFilterKey_(row) {
+  const gender=normalizeGender_(row[24]),dob=normalizeDobValue_(row[25]);
+  if(!gender||!dob)return '';
+  try {
+    const info=calculateAgeCategory_(dob,gender);
+    return gender.toLowerCase()+'-'+info.category.toLowerCase().replace(/\s+/g,'-');
+  } catch(ignore) { return ''; }
+}
 function matchesCategoryFilter_(row,filter) {
-  const gender=String(row[24]||'').trim(),dob=normalizeDobValue_(row[25]);
-  if(!['Male','Female'].includes(gender)||!dob)return false;
-  let info;try{info=calculateAgeCategory_(dob,gender);}catch(ignore){return false;}
-  return (gender+'-'+info.category.toLowerCase().replace(/\s+/g,'-'))===filter;
+  return categoryFilterKey_(row)===String(filter||'').trim().toLowerCase();
 }
 function normalizeDobValue_(value) {
   if (value instanceof Date && !isNaN(value.getTime())) return Utilities.formatDate(value, Session.getScriptTimeZone(), 'yyyy-MM-dd');
@@ -445,7 +456,7 @@ function normalizeDobValue_(value) {
 function rowObject_(r) {
   const d=r[2] instanceof Date?r[2]:new Date(r[2]);
   const dob=normalizeDobValue_(r[25]);
-  const gender=['Male','Female'].includes(String(r[24]||'').trim())?String(r[24]).trim():'Needs verification';
+  const gender=normalizeGender_(r[24])||'Needs verification';
   let ageInfo=null;
   if(dob&&['Male','Female'].includes(gender))try{ageInfo=calculateAgeCategory_(dob,gender);}catch(ignore){}
   return {trackingRef:String(r[0]||''),registrationId:String(r[1]||''),submittedAt:isNaN(d.getTime())?'':Utilities.formatDate(d,Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'),
@@ -458,14 +469,14 @@ function auditCategoryData_(p) {
   const rows=last>1?sh.getRange(2,1,last-1,REG_HEADERS.length).getValues():[];
   const issues=[];
   rows.forEach((r,i)=>{
-    const row=i+2,dob=normalizeDobValue_(r[25]),gender=String(r[24]||'').trim();
-    let info=null;if(dob)try{info=calculateAgeCategory_(dob,gender);}catch(ignore){}
+    const row=i+2,dob=normalizeDobValue_(r[25]),gender=normalizeGender_(r[24]);
+    let info=null;if(dob&&gender)try{info=calculateAgeCategory_(dob,gender);}catch(ignore){}
     const reasons=[];
-    if(!['Male','Female'].includes(gender))reasons.push('Gender requires manual confirmation');
+    if(!gender)reasons.push('Gender requires manual confirmation');
     if(!dob)reasons.push('Date of Birth is invalid or missing');
     if(info&&Number(r[26])!==info.age)reasons.push('Stored age does not match DOB');
     if(info&&String(r[27]||'')!==info.category)reasons.push('Stored category does not match DOB');
-    if(reasons.length)issues.push({row:row,trackingRef:String(r[0]||''),participantName:String(r[3]||''),genderValid:['Male','Female'].includes(gender),dateOfBirth:dob,calculatedAge:info?info.age:'',calculatedCategory:info?info.category:'',reasons:reasons});
+    if(reasons.length)issues.push({row:row,trackingRef:String(r[0]||''),participantName:String(r[3]||''),genderValid:!!gender,dateOfBirth:dob,calculatedAge:info?info.age:'',calculatedCategory:info?info.category:'',reasons:reasons});
   });
   return {success:true,total:rows.length,issueCount:issues.length,issues:issues.slice(0,200),truncated:issues.length>200};
 }
