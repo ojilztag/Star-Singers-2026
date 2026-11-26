@@ -15,7 +15,7 @@ for (const dob of ['2016-12-21','2017-01-01','2027-01-01','2001-02-29','not-a-da
 
 // Regression coverage for dashboard count keys and category-card search filters.
 for (const name of ['normalizeGender_','categoryFilterKey_','matchesCategoryFilter_','normalizeDobValue_']) {
-  const helper = source.match(new RegExp('function '+name+'\\\\([^\\\\n]*\\\\)\\\\s*\\\\{[\\\\s\\\\S]*?\\\\n\\\\}'));
+  const helper = source.match(new RegExp('function '+name+'\\([^\\n]*\\)\\s*\\{[\\s\\S]*?\\n\\}'));
   assert.ok(helper, name+' must exist in Code.gs');
   vm.runInNewContext(helper[0], context);
 }
