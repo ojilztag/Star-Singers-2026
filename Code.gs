@@ -521,6 +521,10 @@ function readSiteSettings_() {
     sh.appendRow(['Registration Fee',300,'INR per individual entry — fixed event fee']);
     out['Registration Fee']='300';
   }
+  if(!Object.prototype.hasOwnProperty.call(out,'Registration Closing Date')){
+    sh.appendRow(['Registration Closing Date','','Enter YYYY-MM-DD before opening registration']);
+    out['Registration Closing Date']='';
+  }
   return out;
 }
 function publicSiteSettings_() {
