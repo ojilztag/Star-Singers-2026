@@ -2536,7 +2536,7 @@ main#main-content :is(input,select,textarea,button){
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
 }
-</style>
+\n/* Registration success: mobile-safe modal and no overlap with page slideshow controls */\nbody.registration-success-open{overflow:hidden!important}\nbody.registration-success-open .mobile-slideshow-controls{display:none!important}\n.registration-success-modal{z-index:20000;box-sizing:border-box;padding:12px;overflow-y:auto;overscroll-behavior:contain}\n.registration-success-card{box-sizing:border-box;max-height:calc(100dvh - 24px);max-height:calc(100svh - 24px);max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}\n@media(max-width:650px){\n .registration-success-modal{align-items:flex-start;justify-content:center;padding:calc(12px + env(safe-area-inset-top)) 10px calc(12px + env(safe-area-inset-bottom))}\n .registration-success-card{width:min(100%,480px);max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:18px 16px;border-radius:18px}\n .registration-success-mark{width:44px;height:44px;margin-bottom:8px;font-size:24px}\n .registration-success-card .eyebrow{font-size:10px;letter-spacing:1px}\n .registration-success-card h2{font-size:clamp(21px,5.5vw,26px);line-height:1.2;margin:7px 0 10px}\n .registration-success-card p{font-size:13px;line-height:1.45;margin:8px 0}\n .registration-success-ref{padding:9px;overflow-wrap:anywhere}\n .registration-success-card button{width:100%;min-height:46px;margin-top:10px}\n}\n</style>
 
 <script>
 (function(){
