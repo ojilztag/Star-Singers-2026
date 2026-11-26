@@ -146,9 +146,9 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     const successModal=document.getElementById('registrationSuccessModal');
     document.getElementById('registrationSuccessName').textContent=submittedName;
     document.getElementById('registrationSuccessRef').textContent=result.trackingRef||'Received';
-    successModal.hidden=false;document.body.style.overflow='hidden';
+    successModal.hidden=false;document.body.classList.add('registration-success-open');document.body.style.overflow='hidden';
     document.getElementById('registrationSuccessHome').onclick=()=>{
-     successModal.hidden=true;document.body.style.overflow='';
+     successModal.hidden=true;document.body.classList.remove('registration-success-open');document.body.style.overflow='';
      const registrationSection=document.getElementById('registration');
      if(registrationSection)registrationSection.hidden=true;
      window.location.hash='home';window.scrollTo({top:0,behavior:'smooth'});
