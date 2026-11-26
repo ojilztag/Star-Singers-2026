@@ -3,7 +3,7 @@
  const API='https://script.google.com/macros/s/AKfycbxPwRrD35fv7UWOJO6EN6eqIxT5czuaIBjbU8qR9xfdFYuod6bB-RrNj6r0hDuma6Qk6Q/exec';
  let frame=null,timeout=null;
  window.SS26_REGISTRATION_FEE=300;
- window.SS26_REGISTRATION_CLOSING_DATE='2026-12-20';
+ window.SS26_REGISTRATION_CLOSING_DATE='2026-12-31';
  function apply(s){
   if(!s||typeof s!=='object')return;
   const set=(id,value)=>{const el=document.getElementById(id);if(el&&String(value||'').trim())el.textContent=String(value).trim();};
@@ -15,7 +15,7 @@
    if(consent)consent.textContent='I understand and agree that the registration fee is ₹'+fee.toLocaleString('en-IN')+' for one individual entry. I will upload the payment receipt/screenshot after payment. *';
   }
   set('siteDateOpens',s.registrationOpens);set('siteDateCloses',s.registrationCloses);
-  window.SS26_REGISTRATION_CLOSING_DATE=String(s.registrationClosingDate||'2026-12-20').trim().match(/^\d{4}-\d{2}-\d{2}$/)?String(s.registrationClosingDate||'2026-12-20').trim():'2026-12-20';
+  window.SS26_REGISTRATION_CLOSING_DATE=String(s.registrationClosingDate||'2026-12-31').trim().match(/^\d{4}-\d{2}-\d{2}$/)?String(s.registrationClosingDate||'2026-12-31').trim():'2026-12-31';
   document.dispatchEvent(new Event('ss26:closing-date-updated'));
   set('siteDateVideo',s.videoDeadline);set('siteDateResults',s.resultsDate);
   set('siteUpdateOpens',s.registrationOpens);set('siteUpdateRules',s.rulesSummary);
