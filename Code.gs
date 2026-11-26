@@ -46,7 +46,7 @@ function setupStarSingersBackend() {
     ['Participant ID Prefix',CFG.PREFIX,'Sequence starts at 001 after approval'],
     ['Payment Verification','Manual','Admin must verify bank/UPI credit'],
     ['Photo Storage','Private Google Drive','Original and cropped images are admin-only files'],
-    ['Registration Closing Date','','Enter YYYY-MM-DD before opening registration']
+    ['Registration Closing Date','2026-12-31','Official closing date — 31 December 2026']
   ]);
   settings.setFrozenRows(1);
   const finance=ss.insertSheet('Payment Reconciliation');
@@ -522,8 +522,12 @@ function readSiteSettings_() {
     out['Registration Fee']='300';
   }
   if(!Object.prototype.hasOwnProperty.call(out,'Registration Closing Date')){
-    sh.appendRow(['Registration Closing Date','','Enter YYYY-MM-DD before opening registration']);
-    out['Registration Closing Date']='';
+    sh.appendRow(['Registration Closing Date','2026-12-31','Official closing date — 31 December 2026']);
+    out['Registration Closing Date']='2026-12-31';
+  } else if(!String(out['Registration Closing Date']||'').trim()) {
+    const rowIndex=sh.getRange(2,1,Math.max(sh.getLastRow()-1,1),1).getDisplayValues().findIndex(r=>String(r[0]||'')==='Registration Closing Date');
+    if(rowIndex>=0)sh.getRange(rowIndex+2,2).setValue('2026-12-31');
+    out['Registration Closing Date']='2026-12-31';
   }
   return out;
 }
