@@ -470,10 +470,12 @@ function auditCategoryData_(p) {
   const issues=[];
   rows.forEach((r,i)=>{
     const row=i+2,dob=normalizeDobValue_(r[25]),gender=normalizeGender_(r[24]);
-    let info=null;if(dob&&gender)try{info=calculateAgeCategory_(dob,gender);}catch(ignore){}
+    let info=null,calculationError='';
+    if(dob&&gender)try{info=calculateAgeCategory_(dob,gender);}catch(err){calculationError=safe_(err);}
     const reasons=[];
     if(!gender)reasons.push('Gender requires manual confirmation');
     if(!dob)reasons.push('Date of Birth is invalid or missing');
+    else if(gender&&!info)reasons.push(calculationError||'Date of Birth does not meet competition eligibility rules');
     if(info&&Number(r[26])!==info.age)reasons.push('Stored age does not match DOB');
     if(info&&String(r[27]||'')!==info.category)reasons.push('Stored category does not match DOB');
     if(reasons.length)issues.push({row:row,trackingRef:String(r[0]||''),participantName:String(r[3]||''),genderValid:!!gender,dateOfBirth:dob,calculatedAge:info?info.age:'',calculatedCategory:info?info.category:'',reasons:reasons});
