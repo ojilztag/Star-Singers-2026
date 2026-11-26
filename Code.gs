@@ -39,13 +39,14 @@ function setupStarSingersBackend() {
   audit.setFrozenRows(1);
   const settings=ss.insertSheet('Settings');
   settings.getRange(1,1,1,SETTINGS_HEADERS.length).setValues([SETTINGS_HEADERS]).setFontWeight('bold');
-  settings.getRange(2,1,6,3).setValues([
+  settings.getRange(2,1,7,3).setValues([
     ['Event Name','NAKSHATHRA GAYAKAR – STAR SINGERS 2026','Official competition title'],
     ['Registration Fee',300,'INR per individual entry'],
     ['Entry Type','Individual / Single Entry','Group entries are not accepted'],
     ['Participant ID Prefix',CFG.PREFIX,'Sequence starts at 001 after approval'],
     ['Payment Verification','Manual','Admin must verify bank/UPI credit'],
-    ['Photo Storage','Private Google Drive','Original and cropped images are admin-only files']
+    ['Photo Storage','Private Google Drive','Original and cropped images are admin-only files'],
+    ['Registration Closing Date','','Enter YYYY-MM-DD before opening registration']
   ]);
   settings.setFrozenRows(1);
   const finance=ss.insertSheet('Payment Reconciliation');
@@ -193,9 +194,8 @@ function register_(p) {
   const name=clean_(p.participantName,120),parish=clean_(p.parishName,160),diocese=clean_(p.diocese,160);
   const country=clean_(p.country,100),state=clean_(p.state,100),district=clean_(p.district,100);
   const phone=String(p.phone||'').trim(),utr=String(p.utr||'').trim();
-  const gender=String(p.gender||'').trim(),dateOfBirth=String(p.dateOfBirth||'').trim(),ageInfo=calculateAgeCategory_(dateOfBirth);
+  const gender=String(p.gender||'').trim(),dateOfBirth=String(p.dateOfBirth||'').trim(),ageInfo=calculateAgeCategory_(dateOfBirth,gender);
   if(!['Male','Female'].includes(gender))throw new Error('Select Male or Female.');
-  if(ageInfo.age<5)throw new Error('Participant must be at least 5 years old on 31 December 2026.');
   if(!name||!parish||!diocese||!country||!state||!district||!phone||!utr)throw new Error('Complete all required fields, including UTR / Transaction ID.');
   if(!/^\d{12}$/.test(utr))throw new Error('UTR / Transaction ID must contain exactly 12 digits.');
   if(!/^\+[1-9]\d{6,14}$/.test(phone.replace(/[\s()-]/g,'')))throw new Error('Enter WhatsApp number with country code, e.g. +91XXXXXXXXXX.');
@@ -262,11 +262,24 @@ function registrationRow_(record) {
   if(missing.length)throw new Error('Registration mapping is missing required fields: '+missing.join(', '));
   return values;
 }
-function calculateAgeCategory_(dobText){
+function getRegistrationClosingDate_(){
+  const value=String(readSiteSettings_()['Registration Closing Date']||'').trim();
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(value))throw new Error('The official registration closing date has not been announced. Registration is not open yet.');
+  const p=value.split('-').map(Number),date=new Date(Date.UTC(p[0],p[1]-1,p[2]));
+  if(date.getUTCFullYear()!==p[0]||date.getUTCMonth()!==p[1]-1||date.getUTCDate()!==p[2])throw new Error('The configured registration closing date is invalid.');
+  return {text:value,year:p[0],month:p[1],day:p[2],date:date};
+}
+function calculateAgeCategory_(dobText,gender){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(dobText))throw new Error('Enter a valid Date of Birth.');
-  const p=dobText.split('-').map(Number),birth=new Date(Date.UTC(p[0],p[1]-1,p[2])),cutoff=new Date(Date.UTC(2026,11,31));
-  if(birth.getUTCFullYear()!==p[0]||birth.getUTCMonth()!==p[1]-1||birth.getUTCDate()!==p[2]||birth>cutoff)throw new Error('Date of Birth must be valid and on or before 31 December 2026.');
-  const age=2026-p[0];return {age:age,category:age<=17?'Junior':age<=39?'Senior':'Super Senior'};
+  const p=dobText.split('-').map(Number),birth=new Date(Date.UTC(p[0],p[1]-1,p[2]));
+  if(birth.getUTCFullYear()!==p[0]||birth.getUTCMonth()!==p[1]-1||birth.getUTCDate()!==p[2])throw new Error('Enter a valid Date of Birth.');
+  const cutoff=getRegistrationClosingDate_();
+  if(birth>cutoff.date)throw new Error('Date of Birth must be on or before the official registration closing date.');
+  const age=cutoff.year-p[0]-((cutoff.month<p[1]||(cutoff.month===p[1]&&cutoff.day<p[2]))?1:0);
+  if(age<10)throw new Error('Participant must be at least 10 years old on the official registration closing date.');
+  if(!['Male','Female'].includes(String(gender||'')))throw new Error('Select Male or Female.');
+  const category=age<=17?'Junior':age<=44?'Senior':'Super Senior';
+  return {age:age,category:category,division:category+' '+(gender==='Female'?'Ladies':'Gentlemen'),cutoffDate:cutoff.text};
 }
 function duplicateNameKey_(v){return String(v||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();}
 function duplicatePhoneKey_(v){return String(v||'').replace(/\D/g,'');}
@@ -414,14 +427,14 @@ function uniqueId_(sh) {
 function matchesCategoryFilter_(row,filter) {
   const gender=String(row[24]||'').trim(),dob=normalizeDobValue_(row[25]);
   if(!['Male','Female'].includes(gender)||!dob)return false;
-  let info;try{info=calculateAgeCategory_(dob);}catch(ignore){return false;}
+  let info;try{info=calculateAgeCategory_(dob,gender);}catch(ignore){return false;}
   return (gender+'-'+info.category.toLowerCase().replace(/\s+/g,'-'))===filter;
 }
 function normalizeDobValue_(value) {
   if (value instanceof Date && !isNaN(value.getTime())) return Utilities.formatDate(value, Session.getScriptTimeZone(), 'yyyy-MM-dd');
   const s=String(value==null?'':value).trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-    try { calculateAgeCategory_(s); return s; } catch (ignore) { return ''; }
+    try { calculateAgeCategory_(s,'Male'); return s; } catch (ignore) { return ''; }
   }
   return '';
 }
@@ -429,7 +442,7 @@ function rowObject_(r) {
   const d=r[2] instanceof Date?r[2]:new Date(r[2]);
   const dob=normalizeDobValue_(r[25]);
   let ageInfo=null;
-  if(dob)try{ageInfo=calculateAgeCategory_(dob);}catch(ignore){}
+  if(dob)try{ageInfo=calculateAgeCategory_(dob,gender);}catch(ignore){}
   const gender=['Male','Female'].includes(String(r[24]||'').trim())?String(r[24]).trim():'Needs verification';
   return {trackingRef:String(r[0]||''),registrationId:String(r[1]||''),submittedAt:isNaN(d.getTime())?'':Utilities.formatDate(d,Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'),
     participantName:String(r[3]||''),parishName:String(r[4]||''),diocese:String(r[5]||''),country:String(r[6]||''),state:String(r[7]||''),district:String(r[8]||''),phone:String(r[9]||''),entryType:String(r[10]||''),fee:r[11],utr:String(r[12]||''),
@@ -442,7 +455,7 @@ function auditCategoryData_(p) {
   const issues=[];
   rows.forEach((r,i)=>{
     const row=i+2,dob=normalizeDobValue_(r[25]),gender=String(r[24]||'').trim();
-    let info=null;if(dob)try{info=calculateAgeCategory_(dob);}catch(ignore){}
+    let info=null;if(dob)try{info=calculateAgeCategory_(dob,gender);}catch(ignore){}
     const reasons=[];
     if(!['Male','Female'].includes(gender))reasons.push('Gender requires manual confirmation');
     if(!dob)reasons.push('Date of Birth is invalid or missing');
@@ -479,6 +492,7 @@ function getEntryPhoto_(p) {
 const SITE_SETTING_FIELDS = {
   registrationFee: {key:'Registration Fee',label:'Registration Fee',max:20},
   registrationOpens: {key:'Registration Opens',label:'Registration Opens',max:80},
+  registrationCloses: {key:'Registration Closing Date',label:'Registration Closing Date (YYYY-MM-DD)',max:10},
   registrationCloses: {key:'Registration Closes',label:'Registration Closes',max:80},
   videoDeadline: {key:'Video Submission Deadline',label:'Video Submission Deadline',max:80},
   resultsDate: {key:'Results Announcement',label:'Results Announcement',max:80},
