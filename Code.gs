@@ -18,7 +18,7 @@ const REG_HEADERS = [
   'WhatsApp Number','Entry Type','Registration Fee','UTR / Transaction ID',
   'Participant Photo Drive ID','Participant Photo Drive URL','Original Photo Drive ID','Original Photo Drive URL',
   'Payment Proof Drive ID','Payment Proof Drive URL','Payment Status',
-  'Registration Status','Admin Note','Reviewed At','Reviewed By','Gender','Date of Birth','Age at 31-Dec-2026','Age Category'
+  'Registration Status','Admin Note','Reviewed At','Reviewed By','Gender','Date of Birth','Age at 20-Dec-2026','Age Category'
 ];
 const AUDIT_HEADERS = ['Timestamp','Admin','Action','Record ID','Details'];
 const SETTINGS_HEADERS = ['Setting','Value','Description'];
@@ -46,7 +46,7 @@ function setupStarSingersBackend() {
     ['Participant ID Prefix',CFG.PREFIX,'Sequence starts at 001 after approval'],
     ['Payment Verification','Manual','Admin must verify bank/UPI credit'],
     ['Photo Storage','Private Google Drive','Original and cropped images are admin-only files'],
-    ['Registration Closing Date','2026-12-31','Official closing date — 31 December 2026']
+    ['Registration Closing Date','2026-12-20','Official closing date — 20 December 2026']
   ]);
   settings.setFrozenRows(1);
   const finance=ss.insertSheet('Payment Reconciliation');
@@ -235,7 +235,7 @@ function register_(p) {
       'Payment Proof Drive ID':proofSaved.id,'Payment Proof Drive URL':proofSaved.url,
       'Payment Status':'Pending Verification','Registration Status':'Pending Review',
       'Admin Note':'','Reviewed At':'','Reviewed By':'','Gender':gender,
-      'Date of Birth':dateOfBirth,'Age at 31-Dec-2026':ageInfo.age,'Age Category':ageInfo.category
+      'Date of Birth':dateOfBirth,'Age at 20-Dec-2026':ageInfo.age,'Age Category':ageInfo.category
     });
     sh.appendRow(rowValues);
     const row=sh.getLastRow();
@@ -257,7 +257,7 @@ function register_(p) {
 function registrationRow_(record) {
   const values=REG_HEADERS.map(header=>Object.prototype.hasOwnProperty.call(record,header)?record[header]:'');
   if(values.length!==REG_HEADERS.length)throw new Error('Registration column mapping is inconsistent. No row was written.');
-  const required=['Tracking Ref','Submitted At','Participant Name','Gender','Date of Birth','Age at 31-Dec-2026','Age Category'];
+  const required=['Tracking Ref','Submitted At','Participant Name','Gender','Date of Birth','Age at 20-Dec-2026','Age Category'];
   const missing=required.filter(header=>!Object.prototype.hasOwnProperty.call(record,header));
   if(missing.length)throw new Error('Registration mapping is missing required fields: '+missing.join(', '));
   return values;
@@ -516,7 +516,7 @@ function readSiteSettings_() {
       if(key==='Registration Fee'){
         if(Number(value)!==300)sh.getRange(i+2,2).setValue(300);
         out[key]='300';
-      } else out[key]=value;
+      } else if(key==='Registration Closing Date') { if(value!=='2026-12-20')sh.getRange(i+2,2).setValue('2026-12-20'); out[key]='2026-12-20'; } else out[key]=value;
     });
   }
   if(!out['Registration Fee']){
@@ -524,12 +524,12 @@ function readSiteSettings_() {
     out['Registration Fee']='300';
   }
   if(!Object.prototype.hasOwnProperty.call(out,'Registration Closing Date')){
-    sh.appendRow(['Registration Closing Date','2026-12-31','Official closing date — 31 December 2026']);
-    out['Registration Closing Date']='2026-12-31';
+    sh.appendRow(['Registration Closing Date','2026-12-20','Official closing date — 20 December 2026']);
+    out['Registration Closing Date']='2026-12-20';
   } else if(!String(out['Registration Closing Date']||'').trim()) {
     const rowIndex=sh.getRange(2,1,Math.max(sh.getLastRow()-1,1),1).getDisplayValues().findIndex(r=>String(r[0]||'')==='Registration Closing Date');
-    if(rowIndex>=0)sh.getRange(rowIndex+2,2).setValue('2026-12-31');
-    out['Registration Closing Date']='2026-12-31';
+    if(rowIndex>=0)sh.getRange(rowIndex+2,2).setValue('2026-12-20');
+    out['Registration Closing Date']='2026-12-20';
   }
   return out;
 }
