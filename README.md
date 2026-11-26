@@ -282,8 +282,8 @@ The six category combinations are:
 The official Age Cut-off Date is **20 December 2026**. This is the reference date for calculating every participant's completed age; it is not the registration closing date.
 
 Confirmed inclusive age bands:
-- **Junior:** 5–17 years
-- **Senior:** 18–39 years
+- **Junior:** 10–17 years
+- **Senior:** 18–44 years
 - **Super Senior:** 40 years and above
 - **Under 5:** Not eligible
 
@@ -481,9 +481,9 @@ For every future request:
 
 **Current live implementation:** one public registration form; current parish/diocese/residence fields; photo and payment-proof upload; ₹300 fee; 12-digit UTR; private Sheets/Drive storage; admin login; manual payment verification; separate approval; sequential `JKJ-CC26-M-` Participant ID; Entry Card PNG; manual WhatsApp hand-off; CSV and print-to-PDF exports.
 
-**Current implementation direction:** preserve one registration page and one Admin Panel; use 20 December 2026 as the age cut-off; assign Junior (5–17), Senior (18–39), Super Senior (40+) from DOB on the server; combine with Male/Female for six categories; maintain the existing common Participant ID sequence; provide category-specific Admin filters and exports. The multi-sheet Master workbook remains future work.
+**Current implementation direction:** preserve one registration page and one Admin Panel; use 20 December 2026 as the age cut-off; assign Junior (10–17), Senior (18–44), Super Senior (45+) from DOB on the server; combine with Male/Female for six categories; maintain the existing common Participant ID sequence; provide category-specific Admin filters and exports. The multi-sheet Master workbook remains future work.
 
-**Still awaiting organiser confirmation:** whether participant email is required; final decision on any Participant ID prefix migration (current prefix remains JKJ-CC26-M-); whether the proposed tenth report selection is required. The age cut-off and category boundaries are confirmed as 20-Dec-2026 and 5–17 / 18–39 / 40+.
+**Still awaiting organiser confirmation:** whether participant email is required; final decision on any Participant ID prefix migration (current prefix remains JKJ-CC26-M-); whether the proposed tenth report selection is required. The age cut-off and category boundaries are confirmed as 20-Dec-2026 and 10–17 / 18–44 / 45+.
 
 The category system is implemented in source. Any live data repair must be preceded by the Admin audit and its automatic hidden backup. Do not run repair until the audit has been reviewed; do not infer missing Gender values.
 
@@ -872,16 +872,16 @@ This register records the role-allocation framework and the current five assignm
 
 - Preserved the existing single Registration Form and all existing fields, upload controls, payment consent, UTR validation, photo crop/compression, submission flow, duplicate rule, payment verification and approval workflow.
 - Added required Gender (Male/Female) and Date of Birth fields inside the existing Participant Details section. Added read-only calculated Age and Automatic Category display fields.
-- Official Age Cut-off Date: **20 December 2026**. Age bands: Junior 5–17; Senior 18–39; Super Senior 40+. Age is calculated as completed years on the cut-off date; age below 5 is ineligible. Boundaries are inclusive.
+- Official Age Cut-off Date: **20 December 2026**. Age bands: Junior 10–17; Senior 18–44; Super Senior 45+. Age is calculated as completed years on the cut-off date; age below 5 is ineligible. Boundaries are inclusive.
 - Frontend displays the result for the participant; Apps Script independently validates DOB, gender and eligibility and calculates the category again. Browser-supplied age/category are not trusted.
-- Added four trailing columns to the existing Registrations sheet: Gender, Date of Birth, Age at 20-Dec-2026, Age Category. Existing columns and rows are preserved; missing trailing headers are added lazily by the existing backend. The installer is not to be rerun.
+- Added four trailing columns to the existing Registrations sheet: Gender, Date of Birth, Age at 31-Dec-2026, Age Category. Existing columns and rows are preserved; missing trailing headers are added lazily by the existing backend. The installer is not to be rerun.
 - Admin record detail and CSV/PDF export fields now include gender, DOB, age and category. DOB is private admin data; do not publish it in public participant lists.
 - Files changed: index.html, backend-client.js, Code.gs, admin.html, README.md and README.md.backup.
 - Verification: source-level targeted replacements only. No Apps Script deployment, live form submission, browser/device test or live Google Sheet migration was performed. The Apps Script owner must deploy updated Code.gs to the existing Web App using Manage deployments → Edit → New version; do not run the installer.
 
 ## 29. Full-system hardening and legacy category data integrity — 2026-11-22
 
-- Confirmed category rules: age is completed age on 20-Dec-2026; Junior 5–17, Senior 18–39, Super Senior 40+; under-5 and invalid/future DOB values are rejected. Gender values are Male or Female. Gender is never inferred from DOB or any other field.
+- Confirmed category rules: age is completed age on 20-Dec-2026; Junior 10–17, Senior 18–44, Super Senior 45+; under-10 and invalid/future DOB values are rejected. Gender values are Male or Female. Gender is never inferred from DOB or any other field.
 - The registration row writer keeps the original 24 registration columns in their existing order and writes the four category columns by their fixed trailing positions: Gender (Y/25), Date of Birth (Z/26), Age (AA/27), Age Category (AB/28).
 - rowObject_ normalises legacy Date-valued DOB cells using the Apps Script project timezone and derives Age/Category from DOB rather than trusting possibly shifted legacy values. Invalid Gender is exposed to Admin as requiring verification.
 - Admin includes only a read-only category-data audit. The repair button and repair API action have been removed; no registration data is changed by the audit.
@@ -893,7 +893,7 @@ This register records the role-allocation framework and the current five assignm
 ## 30. Public website alignment — six categories, prize structure, rules and FAQ — 2026-11-22
 
 - Public Categories section now displays all six Gender × Age combinations using the confirmed cut-off date of 20 December 2026.
-- Eligibility is stated consistently: Junior 5–17, Senior 18–39, Super Senior 40+, under-five participants are ineligible. Category is automatically calculated from DOB and Gender.
+- Eligibility is stated consistently: Junior 10–17, Senior 18–44, Super Senior 45+, under-five participants are ineligible. Category is automatically calculated from DOB and Gender.
 - Competition Rules and FAQ now use the same age bands, solo-entry requirement, Christmas Carol requirement, landscape recording, no-editing rule, ₹300 entry fee and payment-verification process.
 - Prize section now shows First, Second and Third placements in each of the six categories (18 category-wise placement awards). Ten separate audience-engagement Encouragement Prizes remain additional awards. Prize amounts and sponsors remain unannounced; no values are invented.
 - Admin retains the read-only Registration Data Audit only. The repair button and backend repair action are removed. Audit does not delete or modify registration records.
