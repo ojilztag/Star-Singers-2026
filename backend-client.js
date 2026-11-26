@@ -151,17 +151,17 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     if(celebration){
      celebration.replaceChildren();
      if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      const pieces=['🌸','🌼','🌺','✨','🎉','🌷'];
-      for(let i=0;i<30;i++){
+      const pieces=['🌸','🌼','🌺','🌷','💮','✨','🎉','🌻'];
+      for(let i=0;i<46;i++){
        const piece=document.createElement('span');
        piece.className='registration-celebration-piece';
-       piece.textContent=pieces[i%pieces.length];
+       piece.textContent=pieces[Math.floor(Math.random()*pieces.length)];
        piece.style.setProperty('--x',(Math.random()*100)+'%');
-       piece.style.setProperty('--size',(14+Math.random()*13)+'px');
-       piece.style.setProperty('--duration',(4.5+Math.random()*3)+'s');
-       piece.style.setProperty('--delay',(Math.random()*2.2)+'s');
-       piece.style.setProperty('--drift',((Math.random()-.5)*150)+'px');
-       piece.style.setProperty('--spin',((Math.random()-.5)*900)+'deg');
+       piece.style.setProperty('--size',(16+Math.random()*17)+'px');
+       piece.style.setProperty('--duration',(5+Math.random()*3.5)+'s');
+       piece.style.setProperty('--delay',(Math.random()*1.6)+'s');
+       piece.style.setProperty('--drift',((Math.random()-.5)*190)+'px');
+       piece.style.setProperty('--spin',((Math.random()-.5)*1080)+'deg');
        celebration.appendChild(piece);
       }
      }
