@@ -2134,7 +2134,7 @@ if(registrationForm){
 </script>
 
 
-<script src="backend-client.js?v=20261126-agefix2"></script>
+<script src="backend-client.js?v=20261126-successcompact1"></script>
 <div id="registrationSuccessModal" class="registration-success-modal" hidden role="dialog" aria-modal="true" aria-labelledby="registrationSuccessTitle">
  <div class="registration-success-card">
   <div class="registration-success-mark" aria-hidden="true">✓</div>
@@ -2536,7 +2536,23 @@ main#main-content :is(input,select,textarea,button){
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
 }
-\n/* Registration success: mobile-safe modal and no overlap with page slideshow controls */\nbody.registration-success-open{overflow:hidden!important}\nbody.registration-success-open .mobile-slideshow-controls{display:none!important}\n.registration-success-modal{z-index:20000;box-sizing:border-box;padding:12px;overflow-y:auto;overscroll-behavior:contain}\n.registration-success-card{box-sizing:border-box;max-height:calc(100dvh - 24px);max-height:calc(100svh - 24px);max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}\n@media(max-width:650px){\n .registration-success-modal{align-items:flex-start;justify-content:center;padding:calc(12px + env(safe-area-inset-top)) 10px calc(12px + env(safe-area-inset-bottom))}\n .registration-success-card{width:min(100%,480px);max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:18px 16px;border-radius:18px}\n .registration-success-mark{width:44px;height:44px;margin-bottom:8px;font-size:24px}\n .registration-success-card .eyebrow{font-size:10px;letter-spacing:1px}\n .registration-success-card h2{font-size:clamp(21px,5.5vw,26px);line-height:1.2;margin:7px 0 10px}\n .registration-success-card p{font-size:13px;line-height:1.45;margin:8px 0}\n .registration-success-ref{padding:9px;overflow-wrap:anywhere}\n .registration-success-card button{width:100%;min-height:46px;margin-top:10px}\n}\n</style>
+
+/* Compact registration success card: fit the complete message and Home action on mobile */
+body.registration-success-open{overflow:hidden!important}
+body.registration-success-open .mobile-slideshow-controls{display:none!important}
+.registration-success-modal{z-index:20000;box-sizing:border-box;padding:10px;overflow-y:auto;overscroll-behavior:contain}
+.registration-success-card{box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+@media(max-width:650px){
+ .registration-success-modal{align-items:center;justify-content:center;padding:calc(8px + env(safe-area-inset-top)) 8px calc(8px + env(safe-area-inset-bottom))}
+ .registration-success-card{width:min(100%,440px);max-height:calc(100dvh - 16px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:12px 13px;border-radius:16px}
+ .registration-success-mark{width:34px;height:34px;margin:0 auto 5px;font-size:20px}
+ .registration-success-card .eyebrow{font-size:9px;letter-spacing:.8px;margin:3px 0}
+ .registration-success-card h2{font-size:clamp(19px,4.8vw,23px);line-height:1.15;margin:5px 0 7px}
+ .registration-success-card p{font-size:11.5px;line-height:1.3;margin:5px 0;color:#f6e8c8}
+ .registration-success-ref{padding:6px 8px;border-radius:9px}
+ .registration-success-card button{display:block;width:auto;min-width:118px;min-height:36px;margin:7px auto 0;padding:7px 22px;font-size:13px;border-radius:10px}
+}
+</style>
 
 <script>
 (function(){
