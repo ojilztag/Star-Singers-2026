@@ -15,7 +15,7 @@
    if(consent)consent.textContent='I understand and agree that the registration fee is ₹'+fee.toLocaleString('en-IN')+' for one individual entry. I will upload the payment receipt/screenshot after payment. *';
   }
   set('siteDateOpens',s.registrationOpens);set('siteDateCloses',s.registrationCloses);
-  window.SS26_REGISTRATION_CLOSING_DATE=String(s.registrationClosingDate||'2026-12-31').trim().match(/^\\d{4}-\\d{2}-\\d{2}$/)?String(s.registrationClosingDate||'2026-12-31').trim():'2026-12-31';
+  window.SS26_REGISTRATION_CLOSING_DATE=String(s.registrationClosingDate||'2026-12-31').trim().match(/^\d{4}-\d{2}-\d{2}$/)?String(s.registrationClosingDate||'2026-12-31').trim():'2026-12-31';
   document.dispatchEvent(new Event('ss26:closing-date-updated'));
   set('siteDateVideo',s.videoDeadline);set('siteDateResults',s.resultsDate);
   set('siteUpdateOpens',s.registrationOpens);set('siteUpdateRules',s.rulesSummary);
