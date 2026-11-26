@@ -147,8 +147,27 @@ const STAR_SINGERS_API_URL = 'https://script.google.com/macros/s/AKfycbxPwRrD35f
     document.getElementById('registrationSuccessName').textContent=submittedName;
     document.getElementById('registrationSuccessRef').textContent=result.trackingRef||'Received';
     successModal.hidden=false;document.body.classList.add('registration-success-open');document.body.style.overflow='hidden';
+    const celebration=document.getElementById('registrationCelebration');
+    if(celebration){
+     celebration.replaceChildren();
+     if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      const pieces=['🌸','🌼','🌺','✨','🎉','🌷'];
+      for(let i=0;i<30;i++){
+       const piece=document.createElement('span');
+       piece.className='registration-celebration-piece';
+       piece.textContent=pieces[i%pieces.length];
+       piece.style.setProperty('--x',(Math.random()*100)+'%');
+       piece.style.setProperty('--size',(14+Math.random()*13)+'px');
+       piece.style.setProperty('--duration',(4.5+Math.random()*3)+'s');
+       piece.style.setProperty('--delay',(Math.random()*2.2)+'s');
+       piece.style.setProperty('--drift',((Math.random()-.5)*150)+'px');
+       piece.style.setProperty('--spin',((Math.random()-.5)*900)+'deg');
+       celebration.appendChild(piece);
+      }
+     }
+    }
     document.getElementById('registrationSuccessHome').onclick=()=>{
-     successModal.hidden=true;document.body.classList.remove('registration-success-open');document.body.style.overflow='';
+     successModal.hidden=true;if(celebration)celebration.replaceChildren();document.body.classList.remove('registration-success-open');document.body.style.overflow='';
      const registrationSection=document.getElementById('registration');
      if(registrationSection)registrationSection.hidden=true;
      window.location.hash='home';window.scrollTo({top:0,behavior:'smooth'});
