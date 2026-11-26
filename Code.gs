@@ -263,7 +263,8 @@ function registrationRow_(record) {
   return values;
 }
 function getRegistrationClosingDate_(){
-  const value=String(readSiteSettings_()['Registration Closing Date']||'').trim();
+  const settings=readSiteSettings_();
+  const value=String(settings['Registration Closing Date']||'').trim();
   if(!/^\d{4}-\d{2}-\d{2}$/.test(value))throw new Error('The official registration closing date has not been announced. Registration is not open yet.');
   const p=value.split('-').map(Number),date=new Date(Date.UTC(p[0],p[1]-1,p[2]));
   if(date.getUTCFullYear()!==p[0]||date.getUTCMonth()!==p[1]-1||date.getUTCDate()!==p[2])throw new Error('The configured registration closing date is invalid.');
@@ -434,16 +435,17 @@ function normalizeDobValue_(value) {
   if (value instanceof Date && !isNaN(value.getTime())) return Utilities.formatDate(value, Session.getScriptTimeZone(), 'yyyy-MM-dd');
   const s=String(value==null?'':value).trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
-    try { calculateAgeCategory_(s,'Male'); return s; } catch (ignore) { return ''; }
+    const parts=s.split('-').map(Number),date=new Date(Date.UTC(parts[0],parts[1]-1,parts[2]));
+    return date.getUTCFullYear()===parts[0]&&date.getUTCMonth()===parts[1]-1&&date.getUTCDate()===parts[2]?s:'';
   }
   return '';
 }
 function rowObject_(r) {
   const d=r[2] instanceof Date?r[2]:new Date(r[2]);
   const dob=normalizeDobValue_(r[25]);
-  let ageInfo=null;
-  if(dob)try{ageInfo=calculateAgeCategory_(dob,gender);}catch(ignore){}
   const gender=['Male','Female'].includes(String(r[24]||'').trim())?String(r[24]).trim():'Needs verification';
+  let ageInfo=null;
+  if(dob&&['Male','Female'].includes(gender))try{ageInfo=calculateAgeCategory_(dob,gender);}catch(ignore){}
   return {trackingRef:String(r[0]||''),registrationId:String(r[1]||''),submittedAt:isNaN(d.getTime())?'':Utilities.formatDate(d,Session.getScriptTimeZone(),'dd-MMM-yyyy hh:mm a'),
     participantName:String(r[3]||''),parishName:String(r[4]||''),diocese:String(r[5]||''),country:String(r[6]||''),state:String(r[7]||''),district:String(r[8]||''),phone:String(r[9]||''),entryType:String(r[10]||''),fee:r[11],utr:String(r[12]||''),
     photoUrl:String(r[14]||''),originalPhotoUrl:String(r[16]||''),paymentProofUrl:String(r[18]||''),paymentStatus:String(r[19]||''),status:String(r[20]||''),adminNote:String(r[21]||''),gender:gender,dateOfBirth:dob,age:ageInfo?ageInfo.age:'',ageCategory:ageInfo?ageInfo.category:''};
@@ -492,8 +494,8 @@ function getEntryPhoto_(p) {
 const SITE_SETTING_FIELDS = {
   registrationFee: {key:'Registration Fee',label:'Registration Fee',max:20},
   registrationOpens: {key:'Registration Opens',label:'Registration Opens',max:80},
-  registrationCloses: {key:'Registration Closing Date',label:'Registration Closing Date (YYYY-MM-DD)',max:10},
   registrationCloses: {key:'Registration Closes',label:'Registration Closes',max:80},
+  registrationClosingDate: {key:'Registration Closing Date',label:'Registration Closing Date (YYYY-MM-DD)',max:10},
   videoDeadline: {key:'Video Submission Deadline',label:'Video Submission Deadline',max:80},
   resultsDate: {key:'Results Announcement',label:'Results Announcement',max:80},
   participation: {key:'Participation',label:'Participation',max:300},
