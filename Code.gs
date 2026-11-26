@@ -516,7 +516,7 @@ function readSiteSettings_() {
       if(key==='Registration Fee'){
         if(Number(value)!==300)sh.getRange(i+2,2).setValue(300);
         out[key]='300';
-      } else if(key==='Registration Closing Date') { if(value!=='2026-12-31')sh.getRange(i+2,2).setValue('2026-12-31'); out[key]='2026-12-31'; } else if(key==='Registration Closing Date') { if(value!=='2026-12-31')sh.getRange(i+2,2).setValue('2026-12-31'); out[key]='2026-12-31'; } else out[key]=value;
+      } else if(key==='Registration Closing Date') { if(value!=='2026-12-31')sh.getRange(i+2,2).setValue('2026-12-31'); out[key]='2026-12-31'; } else out[key]=value;
     });
   }
   if(!out['Registration Fee']){
